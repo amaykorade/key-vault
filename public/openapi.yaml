@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Key Vault API
+  version: 1.0.0
+  description: API documentation for Key Vault key management endpoints.
+servers:
+  - url: https://yourdomain.com
+paths:
+  /api/keys:
+    get:
+      summary: List keys in a folder (paginated)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: folderId
+          schema:
+            type: string
+          required: true
+          description: Folder ID to list keys from
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: Number of keys to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: Number of keys to skip
+      responses:
+        '200':
+          description: List of keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  keys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KeySummary'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      summary: Create a new key
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyCreateRequest'
+      responses:
+        '200':
+          description: Key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  key:
+                    $ref: '#/components/schemas/KeySummary'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /api/keys/{id}:
+    get:
+      summary: Get a key by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: includeValue
+          schema:
+            type: boolean
+          description: If true, include the decrypted key value
+      responses:
+        '200':
+          description: Key details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  key:
+                    $ref: '#/components/schemas/KeyDetail'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Update a key by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyUpdateRequest'
+      responses:
+        '200':
+          description: Key updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  key:
+                    $ref: '#/components/schemas/KeySummary'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Delete a key by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Key deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    KeySummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isFavorite:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    KeyDetail:
+      allOf:
+        - $ref: '#/components/schemas/KeySummary'
+        - type: object
+          properties:
+            value:
+              type: string
+    KeyCreateRequest:
+      type: object
+      required:
+        - name
+        - value
+        - type
+        - folderId
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isFavorite:
+          type: boolean
+        folderId:
+          type: string
+    KeyUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        isFavorite:
+          type: boolean
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              error:
+                type: string
+              details:
+                type: array
+                items:
+                  type: string
+                nullable: true 

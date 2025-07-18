@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  keys      Key[]
+  folders   Folder[]
+  sessions  Session[]
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model Key {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  value       String   // Encrypted key value
+  type        KeyType
+  tags        String[] // Array of tags
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderId  String?
+  folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  @@map("keys")
+}
+
+model Folder {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String?  // Hex color for UI
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keys   Key[]
+  parentId String?
+  parent   Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Folder[] @relation("FolderHierarchy")
+
+  @@map("folders")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  action    AuditAction
+  resource  String      // "key", "folder", "user", etc.
+  resourceId String?
+  details   Json?       // Additional details about the action
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime    @default(now())
+
+  // Relations
+  userId String?
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum KeyType {
+  PASSWORD
+  API_KEY
+  SSH_KEY
+  CERTIFICATE
+  SECRET
+  OTHER
+}
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  EXPORT
+  IMPORT
+}

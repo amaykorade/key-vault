@@ -1,0 +1,91 @@
+import { NextResponse } from 'next/server'
+import { validateSession } from '../../../lib/auth'
+import { createFolder, getUserFolders } from '../../../lib/folders'
+
+export async function GET(request) {
+  try {
+    const sessionToken = request.cookies.get('session_token')?.value
+
+    if (!sessionToken) {
+      return NextResponse.json(
+        { message: 'Not authenticated' },
+        { status: 401 }
+      )
+    }
+
+    // Validate session
+    const user = await validateSession(sessionToken)
+    
+    if (!user) {
+      return NextResponse.json(
+        { message: 'Invalid or expired session' },
+        { status: 401 }
+      )
+    }
+
+    // Get user's folders
+    const folders = await getUserFolders(user.id)
+
+    return NextResponse.json({ folders })
+
+  } catch (error) {
+    console.error('Folders fetch error:', error)
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(request) {
+  try {
+    const sessionToken = request.cookies.get('session_token')?.value
+
+    if (!sessionToken) {
+      return NextResponse.json(
+        { message: 'Not authenticated' },
+        { status: 401 }
+      )
+    }
+
+    // Validate session
+    const user = await validateSession(sessionToken)
+    
+    if (!user) {
+      return NextResponse.json(
+        { message: 'Invalid or expired session' },
+        { status: 401 }
+      )
+    }
+
+    const { name, description, color, parentId } = await request.json()
+
+    // Validate input
+    if (!name || !name.trim()) {
+      return NextResponse.json(
+        { message: 'Project name is required' },
+        { status: 400 }
+      )
+    }
+
+    // Create folder
+    const folder = await createFolder(user.id, {
+      name: name.trim(),
+      description: description?.trim() || null,
+      color: color || '#3B82F6',
+      parentId: parentId || null
+    })
+
+    return NextResponse.json({ 
+      message: 'Project created successfully',
+      folder 
+    })
+
+  } catch (error) {
+    console.error('Folder creation error:', error)
+    return NextResponse.json(
+      { message: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+} 

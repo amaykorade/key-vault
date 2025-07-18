@@ -1,0 +1,41 @@
+import { NextResponse } from 'next/server'
+
+// Define protected and public routes
+const protectedRoutes = ['/dashboard', '/keys', '/folders', '/settings']
+const authRoutes = ['/auth/login', '/auth/signup']
+const publicRoutes = ['/', '/about', '/contact']
+
+export function middleware(request) {
+  const { pathname } = request.nextUrl
+  const sessionToken = request.cookies.get('session_token')?.value
+
+  // Check if user is authenticated by looking for session token
+  const isAuthenticated = !!sessionToken
+
+  // If user is on auth routes but already authenticated, redirect to dashboard
+  if (isAuthenticated && authRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // If user is on protected routes but not authenticated, redirect to login
+  if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
+    const loginUrl = new URL('/auth/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+} 
