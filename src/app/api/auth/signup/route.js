@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createUser, createSession } from '../../../../lib/auth'
+import { createUser, createSession, createRefreshToken } from '../../../../lib/auth'
 import { logUserLogin } from '../../../../lib/audit'
 import prisma from '../../../../lib/database'
 
@@ -32,6 +32,8 @@ export async function POST(request) {
 
     // Create session
     const session = await createSession(user.id)
+    // Create refresh token
+    const refreshToken = await createRefreshToken(user.id)
 
     // Create default folder for the user
     await prisma.folder.create({
@@ -49,7 +51,7 @@ export async function POST(request) {
       userAgent: request.headers.get('user-agent')
     })
 
-    // Create response with session cookie
+    // Create response with session and refresh token cookies
     const response = NextResponse.json({
       message: 'Account created successfully',
       user: {
@@ -61,15 +63,25 @@ export async function POST(request) {
       session: {
         token: session.token,
         expiresAt: session.expiresAt
+      },
+      refreshToken: {
+        expiresAt: refreshToken.expiresAt
       }
     })
 
-    // Set secure HTTP-only cookie
+    // Set secure HTTP-only cookies
     response.cookies.set('session_token', session.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/'
+    })
+    response.cookies.set('refresh_token', refreshToken.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60, // 30 days
       path: '/'
     })
 

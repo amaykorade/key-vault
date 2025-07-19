@@ -190,6 +190,16 @@ const useAuthStore = create(
       },
 
       clearError: () => set({ error: null }),
+
+      // SDK integration helpers
+      getToken: async () => {
+        const state = get();
+        return state.session?.token || '';
+      },
+      setToken: async (newToken) => {
+        const state = get();
+        set({ session: { ...state.session, token: newToken } });
+      },
     }),
     {
       name: 'auth-storage',
