@@ -3,19 +3,27 @@
 import React, { useState, useEffect } from 'react';
 import useAuthStore from '../../stores/authStore';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ApiPage() {
-  const { user } = useAuthStore();
+  const { user, isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const [token, setToken] = useState('');
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [regenLoading, setRegenLoading] = useState(false);
   const [error, setError] = useState('');
   const [apiUrl, setApiUrl] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     setApiUrl(window.location.origin + '/api');
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      router.push('/auth/login');
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   useEffect(() => {
     if (user) fetchToken();
@@ -58,6 +66,10 @@ export default function ApiPage() {
       setRegenLoading(false);
     }
   };
+
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 flex justify-center items-start">
