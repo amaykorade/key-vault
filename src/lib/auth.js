@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import prisma from './database.js'
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
 export async function hashPassword(password) {
   const saltRounds = 12
@@ -75,13 +77,25 @@ export async function authenticateUser(email, password) {
 }
 
 export async function getCurrentUser(request) {
-  const sessionToken = request.cookies.get('session_token')?.value
-
-  if (!sessionToken) {
-    return null
+  // Check for NextAuth session cookie
+  const nextAuthSession = request.cookies.get('next-auth.session-token')?.value;
+  if (nextAuthSession) {
+    const session = await getServerSession(authOptions);
+    if (session && session.user) {
+      return {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.name,
+        role: session.user.role || "USER",
+      };
+    }
   }
-
-  return await validateSession(sessionToken)
+  // Fallback to legacy session_token logic
+  const sessionToken = request.cookies.get('session_token')?.value;
+  if (!sessionToken) {
+    return null;
+  }
+  return await validateSession(sessionToken);
 } 
 
 export async function createRefreshToken(userId) {

@@ -8,26 +8,46 @@ const redisClient = createClient({
 });
 redisClient.connect().catch(console.error);
 
-// Configure rate limiter (e.g., 100 requests per 15 minutes per IP)
-const rateLimiter = new RateLimiterRedis({
+// Configure rate limiters
+const anonymousLimiter = new RateLimiterRedis({
   storeClient: redisClient,
-  keyPrefix: 'rlflx',
-  points: 100, // Number of points
-  duration: 900, // Per 15 minutes
+  keyPrefix: 'anon',
+  points: 50, // 50 requests
+  duration: 900, // per 15 minutes
 });
 
+const userLimiter = new RateLimiterRedis({
+  storeClient: redisClient,
+  keyPrefix: 'user',
+  points: 1000, // 1000 requests
+  duration: 900, // per 15 minutes
+});
+
+// Admins: unlimited (no limiter)
+
 /**
- * Middleware-like function to enforce rate limiting in API routes.
- * Throws an error if rate limit is exceeded.
- * @param {string} key - Unique key per user/IP (e.g., IP address or user ID)
+ * Role/identity-based rate limiting.
+ * @param {object|null} user - User object (must have .id and .role if present)
+ * @param {string} ip - IP address (for anonymous users)
  */
-export async function checkRateLimit(key) {
+export async function checkUserRateLimit(user, ip) {
+  let key, limiter;
+  if (!user) {
+    // Anonymous
+    key = ip;
+    limiter = anonymousLimiter;
+  } else if (user.role === 'ADMIN') {
+    // Admin: unlimited
+    return { allowed: true };
+  } else {
+    // Authenticated user
+    key = user.id;
+    limiter = userLimiter;
+  }
   try {
-    await rateLimiter.consume(key);
-    // Allowed
+    await limiter.consume(key);
     return { allowed: true };
   } catch (rejRes) {
-    // Rate limit exceeded
     return {
       allowed: false,
       retryAfter: Math.round(rejRes.msBeforeNext / 1000),

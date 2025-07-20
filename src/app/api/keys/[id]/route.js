@@ -1,17 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser } from '../../../../lib/auth.js'
 import { getKeyById, updateKey, deleteKey, decryptKeyValue, validateKeyData } from '../../../../lib/keyManagement.js'
-import { checkRateLimit } from '../../../../lib/rateLimit.js'
+// import { checkUserRateLimit } from '../../../../lib/rateLimit.js'
 import { logKeyAccess } from '../../../../lib/audit.js'
 
 export async function GET(request, { params }) {
-  // Rate limiting
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip || 'unknown';
-  const rate = await checkRateLimit(ip);
-  if (!rate.allowed) {
-    return NextResponse.json({ success: false, error: rate.message }, { status: 429, headers: { 'Retry-After': rate.retryAfter } });
-  }
-
+  // Rate limiting removed
   try {
     const user = await getCurrentUser(request)
     if (!user) {
@@ -78,21 +72,16 @@ export async function GET(request, { params }) {
   }
 }
 
-export async function PUT(request, { params }) {
-  // Rate limiting
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip || 'unknown';
-  const rate = await checkRateLimit(ip);
-  if (!rate.allowed) {
-    return NextResponse.json({ error: rate.message }, { status: 429, headers: { 'Retry-After': rate.retryAfter } });
-  }
-
+export async function PUT(request, context) {
+  // Rate limiting removed
   try {
+    const params = await context.params;
+    const { id } = params;
     const user = await getCurrentUser(request)
     if (!user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { id } = params
     const body = await request.json()
 
     // Validate key data
@@ -143,13 +132,7 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  // Rate limiting
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip || 'unknown';
-  const rate = await checkRateLimit(ip);
-  if (!rate.allowed) {
-    return NextResponse.json({ error: rate.message }, { status: 429, headers: { 'Retry-After': rate.retryAfter } });
-  }
-
+  // Rate limiting removed
   try {
     const user = await getCurrentUser(request)
     if (!user) {

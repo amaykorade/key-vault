@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser } from '../../../lib/auth.js'
 import { createKey, getKeysByFolder, validateKeyData } from '../../../lib/keyManagement.js'
-import { checkRateLimit } from '../../../lib/rateLimit.js'
+// import { checkUserRateLimit } from '../../../lib/rateLimit.js'
 
 export async function POST(request) {
-  // Rate limiting
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip || 'unknown';
-  const rate = await checkRateLimit(ip);
-  if (!rate.allowed) {
-    return NextResponse.json({ error: rate.message }, { status: 429, headers: { 'Retry-After': rate.retryAfter } });
-  }
-
+  // Rate limiting removed
   try {
     const user = await getCurrentUser(request)
     if (!user) {
@@ -62,13 +56,7 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  // Rate limiting
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || request.ip || 'unknown';
-  const rate = await checkRateLimit(ip);
-  if (!rate.allowed) {
-    return NextResponse.json({ error: rate.message }, { status: 429, headers: { 'Retry-After': rate.retryAfter } });
-  }
-
+  // Rate limiting removed
   try {
     const user = await getCurrentUser(request)
     if (!user) {
