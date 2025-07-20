@@ -227,7 +227,7 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder="Enter description (optional)"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   rows="3"
                 />
               </div>
@@ -242,7 +242,7 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
                   value={formData.value}
                   onChange={handleInputChange}
                   placeholder="Enter key value"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                     errors.value ? 'border-red-500' : 'border-gray-300'
                   }`}
                   rows="4"
@@ -262,7 +262,7 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
                   name="type"
                   value={formData.type}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
                     errors.type ? 'border-red-500' : 'border-gray-300'
                   }`}
                   required

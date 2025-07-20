@@ -10,6 +10,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
   const [showValue, setShowValue] = useState(false)
   const [copied, setCopied] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     if (isOpen && keyId) {
@@ -54,14 +55,16 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
     setError(null)
     setShowValue(false)
     setCopied(false)
+    setConfirmDelete(false)
     onClose()
   }
 
   const handleDelete = async () => {
-    if (!keyData || !window.confirm('Are you sure you want to delete this key? This action cannot be undone.')) {
-      return
+    if (!keyData) return;
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
     }
-
     setDeleting(true)
 
     try {
@@ -86,6 +89,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
       setError(err.message)
     } finally {
       setDeleting(false)
+      setConfirmDelete(false)
     }
   }
 
@@ -197,7 +201,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
                   <textarea
                     readOnly
                     value={showValue ? keyData.value : '••••••••••••••••••••••••••••••••'}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-sm text-gray-900"
                     rows={4}
                   />
                   {!showValue && (
@@ -216,7 +220,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
                     {keyData.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded"
+                        className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-900 rounded"
                       >
                         {tag}
                       </span>
@@ -240,35 +244,45 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
               </div>
 
               {/* Actions */}
-              <div className="flex space-x-3 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={handleClose}
-                  disabled={deleting}
-                  className="flex-1"
-                >
-                  Close
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    if (onEdit) {
-                      onEdit(keyData.id)
-                    }
-                  }}
-                  disabled={deleting}
-                  className="flex-1"
-                >
-                  Edit Key
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={handleDelete}
-                  disabled={deleting}
-                  className="flex-1"
-                >
-                  {deleting ? 'Deleting...' : 'Delete Key'}
-                </Button>
+              <div className="flex flex-col space-y-3 pt-4 border-t">
+                {confirmDelete && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 rounded-md p-3 mb-2 text-center">
+                    <strong>Warning:</strong> This action cannot be undone. Click delete again to confirm.
+                  </div>
+                )}
+                <div className="flex space-x-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleClose}
+                    disabled={deleting}
+                    className="flex-1"
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => {
+                      if (onEdit) {
+                        onEdit(keyData.id)
+                      }
+                    }}
+                    disabled={deleting}
+                    className="flex-1"
+                  >
+                    Edit Key
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="danger"
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="flex-1"
+                  >
+                    {deleting ? 'Deleting...' : confirmDelete ? 'Confirm Delete' : 'Delete Key'}
+                  </Button>
+                </div>
               </div>
             </div>
           )}

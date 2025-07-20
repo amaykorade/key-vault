@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server'
 import { validateSession } from '../../../../lib/auth'
 import { getFolder } from '../../../../lib/folders'
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
-    const { id: folderId } = params
+    const params = await context.params;
+    const { id: folderId } = params;
     const sessionToken = request.cookies.get('session_token')?.value
 
     if (!sessionToken) {
