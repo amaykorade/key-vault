@@ -51,6 +51,9 @@ export default function Navbar() {
               <Link href="/docs" className="text-gray-300 hover:text-white text-sm font-medium">
                 Documentation
               </Link>
+              <Link href="/pricing" className="text-gray-300 hover:text-white text-sm font-medium">
+                Pricing
+              </Link>
               <Link href="/api" className="text-gray-300 hover:text-white text-sm font-medium">
                 API
               </Link>
