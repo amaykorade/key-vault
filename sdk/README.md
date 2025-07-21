@@ -1,81 +1,50 @@
-# KeyVault SDK (Read-Only)
+# Key Vault SDK
 
-Easily and securely access your Key Vault keys from your JavaScript/TypeScript projects.
-
-**Note:** This SDK is read-only. Key creation, update, and deletion must be performed via the Key Vault web platform.
-
----
+A simple JavaScript SDK for accessing the Key Vault API.
 
 ## Installation
 
-```bash
-npm install key-vault-sdk # (if published to npm)
-# or use directly from your repo:
-# import KeyVault from '../sdk/index.js'
+```sh
+npm install key-vault-sdk
 ```
 
 ## Usage
 
 ```js
 import KeyVault from 'key-vault-sdk';
-// or, if using locally:
-// import KeyVault from '../sdk/index.js';
 
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api', // Your Key Vault API base URL
-  token: 'YOUR_JWT_TOKEN',              // User JWT token
-});
+const apiUrl = 'https://yourdomain.com/api'; // Or your local URL
+const token = 'PASTE_YOUR_API_TOKEN_HERE';
+const folderId = 'your-folder-id';
+const keyName = 'YOUR_KEY_NAME';
 
-// List keys in a folder (paginated)
-(async () => {
-  try {
-    const { keys, total, limit, offset } = await kv.listKeys({
-      folderId: 'FOLDER_ID',
-      limit: 10,
-      offset: 0
-    });
-    console.log('Keys:', keys);
-    console.log('Total:', total);
-  } catch (err) {
-    console.error('Error listing keys:', err.message);
-  }
-})();
+async function getKeyValueWithUserToken(userToken, folderId, keyName) {
+  const kv = new KeyVault({
+    apiUrl,
+    getToken: async () => userToken,
+  });
+  const { keys } = await kv.listKeys({ folderId });
+  const keyMeta = keys.find(k => k.name === keyName);
+  if (!keyMeta) throw new Error(`Key with name "${keyName}" not found in folder.`);
+  const key = await kv.getKey(keyMeta.id, { includeValue: true });
+  return key.value;
+}
 
-// Get a key by ID (optionally with decrypted value)
-(async () => {
-  try {
-    const key = await kv.getKey('KEY_ID', { includeValue: true });
-    console.log('Key:', key);
-  } catch (err) {
-    console.error('Error fetching key:', err.message);
-  }
-})();
+// Example usage:
+getKeyValueWithUserToken(token, folderId, keyName)
+  .then(secretValue => {
+    // Use the secret value programmatically, do NOT log or display it!
+    console.log(`Secret for "${keyName}" was retrieved and used programmatically.`);
+  })
+  .catch(console.error);
 ```
 
 ## API
 
-### `new KeyVault({ apiUrl, token })`
-- `apiUrl` (string): Base URL of your Key Vault API (e.g., `https://yourdomain.com/api`)
-- `token` (string): JWT token for authentication
-
-### `listKeys({ folderId, limit, offset })`
-- `folderId` (string, required): Folder to list keys from
-- `limit` (number, optional): Number of keys to return (default: 20)
-- `offset` (number, optional): Number of keys to skip (default: 0)
-- **Returns:** `{ keys, total, limit, offset }`
-
-### `getKey(keyId, { includeValue })`
-- `keyId` (string, required): The key's ID
-- `includeValue` (boolean, optional): If true, includes the decrypted key value (if authorized)
-- **Returns:** `key` object
-
----
-
-## Security
-- This SDK is read-only. All key management (create, update, delete) must be done via the Key Vault platform.
-- Always keep your API token secure and never expose it in client-side code.
-
----
+- `new KeyVault({ apiUrl, getToken })` - Initialize the SDK
+- `kv.listKeys({ folderId })` - List keys in a folder
+- `kv.getKey(keyId, { includeValue })` - Get a key by ID (optionally with value)
 
 ## License
+
 MIT 

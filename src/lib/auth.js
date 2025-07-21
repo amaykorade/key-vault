@@ -77,7 +77,19 @@ export async function authenticateUser(email, password) {
 }
 
 export async function getCurrentUser(request) {
-  // Check for NextAuth session cookie
+  // 1. Check for Bearer token in Authorization header
+  const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.slice(7);
+    // Try session token first
+    let user = await validateSession(token);
+    if (user) return user;
+    // Try API token
+    user = await prisma.user.findUnique({ where: { apiToken: token } });
+    if (user) return user;
+  }
+
+  // 2. Check for NextAuth session cookie
   const nextAuthSession = request.cookies.get('next-auth.session-token')?.value;
   if (nextAuthSession) {
     const session = await getServerSession(authOptions);
@@ -90,7 +102,7 @@ export async function getCurrentUser(request) {
       };
     }
   }
-  // Fallback to legacy session_token logic
+  // 3. Fallback to legacy session_token logic
   const sessionToken = request.cookies.get('session_token')?.value;
   if (!sessionToken) {
     return null;
