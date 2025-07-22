@@ -27,7 +27,7 @@ export default function ProjectDetailPage() {
     if (isAuthenticated && params.id) {
       fetchProjectDetails()
     }
-  }, [isAuthenticated, params.id])
+  }, [isAuthenticated, params.id, fetchProjectDetails])
 
   const fetchProjectDetails = async () => {
     try {
