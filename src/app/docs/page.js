@@ -92,7 +92,7 @@ console.log('Secret retrieved successfully');`}</code>
                       <code className="bg-gray-600 px-2 py-1 rounded text-gray-100">getKey(keyId, &#123; includeValue &#125;)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-300">
-                      <li><strong>keyId</strong> (string, required): The key's ID</li>
+                      <li><strong>keyId</strong> (string, required): The key&apos;s ID</li>
                       <li><strong>includeValue</strong> (boolean, optional): If true, includes the decrypted key value</li>
                       <li><strong>Returns:</strong> <code className="bg-gray-600 px-1 rounded text-gray-100">key</code> object with metadata and optionally the value</li>
                     </ul>
@@ -391,7 +391,7 @@ Content-Type: application/json
 
               <div className="bg-gray-700 rounded-lg p-6">
                 <h3 className="text-xl font-semibold text-white mb-2">What happens if I reach my plan limits?</h3>
-                <p className="text-gray-300">You'll see warnings in the UI and API calls will be rejected. Upgrade your plan to continue.</p>
+                <p className="text-gray-300">You&apos;ll see warnings in the UI and API calls will be rejected. Upgrade your plan to continue.</p>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-6">
