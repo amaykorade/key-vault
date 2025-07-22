@@ -7,11 +7,30 @@ export async function POST() {
     // Enable UUID extension
     await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     
-    // Create enums first
-    await prisma.$executeRawUnsafe(`CREATE TYPE IF NOT EXISTS "UserPlan" AS ENUM ('FREE', 'PRO', 'TEAM')`);
-    await prisma.$executeRawUnsafe(`CREATE TYPE IF NOT EXISTS "UserRole" AS ENUM ('ADMIN', 'USER')`);
-    await prisma.$executeRawUnsafe(`CREATE TYPE IF NOT EXISTS "KeyType" AS ENUM ('PASSWORD', 'API_KEY', 'SSH_KEY', 'CERTIFICATE', 'SECRET', 'OTHER')`);
-    await prisma.$executeRawUnsafe(`CREATE TYPE IF NOT EXISTS "AuditAction" AS ENUM ('CREATE', 'READ', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'EXPORT', 'IMPORT')`);
+    // Create enums first (PostgreSQL doesn't support IF NOT EXISTS for enums)
+    try {
+      await prisma.$executeRawUnsafe(`CREATE TYPE "UserPlan" AS ENUM ('FREE', 'PRO', 'TEAM')`);
+    } catch (e) {
+      // Enum might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER')`);
+    } catch (e) {
+      // Enum might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`CREATE TYPE "KeyType" AS ENUM ('PASSWORD', 'API_KEY', 'SSH_KEY', 'CERTIFICATE', 'SECRET', 'OTHER')`);
+    } catch (e) {
+      // Enum might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`CREATE TYPE "AuditAction" AS ENUM ('CREATE', 'READ', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'EXPORT', 'IMPORT')`);
+    } catch (e) {
+      // Enum might already exist
+    }
     
     // Create users table
     await prisma.$executeRawUnsafe(`
