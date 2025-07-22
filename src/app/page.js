@@ -105,9 +105,9 @@ const HomePage = () => {
                   </div>
                   <div className="font-mono text-sm text-green-400">
                     <div>$ npm install key-vault-sdk</div>
-                    <div className="text-gray-400">// Initialize the SDK</div>
+                    <div className="text-gray-400">{'// Initialize the SDK'}</div>
                     <div>const kv = new KeyVault('your-api-token');</div>
-                    <div className="text-gray-400">// Retrieve your secrets</div>
+                    <div className="text-gray-400">{'// Retrieve your secrets'}</div>
                     <div>const apiKey = await kv.getKeyValue('folder-id', 'api-key');</div>
                   </div>
                 </div>
