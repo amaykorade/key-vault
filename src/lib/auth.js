@@ -1,8 +1,6 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import prisma from './database.js'
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
 export async function hashPassword(password) {
   const saltRounds = 12
@@ -89,20 +87,7 @@ export async function getCurrentUser(request) {
     if (user) return user;
   }
 
-  // 2. Check for NextAuth session cookie
-  const nextAuthSession = request.cookies.get('next-auth.session-token')?.value;
-  if (nextAuthSession) {
-    const session = await getServerSession(authOptions);
-    if (session && session.user) {
-      return {
-        id: session.user.id,
-        email: session.user.email,
-        name: session.user.name,
-        role: session.user.role || "USER",
-      };
-    }
-  }
-  // 3. Fallback to legacy session_token logic
+  // 2. Check for session token cookie
   const sessionToken = request.cookies.get('session_token')?.value;
   if (!sessionToken) {
     return null;
