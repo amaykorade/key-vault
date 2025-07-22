@@ -20,6 +20,29 @@ export default function DashboardPage() {
     color: '#3B82F6'
   })
   const [creatingProject, setCreatingProject] = useState(false)
+  const [userPlan, setUserPlan] = useState('FREE');
+  const [projectCount, setProjectCount] = useState(0);
+  const [countLoading, setCountLoading] = useState(false);
+
+  // Fetch user plan and project count
+  const fetchPlanAndProjectCount = async () => {
+    setCountLoading(true);
+    try {
+      // Fetch user info
+      const userRes = await fetch('/api/auth/me', { credentials: 'include' });
+      const userData = await userRes.json();
+      setUserPlan(userData.user?.plan || 'FREE');
+      // Fetch all projects
+      const projectsRes = await fetch('/api/folders', { credentials: 'include' });
+      const projectsData = await projectsRes.json();
+      setProjectCount(projectsData.folders?.length || 0);
+    } catch (err) {
+      setUserPlan('FREE');
+      setProjectCount(0);
+    } finally {
+      setCountLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Only check auth if we have a session token in cookies
@@ -34,6 +57,12 @@ export default function DashboardPage() {
       fetchProjects()
     }
   }, [isAuthenticated])
+
+  useEffect(() => {
+    if (showCreateProject) {
+      fetchPlanAndProjectCount();
+    }
+  }, [showCreateProject]);
 
   const fetchProjects = async () => {
     try {
@@ -53,7 +82,12 @@ export default function DashboardPage() {
   }
 
   const handleCreateProject = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    await fetchPlanAndProjectCount(); // Always check before submit
+    if (userPlan === 'FREE' && projectCount >= 1) {
+      alert('Free plan users can only create 1 project. Upgrade to add more.');
+      return;
+    }
     
     if (!newProject.name.trim()) {
       alert('Project name is required')
@@ -106,15 +140,15 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-800">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-white">
                 Welcome back, {user?.name || 'User'}!
               </h1>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-300">
                 Manage your secure keys and passwords
               </p>
             </div>
@@ -141,7 +175,7 @@ export default function DashboardPage() {
           {/* Projects Section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Your Projects</h2>
+              <h2 className="text-2xl font-bold text-white">Your Projects</h2>
             </div>
             
             {loadingProjects ? (
@@ -157,8 +191,8 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
                     </svg>
                   </div>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No projects</h3>
-                  <p className="mt-1 text-sm text-gray-500">Get started by creating your first project.</p>
+                  <h3 className="mt-2 text-sm font-medium text-white">No projects</h3>
+                  <p className="mt-1 text-sm text-gray-400">Get started by creating your first project.</p>
                   <div className="mt-6">
                     <Button
                       onClick={() => setShowCreateProject(true)}
@@ -180,13 +214,13 @@ export default function DashboardPage() {
                           style={{ backgroundColor: project.color }}
                         ></div>
                         <div>
-                          <h3 className="text-lg font-medium text-gray-900">{project.name}</h3>
-                          <p className="text-sm text-gray-500">{project.description || 'No description'}</p>
+                          <h3 className="text-lg font-medium text-white">{project.name}</h3>
+                          <p className="text-sm text-gray-400">{project.description || 'No description'}</p>
                         </div>
                       </div>
                     </div>
                     <div className="mt-4 flex justify-between items-center">
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-400">
                         {project._count?.keys || 0} keys
                       </span>
                       <Link href={`/projects/${project.id}`}>
@@ -202,34 +236,38 @@ export default function DashboardPage() {
           </div>
 
           {/* Account Information */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              <h3 className="text-lg leading-6 font-medium text-white mb-4">
                 Account Information
               </h3>
               <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Name</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{user?.name}</dd>
+                  <dt className="text-sm font-medium text-gray-400">Name</dt>
+                  <dd className="mt-1 text-sm text-white">{user?.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Email</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{user?.email}</dd>
+                  <dt className="text-sm font-medium text-gray-400">Email</dt>
+                  <dd className="mt-1 text-sm text-white">{user?.email}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Role</dt>
-                  <dd className="mt-1 text-sm text-gray-900 capitalize">{user?.role}</dd>
+                  <dt className="text-sm font-medium text-gray-400">Role</dt>
+                  <dd className="mt-1 text-sm text-white capitalize">{user?.role}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                  <dd className="mt-1 text-sm text-gray-900 font-mono">{user?.id}</dd>
+                  <dt className="text-sm font-medium text-gray-400">User ID</dt>
+                  <dd className="mt-1 text-sm text-white font-mono">{user?.id}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-400">Current Plan</dt>
+                  <dd className="mt-1 text-sm text-white font-semibold uppercase">{userPlan}</dd>
                 </div>
               </dl>
             </div>
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -241,10 +279,10 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Total Keys
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         0
                       </dd>
                     </dl>
@@ -253,7 +291,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -266,10 +304,10 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Folders
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         1
                       </dd>
                     </dl>
@@ -278,7 +316,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -290,10 +328,10 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Favorites
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         0
                       </dd>
                     </dl>
@@ -308,9 +346,9 @@ export default function DashboardPage() {
       {/* Create Project Modal */}
       {showCreateProject && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-700">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Project</h3>
+              <h3 className="text-lg font-medium text-white mb-4">Create New Project</h3>
               <form onSubmit={handleCreateProject}>
                 <div className="space-y-4">
                   <Input
@@ -333,7 +371,7 @@ export default function DashboardPage() {
                   />
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Project Color
                     </label>
                     <div className="flex space-x-2">
@@ -342,7 +380,7 @@ export default function DashboardPage() {
                           key={color}
                           type="button"
                           className={`w-8 h-8 rounded-full border-2 ${
-                            newProject.color === color ? 'border-gray-900' : 'border-gray-300'
+                            newProject.color === color ? 'border-white' : 'border-gray-500'
                           }`}
                           style={{ backgroundColor: color }}
                           onClick={() => setNewProject({...newProject, color})}
@@ -351,7 +389,11 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
-                
+                {userPlan === 'FREE' && projectCount >= 1 && (
+                  <div className="text-sm text-red-400 bg-red-900 p-3 rounded-md mb-2 mt-4">
+                    Free plan users can only create 1 project. <a href="/pricing" className="text-blue-400 underline">Upgrade to add more.</a>
+                  </div>
+                )}
                 <div className="flex justify-end space-x-3 mt-6">
                   <Button
                     type="button"
@@ -364,7 +406,7 @@ export default function DashboardPage() {
                     type="submit"
                     variant="primary"
                     loading={creatingProject}
-                    disabled={creatingProject}
+                    disabled={creatingProject || (userPlan === 'FREE' && projectCount >= 1) || countLoading}
                   >
                     Create Project
                   </Button>

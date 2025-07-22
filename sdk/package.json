@@ -6,7 +6,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/key-vault"
+    "url": "https://github.com/amaykorade/key-vault"
   },
   "keywords": ["keyvault", "sdk", "secrets", "api", "vault"],
   "author": "Amay Korade <amaykorade5@gmail.com>",

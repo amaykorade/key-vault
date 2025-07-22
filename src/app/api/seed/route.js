@@ -1,0 +1,67 @@
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+
+const prisma = new PrismaClient();
+
+export async function POST() {
+  try {
+    // Create default folder
+    await prisma.folder.upsert({
+      where: { id: 'default' },
+      update: {},
+      create: {
+        id: 'default',
+        name: 'Default',
+        description: 'Default folder for keys'
+      }
+    });
+
+    // Create test user
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    await prisma.user.upsert({
+      where: { email: 'test@example.com' },
+      update: {},
+      create: {
+        email: 'test@example.com',
+        password: hashedPassword,
+        name: 'Test User'
+      }
+    });
+
+    // Create some test keys
+    await prisma.key.upsert({
+      where: { 
+        name_userId: {
+          name: 'Database Password',
+          userId: (await prisma.user.findUnique({ where: { email: 'test@example.com' } })).id
+        }
+      },
+      update: {},
+      create: {
+        name: 'Database Password',
+        description: 'Production database password',
+        type: 'PASSWORD',
+        value: 'encrypted-value-placeholder',
+        userId: (await prisma.user.findUnique({ where: { email: 'test@example.com' } })).id,
+        folderId: 'default'
+      }
+    });
+
+    return Response.json({ 
+      success: true, 
+      message: 'Database seeded successfully',
+      testUser: {
+        email: 'test@example.com',
+        password: 'password123'
+      }
+    });
+  } catch (error) {
+    console.error('Seeding error:', error);
+    return Response.json({ 
+      success: false, 
+      error: error.message 
+    }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+} 

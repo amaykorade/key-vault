@@ -6,7 +6,7 @@ const Card = ({
   padding = 'p-6',
   ...props 
 }) => {
-  const baseClasses = 'bg-white rounded-lg shadow-sm border border-gray-200'
+  const baseClasses = 'bg-gray-700 rounded-lg shadow-sm border border-gray-600'
   const classes = `${baseClasses} ${padding} ${className}`
   
   return (

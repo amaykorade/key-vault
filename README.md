@@ -1,36 +1,247 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Key Vault - Secure Secret Management
 
-## Getting Started
+A modern, secure secret management application built with Next.js, featuring encrypted storage, API access, and subscription-based plans.
 
-First, run the development server:
+## Features
 
+### 🔐 Security
+- **AES-256-GCM Encryption**: All secrets are encrypted at rest
+- **Secure Authentication**: JWT-based sessions with bcrypt password hashing
+- **API Token Access**: Generate tokens for programmatic access
+- **Audit Logging**: Complete audit trail of all actions
+
+### 📁 Organization
+- **Project-based Organization**: Group secrets by projects/folders
+- **Tags & Favorites**: Organize and mark important secrets
+- **Search & Filter**: Find secrets quickly with advanced filtering
+
+### 🚀 Developer Experience
+- **JavaScript SDK**: Easy integration with your applications
+- **RESTful API**: Full API access for automation
+- **Multiple Key Types**: Passwords, API keys, SSH keys, certificates, and more
+
+### 💳 Subscription Plans
+- **Free Plan**: 1 project, 5 secrets, basic features
+- **Pro Plan ($9/month)**: 3 projects, 100 secrets, audit logs, expiring secrets
+- **Team Plan ($29/month)**: Unlimited projects, 1000+ secrets, team features
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL 12+
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd key-vault
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp env.example .env
+   ```
+   
+   Update `.env` with your configuration:
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/key_vault_db"
+   JWT_SECRET="your-super-secret-jwt-key-here"
+   ENCRYPTION_KEY="your-32-character-encryption-key"
+   SESSION_SECRET="your-session-secret-key-here"
+   
+   # For payments (optional)
+   RAZORPAY_KEY_ID="your-razorpay-key-id"
+   RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+   RAZORPAY_WEBHOOK_SECRET="your-webhook-secret"
+   ```
+
+4. **Set up the database**
+   ```bash
+   npm run db:setup
+   ```
+
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## SDK Usage
+
+### Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install key-vault-sdk
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Basic Usage
+```javascript
+import KeyVault from 'key-vault-sdk';
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+const kv = new KeyVault({
+  apiUrl: 'https://yourdomain.com/api',
+  getToken: async () => 'your-api-token'
+});
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+// Get a specific key's value
+const secretValue = await kv.getKeyValue('your-folder-id', 'key-name');
+console.log('Secret retrieved successfully');
+```
 
-## Learn More
+### Advanced Usage
+```javascript
+// List all keys in a folder
+const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
 
-To learn more about Next.js, take a look at the following resources:
+// Get a specific key with metadata
+const key = await kv.getKey('key-id', { includeValue: true });
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Authentication
+All API requests require authentication via:
+- **Session Cookie**: For web application
+- **Bearer Token**: For API access (`Authorization: Bearer <token>`)
 
-## Deploy on Vercel
+### Key Endpoints
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Create a Key
+```http
+POST /api/keys
+Content-Type: application/json
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+{
+  "name": "Database Password",
+  "value": "secret-password",
+  "type": "PASSWORD",
+  "folderId": "folder-id",
+  "description": "Production database password"
+}
+```
+
+#### List Keys
+```http
+GET /api/keys?folderId=folder-id
+```
+
+#### Get Key Value
+```http
+GET /api/keys/{keyId}?includeValue=true
+```
+
+#### Update Key
+```http
+PUT /api/keys/{keyId}
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "value": "new-secret-value"
+}
+```
+
+#### Delete Key
+```http
+DELETE /api/keys/{keyId}
+```
+
+### Folder Endpoints
+
+#### Create Folder
+```http
+POST /api/folders
+Content-Type: application/json
+
+{
+  "name": "Production",
+  "description": "Production environment secrets",
+  "color": "#ff0000"
+}
+```
+
+#### List Folders
+```http
+GET /api/folders
+```
+
+## Payment Integration
+
+The application integrates with Razorpay for subscription management:
+
+### Webhook Setup
+1. Configure webhook URL in Razorpay dashboard: `https://yourdomain.com/api/payment/webhook`
+2. Select events: `payment.captured` and `order.paid`
+3. Set webhook secret in environment variables
+
+### Plan Limits
+- **Free**: 1 project, 5 secrets
+- **Pro**: 3 projects, 100 secrets  
+- **Team**: Unlimited projects, 1000+ secrets
+
+## Development
+
+### Database Commands
+```bash
+npm run db:setup    # Initial setup
+npm run db:seed     # Add sample data
+npm run db:migrate  # Run migrations
+npm run db:studio   # Open Prisma Studio
+```
+
+### Available Scripts
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run start       # Start production server
+npm run lint        # Run ESLint
+```
+
+## Security Considerations
+
+### Encryption
+- All secret values are encrypted using AES-256-GCM
+- Each encryption uses a unique salt and IV
+- Master encryption key is stored securely
+
+### Authentication
+- Passwords hashed with bcrypt (12 rounds)
+- JWT tokens with configurable expiration
+- API tokens for programmatic access
+
+### Access Control
+- Users can only access their own secrets
+- Admin users have additional privileges
+- Audit logging for compliance
+
+## Deployment
+
+### Environment Variables
+See `env.example` for all required environment variables.
+
+### Production Checklist
+- [ ] Set strong, unique secrets
+- [ ] Configure SSL/TLS
+- [ ] Set up database backups
+- [ ] Configure monitoring
+- [ ] Set up webhook endpoints
+- [ ] Test payment integration
+
+## Support
+
+- **Documentation**: Check the `/docs` page in the application
+- **API Reference**: Available at `/api` page
+- **Issues**: Report bugs and feature requests via GitHub
+
+## License
+
+MIT License - see LICENSE file for details.

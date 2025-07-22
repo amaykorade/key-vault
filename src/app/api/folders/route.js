@@ -58,6 +58,17 @@ export async function POST(request) {
       )
     }
 
+    // Enforce Free plan project limit
+    if (user.plan === 'FREE') {
+      const userFolders = await getUserFolders(user.id);
+      if (userFolders.length >= 1) {
+        return NextResponse.json(
+          { message: 'Free plan users can only create 1 project. Upgrade to add more.' },
+          { status: 403 }
+        );
+      }
+    }
+
     const { name, description, color, parentId } = await request.json()
 
     // Validate input

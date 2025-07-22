@@ -94,6 +94,8 @@ The application uses the following main tables:
 - `password`: Hashed password
 - `name`: User's display name
 - `role`: User role (ADMIN/USER)
+- `apiToken`: API token for SDK access (unique)
+- `plan`: User subscription plan (FREE/PRO/TEAM)
 - `createdAt`/`updatedAt`: Timestamps
 
 ### Keys
@@ -120,6 +122,25 @@ The application uses the following main tables:
 - `token`: Session token
 - `expiresAt`: Expiration timestamp
 - `userId`: User reference
+
+### Refresh Tokens
+- `id`: Unique identifier
+- `token`: Refresh token
+- `expiresAt`: Expiration timestamp
+- `revoked`: Whether token is revoked
+- `userId`: User reference
+
+### Payments
+- `id`: Unique identifier
+- `userId`: User reference
+- `orderId`: Razorpay order ID
+- `paymentId`: Razorpay payment ID
+- `signature`: Payment signature for verification
+- `plan`: Subscription plan (FREE/PRO/TEAM)
+- `amount`: Payment amount in smallest currency unit
+- `currency`: Payment currency (e.g., "INR")
+- `status`: Payment status
+- `createdAt`/`updatedAt`: Timestamps
 
 ### Audit Logs
 - `id`: Unique identifier
@@ -174,6 +195,9 @@ npm run db:studio
 | `SESSION_SECRET` | Session encryption secret | Required |
 | `NODE_ENV` | Environment mode | development |
 | `PORT` | Server port | 3000 |
+| `RAZORPAY_KEY_ID` | Razorpay public key ID | Optional |
+| `RAZORPAY_KEY_SECRET` | Razorpay secret key | Optional |
+| `RAZORPAY_WEBHOOK_SECRET` | Razorpay webhook secret | Optional |
 
 ## Troubleshooting
 
@@ -207,6 +231,8 @@ npm run db:studio
 3. Restrict network access
 4. Regular security updates
 5. Monitor audit logs
+6. Configure payment webhooks securely
+7. Validate payment signatures
 
 ## Support
 

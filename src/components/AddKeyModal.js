@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Button from './ui/Button'
 import Input from './ui/Input'
 
@@ -15,6 +15,9 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [userPlan, setUserPlan] = useState('FREE');
+  const [secretCount, setSecretCount] = useState(0);
+  const [countLoading, setCountLoading] = useState(false);
 
   const keyTypes = [
     { value: 'PASSWORD', label: 'Password' },
@@ -57,6 +60,33 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
     return Object.keys(newErrors).length === 0
   }
 
+  // Fetch user plan and secret count
+  const fetchPlanAndCount = async () => {
+    setCountLoading(true);
+    try {
+      // Fetch user info
+      const userRes = await fetch('/api/auth/me', { credentials: 'include' });
+      const userData = await userRes.json();
+      setUserPlan(userData.user?.plan || 'FREE');
+      // Fetch total secrets for user
+      const keysRes = await fetch(`/api/keys?folderId=${folderId}&limit=1000`, { credentials: 'include' });
+      const keysData = await keysRes.json();
+      setSecretCount(keysData.total || 0);
+    } catch (err) {
+      // fallback: allow
+      setUserPlan('FREE');
+      setSecretCount(0);
+    } finally {
+      setCountLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchPlanAndCount();
+    }
+  }, [isOpen, folderId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -67,6 +97,12 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
     setLoading(true)
 
     try {
+      await fetchPlanAndCount(); // Always check before submit
+      if (userPlan === 'FREE' && secretCount >= 5) {
+        setErrors({ submit: 'Free plan users can only create up to 5 secrets. Upgrade to add more.' });
+        return;
+      }
+
       const tagsArray = formData.tags
         .split(',')
         .map(tag => tag.trim())
@@ -137,10 +173,10 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="bg-gray-700 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Add New Key</h2>
+                          <h2 className="text-xl font-semibold text-white">Add New Key</h2>
             <button
               onClick={handleClose}
               disabled={loading}
@@ -266,6 +302,11 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 {errors.submit}
               </div>
             )}
+            {userPlan === 'FREE' && secretCount >= 5 && (
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md mb-2">
+                Free plan users can only create up to 5 secrets. <a href="/pricing" className="text-blue-600 underline">Upgrade to add more.</a>
+              </div>
+            )}
 
             <div className="flex space-x-3 pt-4">
               <Button
@@ -280,7 +321,7 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={loading}
+                disabled={loading || (userPlan === 'FREE' && secretCount >= 5) || countLoading}
                 className="flex-1"
               >
                 {loading ? 'Creating...' : 'Create Key'}

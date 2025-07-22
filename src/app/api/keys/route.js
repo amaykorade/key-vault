@@ -11,6 +11,14 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Enforce Free plan secret limit
+    if (user.plan === 'FREE') {
+      const totalSecrets = await prisma.key.count({ where: { userId: user.id } });
+      if (totalSecrets >= 5) {
+        return NextResponse.json({ success: false, error: 'Free plan users can only create up to 5 secrets. Upgrade to add more.' }, { status: 403 });
+      }
+    }
+
     const body = await request.json()
     const { folderId, ...keyData } = body
 

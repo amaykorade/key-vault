@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Left section: Logo and nav links */}
           <div className="flex items-center gap-8">
-            <Link href="/dashboard" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <img src="/file.svg" className="h-7 w-7" alt="Key Vault Logo" />
               <span className="text-xl font-bold text-white">Key Vault</span>
             </Link>
