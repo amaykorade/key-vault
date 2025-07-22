@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function POST() {
   try {
     // Create test user first
-    const hashedPassword = await bcrypt.hash('password123', 10);
+    const hashedPassword = await bcrypt.hash('Password123', 10);
     const user = await prisma.user.upsert({
       where: { email: 'test@example.com' },
       update: {},
@@ -52,7 +52,7 @@ export async function POST() {
       message: 'Database seeded successfully',
       testUser: {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'Password123'
       }
     });
   } catch (error) {
