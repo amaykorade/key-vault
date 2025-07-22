@@ -4,31 +4,27 @@ export async function POST() {
   try {
     const prisma = new PrismaClient();
     
-    // Drop all tables first
-    await prisma.$executeRawUnsafe(`
-      DROP TABLE IF EXISTS "verification_tokens" CASCADE;
-      DROP TABLE IF EXISTS "accounts" CASCADE;
-      DROP TABLE IF EXISTS "payments" CASCADE;
-      DROP TABLE IF EXISTS "refresh_tokens" CASCADE;
-      DROP TABLE IF EXISTS "audit_logs" CASCADE;
-      DROP TABLE IF EXISTS "sessions" CASCADE;
-      DROP TABLE IF EXISTS "keys" CASCADE;
-      DROP TABLE IF EXISTS "folders" CASCADE;
-      DROP TABLE IF EXISTS "users" CASCADE;
-    `);
+    // Drop all tables first (one by one)
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "verification_tokens" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "accounts" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "payments" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "refresh_tokens" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "audit_logs" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "sessions" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "keys" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "folders" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "users" CASCADE`);
     
-    // Drop enums
-    await prisma.$executeRawUnsafe(`
-      DROP TYPE IF EXISTS "UserPlan" CASCADE;
-      DROP TYPE IF EXISTS "UserRole" CASCADE;
-      DROP TYPE IF EXISTS "KeyType" CASCADE;
-      DROP TYPE IF EXISTS "AuditAction" CASCADE;
-    `);
+    // Drop enums (one by one)
+    await prisma.$executeRawUnsafe(`DROP TYPE IF EXISTS "UserPlan" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TYPE IF EXISTS "UserRole" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TYPE IF EXISTS "KeyType" CASCADE`);
+    await prisma.$executeRawUnsafe(`DROP TYPE IF EXISTS "AuditAction" CASCADE`);
     
     // Enable UUID extension
     await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     
-    // Create enums first
+    // Create enums first (one by one)
     await prisma.$executeRawUnsafe(`CREATE TYPE "UserPlan" AS ENUM ('FREE', 'PRO', 'TEAM')`);
     await prisma.$executeRawUnsafe(`CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER')`);
     await prisma.$executeRawUnsafe(`CREATE TYPE "KeyType" AS ENUM ('PASSWORD', 'API_KEY', 'SSH_KEY', 'CERTIFICATE', 'SECRET', 'OTHER')`);
@@ -171,7 +167,7 @@ export async function POST() {
       )
     `);
     
-    // Add unique constraints
+    // Add unique constraints (one by one)
     await prisma.$executeRawUnsafe(`ALTER TABLE "users" ADD CONSTRAINT "users_email_key" UNIQUE ("email")`);
     await prisma.$executeRawUnsafe(`ALTER TABLE "users" ADD CONSTRAINT "users_apiToken_key" UNIQUE ("apiToken")`);
     await prisma.$executeRawUnsafe(`ALTER TABLE "sessions" ADD CONSTRAINT "sessions_token_key" UNIQUE ("token")`);
@@ -179,7 +175,7 @@ export async function POST() {
     await prisma.$executeRawUnsafe(`ALTER TABLE "accounts" ADD CONSTRAINT "accounts_provider_providerAccountId_key" UNIQUE ("provider", "providerAccountId")`);
     await prisma.$executeRawUnsafe(`ALTER TABLE "verification_tokens" ADD CONSTRAINT "verification_tokens_token_key" UNIQUE ("token")`);
     
-    // Add foreign key constraints
+    // Add foreign key constraints (one by one)
     await prisma.$executeRawUnsafe(`ALTER TABLE "keys" ADD CONSTRAINT "keys_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
     await prisma.$executeRawUnsafe(`ALTER TABLE "keys" ADD CONSTRAINT "keys_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
     await prisma.$executeRawUnsafe(`ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);

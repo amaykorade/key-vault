@@ -6,7 +6,7 @@ export async function GET(request) {
   try {
     // Get current user (supports both NextAuth and legacy sessions)
     const user = await getCurrentUser(request)
-    
+
     if (!user) {
       return NextResponse.json(
         { message: 'Not authenticated' },
