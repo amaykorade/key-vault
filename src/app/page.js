@@ -104,11 +104,11 @@ const HomePage = () => {
                     <span className="text-gray-400 text-sm ml-4">Terminal</span>
                   </div>
                   <div className="font-mono text-sm text-green-400">
-                    <div>$ npm install key-vault-sdk</div>
-                    <div className="text-gray-400">{'// Initialize the SDK'}</div>
-                    <div>const kv = new KeyVault('your-api-token');</div>
-                    <div className="text-gray-400">{'// Retrieve your secrets'}</div>
-                    <div>const apiKey = await kv.getKeyValue('folder-id', 'api-key');</div>
+                    <div>{`$ npm install key-vault-sdk`}</div>
+                    <div className="text-gray-400">{`// Initialize the SDK`}</div>
+                    <div>{`const kv = new KeyVault('your-api-token');`}</div>
+                    <div className="text-gray-400">{`// Retrieve your secrets`}</div>
+                    <div>{`const apiKey = await kv.getKeyValue('folder-id', 'api-key');`}</div>
                   </div>
                 </div>
               </div>
