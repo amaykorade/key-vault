@@ -30,20 +30,13 @@ export async function POST() {
     });
 
     // Create some test keys
-    await prisma.key.upsert({
-      where: { 
-        name_userId: {
-          name: 'Database Password',
-          userId: (await prisma.user.findUnique({ where: { email: 'test@example.com' } })).id
-        }
-      },
-      update: {},
-      create: {
+    await prisma.key.create({
+      data: {
         name: 'Database Password',
         description: 'Production database password',
         type: 'PASSWORD',
         value: 'encrypted-value-placeholder',
-        userId: (await prisma.user.findUnique({ where: { email: 'test@example.com' } })).id,
+        userId: user.id,
         folderId: 'default'
       }
     });
