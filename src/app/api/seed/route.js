@@ -24,7 +24,8 @@ export async function POST() {
       create: {
         id: 'default',
         name: 'Default',
-        description: 'Default folder for keys'
+        description: 'Default folder for keys',
+        userId: user.id
       }
     });
 
