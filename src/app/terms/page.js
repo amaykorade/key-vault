@@ -12,7 +12,7 @@ export default function TermsOfService() {
       <h2>Account termination</h2>
       <p>We may suspend or terminate your account if you violate these terms or misuse the service.</p>
       <h2>Disclaimer</h2>
-      <p>Key Vault is provided "as is" without warranties of any kind.</p>
+      <p>Key Vault is provided &quot;as is&quot; without warranties of any kind.</p>
       <h2>Limitation of liability</h2>
       <p>We are not liable for any damages resulting from your use of Key Vault.</p>
       <h2>Changes to terms</h2>

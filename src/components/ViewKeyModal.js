@@ -16,7 +16,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
     if (isOpen && keyId) {
       fetchKeyData()
     }
-  }, [isOpen, keyId])
+  }, [isOpen, keyId, fetchKeyData])
 
   const fetchKeyData = async () => {
     setLoading(true)
@@ -206,7 +206,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
                   />
                   {!showValue && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
-                      <span className="text-gray-400 text-sm">Click "Show" to reveal the value</span>
+                      <span className="text-gray-400 text-sm">Click &quot;Show&quot; to reveal the value</span>
                     </div>
                   )}
                 </div>

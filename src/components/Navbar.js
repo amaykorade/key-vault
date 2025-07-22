@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '../stores/authStore';
 import Button from './ui/Button';
@@ -41,7 +42,7 @@ export default function Navbar() {
           {/* Left section: Logo and nav links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center space-x-2">
-              <img src="/file.svg" className="h-7 w-7" alt="Key Vault Logo" />
+              <Image src="/file.svg" width={28} height={28} alt="Key Vault Logo" />
               <span className="text-xl font-bold text-white">Key Vault</span>
             </Link>
             <div className="hidden sm:flex sm:space-x-6 ml-6">
