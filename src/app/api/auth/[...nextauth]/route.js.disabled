@@ -9,16 +9,66 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // We'll handle user creation in a separate callback
+      return true;
+    },
     async session({ session, token, user }) {
-      // Add user id and role to session
-      if (session.user) {
-        session.user.id = user?.id || token?.sub || token?.id;
-        session.user.role = user?.role || token?.role || 'USER';
+      // Add user info to session
+      if (session?.user) {
+        session.user.id = token.sub || user?.id;
+        session.user.role = token.role || 'USER';
+        session.user.plan = token.plan || 'FREE';
       }
       return session;
     },
+    async jwt({ token, user, account }) {
+      if (account?.provider === "google" && user) {
+        // Import prisma dynamically to avoid build issues
+        const { PrismaClient } = await import('@prisma/client');
+        const prisma = new PrismaClient();
+        
+        try {
+          // Check if user exists in our database
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email }
+          });
+
+          if (!existingUser) {
+            // Create new user with Google data
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name,
+                password: "", // Google users don't need password
+                role: "USER",
+                plan: "FREE"
+              }
+            });
+            token.id = newUser.id;
+            token.role = newUser.role;
+            token.plan = newUser.plan;
+          } else {
+            token.id = existingUser.id;
+            token.role = existingUser.role;
+            token.plan = existingUser.plan;
+          }
+        } catch (error) {
+          console.error('Error creating/finding user:', error);
+        } finally {
+          await prisma.$disconnect();
+        }
+      }
+      return token;
+    }
   },
-  // Add more options here if needed (callbacks, database, etc.)
+  pages: {
+    signIn: '/auth/login',
+    signUp: '/auth/signup'
+  },
+  session: {
+    strategy: "jwt"
+  }
 };
 
 const handler = NextAuth(authOptions);

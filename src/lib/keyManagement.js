@@ -5,10 +5,12 @@ import { logAction } from './audit.js'
 const prisma = new PrismaClient()
 
 // Get encryption key from environment
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
-
-if (!ENCRYPTION_KEY) {
-  throw new Error('ENCRYPTION_KEY environment variable is required')
+function getEncryptionKey() {
+  const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+  if (!ENCRYPTION_KEY) {
+    throw new Error('ENCRYPTION_KEY environment variable is required')
+  }
+  return ENCRYPTION_KEY
 }
 
 export async function createKey(userId, folderId, keyData) {
@@ -26,7 +28,7 @@ export async function createKey(userId, folderId, keyData) {
   }
 
   // Encrypt the key value
-  const encryptedValue = encrypt(value, ENCRYPTION_KEY)
+  const encryptedValue = encrypt(value, getEncryptionKey())
 
   try {
     const key = await prisma.key.create({
@@ -127,7 +129,7 @@ export async function updateKey(userId, keyId, keyData) {
 
     // Only encrypt value if it's provided
     if (value !== undefined) {
-      updateData.value = encrypt(value, ENCRYPTION_KEY)
+      updateData.value = encrypt(value, getEncryptionKey())
     }
 
     const key = await prisma.key.update({
@@ -180,7 +182,7 @@ export async function deleteKey(userId, keyId) {
 
 export async function decryptKeyValue(encryptedValue) {
   try {
-    return decrypt(encryptedValue, ENCRYPTION_KEY)
+    return decrypt(encryptedValue, getEncryptionKey())
   } catch (error) {
     throw new Error(`Failed to decrypt key value: ${error.message}`)
   }

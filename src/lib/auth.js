@@ -87,12 +87,13 @@ export async function getCurrentUser(request) {
     if (user) return user;
   }
 
-  // 2. Check for session token cookie
+  // 2. Check for legacy session token
   const sessionToken = request.cookies.get('session_token')?.value;
-  if (!sessionToken) {
-    return null;
+  if (sessionToken) {
+    return await validateSession(sessionToken);
   }
-  return await validateSession(sessionToken);
+
+  return null;
 } 
 
 export async function createRefreshToken(userId) {

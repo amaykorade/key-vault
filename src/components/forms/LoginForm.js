@@ -8,7 +8,6 @@ import Button from '../ui/Button'
 import Card from '../ui/Card'
 import { validateEmail, validatePassword } from '../../utils/validation'
 import useAuthStore from '../../stores/authStore'
-import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
   const router = useRouter()
