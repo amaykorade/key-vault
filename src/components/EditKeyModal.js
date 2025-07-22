@@ -30,7 +30,7 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
     if (isOpen && keyId) {
       fetchKeyData()
     }
-  }, [isOpen, keyId, fetchKeyData])
+  }, [isOpen, keyId])
 
   const fetchKeyData = async () => {
     setFetching(true)

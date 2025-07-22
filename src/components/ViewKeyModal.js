@@ -16,7 +16,7 @@ export default function ViewKeyModal({ isOpen, onClose, keyId, onDelete, onEdit 
     if (isOpen && keyId) {
       fetchKeyData()
     }
-  }, [isOpen, keyId, fetchKeyData])
+  }, [isOpen, keyId])
 
   const fetchKeyData = async () => {
     setLoading(true)

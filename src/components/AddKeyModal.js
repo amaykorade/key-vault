@@ -85,7 +85,7 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
     if (isOpen) {
       fetchPlanAndCount();
     }
-  }, [isOpen, folderId, fetchPlanAndCount]);
+  }, [isOpen, folderId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
