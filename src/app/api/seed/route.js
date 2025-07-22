@@ -5,6 +5,18 @@ const prisma = new PrismaClient();
 
 export async function POST() {
   try {
+    // Create test user first
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    const user = await prisma.user.upsert({
+      where: { email: 'test@example.com' },
+      update: {},
+      create: {
+        email: 'test@example.com',
+        password: hashedPassword,
+        name: 'Test User'
+      }
+    });
+
     // Create default folder
     await prisma.folder.upsert({
       where: { id: 'default' },
@@ -13,18 +25,6 @@ export async function POST() {
         id: 'default',
         name: 'Default',
         description: 'Default folder for keys'
-      }
-    });
-
-    // Create test user
-    const hashedPassword = await bcrypt.hash('password123', 10);
-    await prisma.user.upsert({
-      where: { email: 'test@example.com' },
-      update: {},
-      create: {
-        email: 'test@example.com',
-        password: hashedPassword,
-        name: 'Test User'
       }
     });
 
