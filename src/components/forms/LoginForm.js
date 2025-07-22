@@ -189,7 +189,16 @@ const LoginForm = () => {
         <div className="flex flex-col items-center mt-4">
           <button
             type="button"
-            onClick={() => signIn("google")}
+            onClick={() => {
+              const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+              const redirectUri = `${window.location.origin}/auth/google/callback`;
+              const scope = 'email profile';
+              const responseType = 'code';
+              
+              const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=${responseType}`;
+              
+              window.location.href = googleAuthUrl;
+            }}
             className="w-full flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 py-2 px-4 rounded hover:bg-gray-50 shadow-sm transition"
           >
             <svg width="20" height="20" viewBox="0 0 48 48" className="inline-block align-middle" xmlns="http://www.w3.org/2000/svg"><g><path fill="#4285F4" d="M24 9.5c3.54 0 6.7 1.22 9.19 3.23l6.85-6.85C35.91 2.7 30.28 0 24 0 14.82 0 6.73 5.8 2.69 14.09l7.98 6.19C12.13 13.41 17.57 9.5 24 9.5z"/><path fill="#34A853" d="M46.1 24.55c0-1.64-.15-3.22-.42-4.74H24v9.01h12.42c-.54 2.9-2.18 5.36-4.65 7.01l7.19 5.59C43.98 37.13 46.1 31.3 46.1 24.55z"/><path fill="#FBBC05" d="M10.67 28.28A14.5 14.5 0 019.5 24c0-1.49.25-2.93.67-4.28l-7.98-6.19A23.93 23.93 0 000 24c0 3.93.94 7.65 2.69 10.91l7.98-6.19z"/><path fill="#EA4335" d="M24 48c6.28 0 11.91-2.09 15.94-5.7l-7.19-5.59c-2.01 1.35-4.59 2.16-8.75 2.16-6.43 0-11.87-3.91-13.33-9.19l-7.98 6.19C6.73 42.2 14.82 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></g></svg>
