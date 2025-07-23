@@ -14,6 +14,7 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "vercel:setup": "node scripts/vercel-setup.js",
+    "check:subscriptions": "node scripts/check-subscriptions.js",
     "postinstall": "prisma generate"
   },
   "dependencies": {

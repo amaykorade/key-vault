@@ -14,11 +14,31 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Enforce Free plan secret limit
-    if (user.plan === 'FREE') {
+    // Check subscription status
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { plan: true, subscriptionExpiresAt: true }
+    });
+
+    const now = new Date();
+    const hasActiveSubscription = currentUser.subscriptionExpiresAt && currentUser.subscriptionExpiresAt > now;
+
+    // Enforce plan limits based on active subscription
+    if (currentUser.plan === 'FREE' || !hasActiveSubscription) {
       const totalSecrets = await prisma.key.count({ where: { userId: user.id } });
       if (totalSecrets >= 5) {
-        return NextResponse.json({ success: false, error: 'Free plan users can only create up to 5 secrets. Upgrade to add more.' }, { status: 403 });
+        return NextResponse.json({ 
+          success: false, 
+          error: 'Free plan users can only create up to 5 secrets. Upgrade to add more.' 
+        }, { status: 403 });
+      }
+    } else if (currentUser.plan === 'PRO' && hasActiveSubscription) {
+      const totalSecrets = await prisma.key.count({ where: { userId: user.id } });
+      if (totalSecrets >= 100) {
+        return NextResponse.json({ 
+          success: false, 
+          error: 'Pro plan users can only create up to 100 secrets. Upgrade to Team plan for unlimited secrets.' 
+        }, { status: 403 });
       }
     }
 
@@ -83,7 +103,7 @@ export async function GET(request) {
       return NextResponse.json({ success: false, error: 'Folder ID is required' }, { status: 400 })
     }
 
-    // Get keys for the specified folder with pagination
+    // Get keys for the specified folder with pagination (including team access)
     const { keys, total } = await getKeysByFolder(user.id, folderId, limit, offset)
 
     // Return keys without the encrypted values

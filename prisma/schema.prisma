@@ -18,6 +18,7 @@ model User {
   role      UserRole @default(USER)
   apiToken  String?  @unique // API token for SDK usage
   plan      UserPlan @default(FREE)
+  subscriptionExpiresAt DateTime? // When the current subscription expires
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -29,8 +30,61 @@ model User {
   refreshTokens RefreshToken[]
   payments  Payment[]
   accounts  Account[]
+  
+  // Team relations
+  ownedTeams Team[] @relation("TeamOwner")
+  teamMemberships TeamMember[]
 
   @@map("users")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  ownerId String
+  owner   User   @relation("TeamOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members TeamMember[]
+  keyAccesses KeyAccess[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  role      TeamRole @default(MEMBER)
+  joinedAt  DateTime @default(now())
+  invitedAt DateTime @default(now())
+  invitedBy String?  // User ID who invited this member
+
+  // Relations
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+model KeyAccess {
+  id        String   @id @default(cuid())
+  permissions KeyPermission[]
+  grantedAt DateTime @default(now())
+  grantedBy String   // User ID who granted access
+
+  // Relations
+  keyId String
+  key   Key    @relation(fields: [keyId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([keyId, teamId])
+  @@map("key_accesses")
 }
 
 model Key {
@@ -49,6 +103,9 @@ model Key {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   folderId  String?
   folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  
+  // Team access
+  teamAccesses KeyAccess[]
 
   @@map("keys")
 }
@@ -88,7 +145,7 @@ model Session {
 model AuditLog {
   id        String      @id @default(cuid())
   action    AuditAction
-  resource  String      // "key", "folder", "user", etc.
+  resource  String      // "key", "folder", "user", "team", etc.
   resourceId String?
   details   Json?       // Additional details about the action
   ipAddress String?
@@ -127,6 +184,8 @@ model Payment {
   amount        Int
   currency      String
   status        String
+  subscriptionStartDate DateTime @default(now())
+  subscriptionEndDate   DateTime // When this payment's subscription expires
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -136,6 +195,18 @@ model Payment {
 enum UserRole {
   ADMIN
   USER
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum KeyPermission {
+  READ
+  WRITE
+  DELETE
 }
 
 enum KeyType {
@@ -156,6 +227,8 @@ enum AuditAction {
   LOGOUT
   EXPORT
   IMPORT
+  SHARE
+  REVOKE
 }
 
 enum UserPlan {

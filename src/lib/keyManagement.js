@@ -60,22 +60,52 @@ export async function createKey(userId, folderId, keyData) {
 
 export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) {
   try {
+    // Get user's teams
+    const userTeams = await prisma.team.findMany({
+      where: {
+        OR: [
+          { ownerId: userId },
+          { members: { some: { userId } } }
+        ]
+      },
+      select: { id: true }
+    })
+
+    const teamIds = userTeams.map(team => team.id)
+
+    // Get keys that user owns or has team access to
     const keys = await prisma.key.findMany({
       where: {
-        userId,
-        folderId
+        folderId,
+        OR: [
+          { userId }, // User's own keys
+          { teamAccesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
+        ]
       },
       orderBy: {
         createdAt: 'desc'
       },
       take: limit,
-      skip: offset
+      skip: offset,
+      include: {
+        teamAccesses: {
+          where: { teamId: { in: teamIds } },
+          include: {
+            team: {
+              select: { id: true, name: true }
+            }
+          }
+        }
+      }
     })
 
     const total = await prisma.key.count({
       where: {
-        userId,
-        folderId
+        folderId,
+        OR: [
+          { userId },
+          { teamAccesses: { some: { teamId: { in: teamIds } } } }
+        ]
       }
     })
 
@@ -87,10 +117,36 @@ export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) 
 
 export async function getKeyById(userId, keyId) {
   try {
+    // Get user's teams
+    const userTeams = await prisma.team.findMany({
+      where: {
+        OR: [
+          { ownerId: userId },
+          { members: { some: { userId } } }
+        ]
+      },
+      select: { id: true }
+    })
+
+    const teamIds = userTeams.map(team => team.id)
+
     const key = await prisma.key.findFirst({
       where: {
         id: keyId,
-        userId
+        OR: [
+          { userId }, // User's own keys
+          { teamAccesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
+        ]
+      },
+      include: {
+        teamAccesses: {
+          where: { teamId: { in: teamIds } },
+          include: {
+            team: {
+              select: { id: true, name: true }
+            }
+          }
+        }
       }
     })
 
