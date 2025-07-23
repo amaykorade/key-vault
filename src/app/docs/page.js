@@ -53,7 +53,7 @@ export default function DocsPage() {
                     <h4 className="text-xl font-semibold text-white mb-3">Step 1: Get Your API Token</h4>
                     <ol className="space-y-2 text-gray-300 ml-6">
                       <li>1. Login to your Key Vault application</li>
-                      <li>2. Navigate to the "API" page</li>
+                      <li>2. Navigate to the &quot;API&quot; page</li>
                       <li>3. Copy your API token (starts with <code className="bg-gray-600 px-1 rounded text-gray-100">tok_</code>)</li>
                     </ol>
                   </div>
@@ -401,7 +401,7 @@ Content-Type: application/json
                 <h3 className="text-2xl font-semibold text-white mb-4">Getting Your API Token</h3>
                 <ol className="space-y-2 text-gray-300 ml-6">
                   <li>1. Log in to your Key Vault account</li>
-                  <li>2. Navigate to the <code className="bg-gray-600 px-1 rounded text-gray-100">/api</code> page</li>
+                  <li>2. Navigate to the &quot;API&quot; page</li>
                   <li>3. Copy your API token</li>
                   <li>4. Use this token in your SDK or API requests</li>
                 </ol>
@@ -503,7 +503,7 @@ Content-Type: application/json
             <div className="space-y-6">
               <div className="bg-gray-700 rounded-lg p-6">
                 <h3 className="text-xl font-semibold text-white mb-2">How do I get my API token?</h3>
-                <p className="text-gray-300">Log in to the Key Vault web platform and navigate to the <code className="bg-gray-600 px-1 rounded text-gray-100">/api</code> page to copy your API token.</p>
+                <p className="text-gray-300">Log in to the Key Vault web platform and navigate to the &quot;API&quot; page to copy your API token.</p>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-6">
