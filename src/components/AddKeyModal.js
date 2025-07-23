@@ -97,9 +97,18 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
     setLoading(true)
 
     try {
-      await fetchPlanAndCount(); // Always check before submit
-      if (userPlan === 'FREE' && secretCount >= 5) {
+      // Fetch current plan and count before submitting
+      const userRes = await fetch('/api/auth/me', { credentials: 'include' });
+      const userData = await userRes.json();
+      const currentPlan = userData.user?.plan || 'FREE';
+      
+      const keysRes = await fetch(`/api/keys?folderId=${folderId}&limit=1000`, { credentials: 'include' });
+      const keysData = await keysRes.json();
+      const currentCount = keysData.total || 0;
+      
+      if (currentPlan === 'FREE' && currentCount >= 5) {
         setErrors({ submit: 'Free plan users can only create up to 5 secrets. Upgrade to add more.' });
+        setLoading(false);
         return;
       }
 

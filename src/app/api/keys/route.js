@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
 import { getCurrentUser } from '../../../lib/auth.js'
 import { createKey, getKeysByFolder, validateKeyData } from '../../../lib/keyManagement.js'
 // import { checkUserRateLimit } from '../../../lib/rateLimit.js'
+
+const prisma = new PrismaClient()
 
 export async function POST(request) {
   // Rate limiting removed
