@@ -190,10 +190,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-300 truncate">
                         Total Keys
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         {keys.length}
                       </dd>
                     </dl>
@@ -214,10 +214,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-300 truncate">
                         Active Keys
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         {keys.filter(key => !key.isFavorite).length}
                       </dd>
                     </dl>
@@ -238,10 +238,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
+                      <dt className="text-sm font-medium text-gray-300 truncate">
                         Favorites
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900">
+                      <dd className="text-lg font-medium text-white">
                         {keys.filter(key => key.isFavorite).length}
                       </dd>
                     </dl>
