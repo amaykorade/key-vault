@@ -10,18 +10,31 @@ npm install key-vault-sdk
 
 ## Quick Start
 
+### Step 1: Get Your API Token
+1. Login to your Key Vault application
+2. Go to the "API" page
+3. Copy your API token (starts with `tok_`)
+
+### Step 2: Install and Initialize
 ```javascript
 import KeyVault from 'key-vault-sdk';
 
 // Initialize the SDK
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'your-api-token-here'
+  getToken: async () => 'tok_your-api-token-here'
 });
+```
 
+### Step 3: Retrieve Secrets
+```javascript
 // Get a specific secret value by name
 const secretValue = await kv.getKeyValue('your-folder-id', 'database-password');
 console.log('Secret retrieved successfully');
+
+// Or get all keys in a folder
+const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
+console.log('Available keys:', keys.map(k => k.name));
 ```
 
 ## Configuration
@@ -97,6 +110,36 @@ const dbPassword = await kv.getKeyValue('prod-folder', 'database-password');
 
 // Use the secret (never log it!)
 connectToDatabase(dbPassword);
+```
+
+### Get Database URL from Key Vault
+```javascript
+async function getDatabaseUrl() {
+  try {
+    // First, list keys to find the one you want
+    const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
+    
+    // Find the key by name
+    const dbUrlKey = keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // Get the actual value
+      const keyWithValue = await kv.getKey(dbUrlKey.id, { includeValue: true });
+      console.log('Database URL retrieved successfully');
+      return keyWithValue.value;
+    } else {
+      throw new Error('DB_URL key not found');
+    }
+  } catch (error) {
+    console.error('Error fetching database URL:', error);
+    throw error;
+  }
+}
+
+// Use it
+const databaseUrl = await getDatabaseUrl();
+const { Pool } = require('pg');
+const pool = new Pool({ connectionString: databaseUrl });
 ```
 
 ### Environment-Specific Secrets
@@ -185,6 +228,74 @@ const getSecret = async (folderId, keyName) => {
 | `Key not found` | Key doesn't exist in folder | Verify key name and folder ID |
 | `Folder not found` | Folder doesn't exist | Check folder ID |
 | `Network error` | Connection issues | Check API URL and network |
+
+## Direct API Usage (Alternative to SDK)
+
+If you prefer to use direct API calls instead of the SDK:
+
+### Get Database URL via Direct API
+```javascript
+import fetch from 'node-fetch';
+
+const BASE_URL = 'https://yourdomain.com';
+const API_TOKEN = 'tok_your-api-token-here';
+
+async function getDatabaseUrl() {
+  try {
+    // 1. List folders to get folder ID
+    const foldersResponse = await fetch(`${BASE_URL}/api/folders`, {
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const foldersData = await foldersResponse.json();
+    const folderId = foldersData.folders[0].id;
+    
+    // 2. List keys in the folder
+    const keysResponse = await fetch(`${BASE_URL}/api/keys?folderId=${folderId}`, {
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const keysData = await keysResponse.json();
+    
+    // 3. Find the DB_URL key
+    const dbUrlKey = keysData.keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // 4. Get the actual value
+      const keyValueResponse = await fetch(`${BASE_URL}/api/keys/${dbUrlKey.id}?includeValue=true`, {
+        headers: {
+          'Authorization': `Bearer ${API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const keyValueData = await keyValueResponse.json();
+      console.log('Database URL retrieved successfully');
+      return keyValueData.key.value;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+// Use it
+const databaseUrl = await getDatabaseUrl();
+```
+
+### API Endpoints Reference
+- `GET /api/folders` - List all folders
+- `GET /api/keys?folderId={id}` - List keys in a folder
+- `GET /api/keys/{keyId}?includeValue=true` - Get key with value
+- `POST /api/keys` - Create a new key
+- `PUT /api/keys/{keyId}` - Update a key
+- `DELETE /api/keys/{keyId}` - Delete a key
 
 ## Browser Usage
 

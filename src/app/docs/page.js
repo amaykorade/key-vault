@@ -46,20 +46,46 @@ export default function DocsPage() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-white mb-4">Quick Start</h3>
-                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                  <pre className="text-green-400 text-sm">
-        <code>{`import KeyVault from 'key-vault-sdk';
+                <h3 className="text-2xl font-semibold text-white mb-4">Getting Started</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xl font-semibold text-white mb-3">Step 1: Get Your API Token</h4>
+                    <ol className="space-y-2 text-gray-300 ml-6">
+                      <li>1. Login to your Key Vault application</li>
+                      <li>2. Navigate to the "API" page</li>
+                      <li>3. Copy your API token (starts with <code className="bg-gray-600 px-1 rounded text-gray-100">tok_</code>)</li>
+                    </ol>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xl font-semibold text-white mb-3">Step 2: Initialize the SDK</h4>
+                    <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                      <pre className="text-green-400 text-sm">
+                        <code>{`import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'your-api-token-here'
-});
+  getToken: async () => 'tok_your-api-token-here'
+});`}</code>
+                      </pre>
+                    </div>
+                  </div>
 
-// Get a specific secret value
-const secretValue = await kv.getKeyValue('folder-id', 'database-password');
-console.log('Secret retrieved successfully');`}</code>
-                  </pre>
+                  <div>
+                    <h4 className="text-xl font-semibold text-white mb-3">Step 3: Retrieve Secrets</h4>
+                    <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                      <pre className="text-green-400 text-sm">
+                        <code>{`// Get a specific secret value by name
+const secretValue = await kv.getKeyValue('folder-id', 'DB_URL');
+console.log('Secret retrieved successfully');
+
+// Or get all keys in a folder
+const { keys } = await kv.listKeys({ folderId: 'folder-id' });
+console.log('Available keys:', keys.map(k => k.name));`}</code>
+                      </pre>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -116,6 +142,40 @@ console.log('Secret retrieved successfully');`}</code>
                 
                 <div className="space-y-6">
                   <div>
+                    <h4 className="text-xl font-semibold text-white mb-3">Get Database URL from Key Vault</h4>
+                    <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                      <pre className="text-green-400 text-sm">
+                        <code>{`async function getDatabaseUrl() {
+  try {
+    // First, list keys to find the one you want
+    const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
+    
+    // Find the key by name
+    const dbUrlKey = keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // Get the actual value
+      const keyWithValue = await kv.getKey(dbUrlKey.id, { includeValue: true });
+      console.log('Database URL retrieved successfully');
+      return keyWithValue.value;
+    } else {
+      throw new Error('DB_URL key not found');
+    }
+  } catch (error) {
+    console.error('Error fetching database URL:', error);
+    throw error;
+  }
+}
+
+// Use it
+const databaseUrl = await getDatabaseUrl();
+const { Pool } = require('pg');
+const pool = new Pool({ connectionString: databaseUrl });`}</code>
+                      </pre>
+                    </div>
+                  </div>
+
+                  <div>
                     <h4 className="text-xl font-semibold text-white mb-3">Environment-Specific Secrets</h4>
                     <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                       <pre className="text-green-400 text-sm">
@@ -123,9 +183,9 @@ console.log('Secret retrieved successfully');`}</code>
 const folderId = environment === 'production' ? 'prod-folder' : 'dev-folder';
 
 const secrets = {
-  database: await kv.getKeyValue(folderId, 'database-url'),
-  apiKey: await kv.getKeyValue(folderId, 'external-api-key'),
-  jwtSecret: await kv.getKeyValue(folderId, 'jwt-secret')
+  database: await kv.getKeyValue(folderId, 'DB_URL'),
+  apiKey: await kv.getKeyValue(folderId, 'API_KEY'),
+  jwtSecret: await kv.getKeyValue(folderId, 'JWT_SECRET')
 };`}</code>
                       </pre>
                     </div>
@@ -136,15 +196,15 @@ const secrets = {
                     <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                       <pre className="text-green-400 text-sm">
                         <code>{`try {
-  const secret = await kv.getKeyValue('folder-id', 'secret-name');
+  const secret = await kv.getKeyValue('folder-id', 'DB_URL');
   // Use secret
 } catch (error) {
   if (error.message.includes('not found')) {
-    console.error('Secret not found');
+    console.error('DB_URL not found');
   } else if (error.message.includes('Unauthorized')) {
     console.error('Invalid API token');
   } else {
-    console.error('Failed to retrieve secret:', error.message);
+    console.error('Failed to retrieve DB_URL:', error.message);
   }
 }`}</code>
                       </pre>
@@ -177,6 +237,68 @@ const secrets = {
                   <li><strong>Session Cookie</strong>: For web application requests</li>
                   <li><strong>Bearer Token</strong>: For API access (<code className="bg-gray-600 px-1 rounded text-gray-100">Authorization: Bearer &lt;token&gt;</code>)</li>
                 </ul>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-white mb-4">Direct API Usage (Alternative to SDK)</h3>
+                <p className="text-gray-300 mb-4">If you prefer to use direct API calls instead of the SDK:</p>
+                
+                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                  <pre className="text-green-400 text-sm">
+                    <code>{`import fetch from 'node-fetch';
+
+const BASE_URL = 'https://yourdomain.com';
+const API_TOKEN = 'tok_your-api-token-here';
+
+async function getDatabaseUrl() {
+  try {
+    // 1. List folders to get folder ID
+    const foldersResponse = await fetch(\`\${BASE_URL}/api/folders\`, {
+      headers: {
+        'Authorization': \`Bearer \${API_TOKEN}\`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const foldersData = await foldersResponse.json();
+    const folderId = foldersData.folders[0].id;
+    
+    // 2. List keys in the folder
+    const keysResponse = await fetch(\`\${BASE_URL}/api/keys?folderId=\${folderId}\`, {
+      headers: {
+        'Authorization': \`Bearer \${API_TOKEN}\`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const keysData = await keysResponse.json();
+    
+    // 3. Find the DB_URL key
+    const dbUrlKey = keysData.keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // 4. Get the actual value
+      const keyValueResponse = await fetch(\`\${BASE_URL}/api/keys/\${dbUrlKey.id}?includeValue=true\`, {
+        headers: {
+          'Authorization': \`Bearer \${API_TOKEN}\`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const keyValueData = await keyValueResponse.json();
+      console.log('Database URL retrieved successfully');
+      return keyValueData.key.value;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+// Use it
+const databaseUrl = await getDatabaseUrl();`}</code>
+                  </pre>
+                </div>
               </div>
 
               <div>

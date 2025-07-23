@@ -106,6 +106,117 @@ const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
 const key = await kv.getKey('key-id', { includeValue: true });
 ```
 
+## Getting Started with API Access
+
+### Step 1: Get Your API Token
+1. Login to your Key Vault application
+2. Navigate to the "API" page
+3. Copy your API token (starts with `tok_`)
+
+### Step 2: Use the SDK to Retrieve Keys
+
+#### Method 1: Using the SDK (Recommended)
+```javascript
+import KeyVault from 'key-vault-sdk';
+
+// Initialize the SDK
+const kv = new KeyVault({
+  apiUrl: 'https://yourdomain.com/api',
+  getToken: async () => 'tok_your-api-token-here'
+});
+
+// Get a specific key by name
+async function getDatabaseUrl() {
+  try {
+    // First, list keys to find the one you want
+    const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
+    
+    // Find the key by name
+    const dbUrlKey = keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // Get the actual value
+      const keyWithValue = await kv.getKey(dbUrlKey.id, { includeValue: true });
+      console.log('Database URL:', keyWithValue.value);
+      return keyWithValue.value;
+    }
+  } catch (error) {
+    console.error('Error fetching key:', error);
+  }
+}
+
+getDatabaseUrl();
+```
+
+#### Method 2: Using Direct API Calls
+```javascript
+import fetch from 'node-fetch';
+
+const BASE_URL = 'https://yourdomain.com';
+const API_TOKEN = 'tok_your-api-token-here';
+
+async function getDatabaseUrl() {
+  try {
+    // 1. List folders to get folder ID
+    const foldersResponse = await fetch(`${BASE_URL}/api/folders`, {
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const foldersData = await foldersResponse.json();
+    const folderId = foldersData.folders[0].id;
+    
+    // 2. List keys in the folder
+    const keysResponse = await fetch(`${BASE_URL}/api/keys?folderId=${folderId}`, {
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const keysData = await keysResponse.json();
+    
+    // 3. Find the DB_URL key
+    const dbUrlKey = keysData.keys.find(key => key.name === 'DB_URL');
+    
+    if (dbUrlKey) {
+      // 4. Get the actual value
+      const keyValueResponse = await fetch(`${BASE_URL}/api/keys/${dbUrlKey.id}?includeValue=true`, {
+        headers: {
+          'Authorization': `Bearer ${API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const keyValueData = await keyValueResponse.json();
+      console.log('Database URL:', keyValueData.key.value);
+      return keyValueData.key.value;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+getDatabaseUrl();
+```
+
+### Step 3: Use in Your Application
+```javascript
+// Example: Using retrieved database URL
+const databaseUrl = await getDatabaseUrl();
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: databaseUrl
+});
+
+// Now you can use the database connection
+const result = await pool.query('SELECT NOW()');
+console.log('Database connected:', result.rows[0]);
+```
+
 ## API Documentation
 
 ### Authentication

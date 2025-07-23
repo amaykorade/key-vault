@@ -1,32 +1,16 @@
-// Test file to fetch DB_URL using direct API calls
+// Fixed API test that works with API tokens
 import fetch from 'node-fetch';
 
 // Configuration
 const BASE_URL = 'https://key-vault-five.vercel.app';
-const API_TOKEN = 'tok_cmdflk55p000ajr04lhhqd6wj_b3hol6rgdar'; // Replace with your actual API token
+const API_TOKEN = 'tok_cmdflk55p000ajr04lhhqd6wj_b3hol6rgdar';
 
-// Test function to get DB_URL
-async function testGetDBUrl() {
+// Test function to get DB_URL using API token
+async function testGetDBUrlWithApiToken() {
   try {
-    console.log('🔍 Testing API connection...');
+    console.log('🔍 Testing API connection with API token...');
     
-    // First, let's get user info to see if API token works
-    console.log('👤 Getting user info...');
-    const userResponse = await fetch(`${BASE_URL}/api/auth/me`, {
-      headers: {
-        'Authorization': `Bearer ${API_TOKEN}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!userResponse.ok) {
-      throw new Error(`User API failed: ${userResponse.status} ${userResponse.statusText}`);
-    }
-    
-    const userData = await userResponse.json();
-    console.log('✅ User info:', userData);
-    
-    // Now let's list folders to get folder ID
+    // Test 1: List folders (this should work with API tokens)
     console.log('📁 Listing folders...');
     const foldersResponse = await fetch(`${BASE_URL}/api/folders`, {
       headers: {
@@ -40,9 +24,9 @@ async function testGetDBUrl() {
     }
     
     const foldersData = await foldersResponse.json();
-    console.log('✅ Folders:', foldersData);
+    console.log('✅ Folders API works:', foldersData);
     
-    // If we have folders, let's list keys in the first folder
+    // Test 2: If we have folders, list keys in the first folder
     if (foldersData.folders && foldersData.folders.length > 0) {
       const firstFolder = foldersData.folders[0];
       console.log(`🔑 Listing keys in folder: ${firstFolder.name} (${firstFolder.id})`);
@@ -59,9 +43,9 @@ async function testGetDBUrl() {
       }
       
       const keysData = await keysResponse.json();
-      console.log('✅ Keys:', keysData);
+      console.log('✅ Keys API works:', keysData);
       
-      // If we have keys, try to get the DB_URL key
+      // Test 3: If we have keys, try to get the DB_URL key value
       if (keysData.keys && keysData.keys.length > 0) {
         const dbUrlKey = keysData.keys.find(key => key.name === 'DB_URL');
         if (dbUrlKey) {
@@ -80,11 +64,55 @@ async function testGetDBUrl() {
           }
           
           const keyValueData = await keyValueResponse.json();
-          console.log('✅ DB_URL value:', keyValueData.key.value);
+          console.log('✅ DB_URL value retrieved:', keyValueData.key.value);
         } else {
           console.log('❌ DB_URL key not found in this folder');
+          console.log('Available keys:', keysData.keys.map(k => k.name));
         }
       }
+    }
+    
+    // Test 4: Try to create a test key (this should work with API tokens)
+    console.log('🧪 Testing key creation...');
+    const testKeyData = {
+      folderId: foldersData.folders[0].id,
+      name: 'TEST_KEY_' + Date.now(),
+      description: 'Test key created via API',
+      value: 'test-value-' + Date.now(),
+      type: 'API_KEY',
+      tags: ['test', 'api'],
+      isFavorite: false
+    };
+    
+    const createResponse = await fetch(`${BASE_URL}/api/keys`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(testKeyData)
+    });
+    
+    if (createResponse.ok) {
+      const createData = await createResponse.json();
+      console.log('✅ Key creation works:', createData);
+      
+      // Clean up: delete the test key
+      const deleteResponse = await fetch(`${BASE_URL}/api/keys/${createData.key.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${API_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (deleteResponse.ok) {
+        console.log('✅ Key deletion works');
+      } else {
+        console.log('⚠️ Key deletion failed:', deleteResponse.status);
+      }
+    } else {
+      console.log('⚠️ Key creation failed:', createResponse.status, createResponse.statusText);
     }
     
   } catch (error) {
@@ -93,4 +121,4 @@ async function testGetDBUrl() {
 }
 
 // Run the test
-testGetDBUrl(); 
+testGetDBUrlWithApiToken(); 
