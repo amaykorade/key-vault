@@ -42,21 +42,21 @@ async function main() {
 
   // Create some test keys
   const testKeys = [
-    {
+  {
       name: 'API Key',
       description: 'Test API key',
       value: 'test_api_key_12345',
-      type: 'API_KEY',
+    type: 'API_KEY',
       tags: ['test', 'api'],
-    },
-    {
-      name: 'Database Password',
+  },
+  {
+    name: 'Database Password',
       description: 'Test database password',
       value: 'db_password_67890',
-      type: 'PASSWORD',
+    type: 'PASSWORD',
       tags: ['test', 'database'],
-    },
-    {
+  },
+  {
       name: 'OAuth Secret',
       description: 'Test OAuth client secret',
       value: 'oauth_secret_abcde',
@@ -66,11 +66,11 @@ async function main() {
   ];
 
   for (const keyData of testKeys) {
-    const key = await prisma.key.create({
-      data: {
+        const key = await prisma.key.create({
+          data: {
         ...keyData,
         userId: user.id,
-        folderId: folder.id,
+            folderId: folder.id,
       },
     });
     console.log('✅ Created test key:', key.name);

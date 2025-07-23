@@ -6,9 +6,9 @@ const prisma = new PrismaClient()
 
 // Get encryption key from environment
 function getEncryptionKey() {
-  const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
-  if (!ENCRYPTION_KEY) {
-    throw new Error('ENCRYPTION_KEY environment variable is required')
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+if (!ENCRYPTION_KEY) {
+  throw new Error('ENCRYPTION_KEY environment variable is required')
   }
   return ENCRYPTION_KEY
 }

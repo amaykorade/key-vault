@@ -35,7 +35,7 @@ export default function DocsPage() {
             <p className="text-lg text-gray-300 mb-8">
               The Key Vault SDK allows you to securely access your vault keys from JavaScript/TypeScript projects. 
               <strong className="text-red-400"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
-            </p>
+      </p>
 
             <div className="space-y-8">
               <div>
@@ -49,7 +49,7 @@ export default function DocsPage() {
                 <h3 className="text-2xl font-semibold text-white mb-4">Quick Start</h3>
                 <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                   <pre className="text-green-400 text-sm">
-                    <code>{`import KeyVault from 'key-vault-sdk';
+        <code>{`import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -255,7 +255,7 @@ Content-Type: application/json
   "description": "Production environment secrets",
   "color": "#ff0000"
 }`}</code>
-                      </pre>
+      </pre>
                     </div>
                   </div>
 
@@ -308,7 +308,7 @@ Content-Type: application/json
                   <li>• All secret values are encrypted using AES-256-GCM</li>
                   <li>• Each encryption uses a unique salt and IV</li>
                   <li>• Master encryption key is stored securely</li>
-                </ul>
+      </ul>
               </div>
 
               <div>
@@ -317,7 +317,7 @@ Content-Type: application/json
                   <li>• Users can only access their own secrets</li>
                   <li>• Admin users have additional privileges</li>
                   <li>• Complete audit logging for compliance</li>
-                </ul>
+      </ul>
               </div>
 
               <div>
@@ -327,7 +327,7 @@ Content-Type: application/json
                   <li>• Use environment variables for configuration</li>
                   <li>• Handle errors gracefully without exposing sensitive information</li>
                   <li>• Regularly rotate API tokens</li>
-                </ul>
+      </ul>
               </div>
             </div>
           </section>
@@ -357,7 +357,7 @@ Content-Type: application/json
                   <li>• Expiring secrets</li>
                   <li>• API analytics</li>
                   <li>• Email support</li>
-                </ul>
+      </ul>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-6 border border-gray-600">
@@ -369,7 +369,7 @@ Content-Type: application/json
                   <li>• RBAC (roles & permissions)</li>
                   <li>• SDK token rotation</li>
                   <li>• Priority support</li>
-                </ul>
+      </ul>
               </div>
             </div>
           </section>

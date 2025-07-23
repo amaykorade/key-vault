@@ -6,7 +6,7 @@ export async function GET(request) {
   try {
     // Get current user (supports both NextAuth and legacy sessions)
     const user = await getCurrentUser(request)
-    
+
     if (!user) {
       return NextResponse.json(
         { message: 'Not authenticated' },
@@ -32,7 +32,7 @@ export async function POST(request) {
   try {
     // Get current user (supports both NextAuth and legacy sessions)
     const user = await getCurrentUser(request)
-    
+
     if (!user) {
       return NextResponse.json(
         { message: 'Not authenticated' },
@@ -44,7 +44,7 @@ export async function POST(request) {
     if (user.plan === 'FREE') {
       const userFolders = await getUserFolders(user.id);
       if (userFolders.length >= 1) {
-        return NextResponse.json(
+      return NextResponse.json(
           { message: 'Free plan users can only create 1 project. Upgrade to add more.' },
           { status: 403 }
         );
