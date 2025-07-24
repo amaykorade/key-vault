@@ -27,12 +27,21 @@ export async function POST(request) {
     if (generated_signature !== razorpay_signature) {
       return NextResponse.json({ error: 'Invalid payment signature' }, { status: 400 });
     }
-    // Update user plan
+    // Calculate subscription expiration (1 month from now)
+    const subscriptionStartDate = new Date();
+    const subscriptionEndDate = new Date();
+    subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+
+    // Update user plan and subscription expiration
     await prisma.user.update({
       where: { id: user.id },
-      data: { plan: plan.toUpperCase() },
+      data: { 
+        plan: plan.toUpperCase(),
+        subscriptionExpiresAt: subscriptionEndDate
+      },
     });
-    // Store payment info
+
+    // Store payment info with subscription dates
     await prisma.payment.create({
       data: {
         userId: user.id,
@@ -43,6 +52,8 @@ export async function POST(request) {
         amount: parseInt(request.headers.get('x-razorpay-amount') || '0', 10),
         currency: request.headers.get('x-razorpay-currency') || 'USD',
         status: 'captured',
+        subscriptionStartDate,
+        subscriptionEndDate,
       }
     });
     return NextResponse.json({ success: true, message: 'Payment verified and plan upgraded.' });

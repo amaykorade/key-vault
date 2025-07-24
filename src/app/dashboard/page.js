@@ -7,6 +7,7 @@ import useAuthStore from '../../stores/authStore'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
+import SubscriptionStatus from '../../components/SubscriptionStatus'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -23,6 +24,8 @@ export default function DashboardPage() {
   const [userPlan, setUserPlan] = useState('FREE');
   const [projectCount, setProjectCount] = useState(0);
   const [countLoading, setCountLoading] = useState(false);
+  const [stats, setStats] = useState({ totalKeys: 0, folders: 0, favorites: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
 
   // Fetch user plan and project count
   const fetchPlanAndProjectCount = async () => {
@@ -44,6 +47,25 @@ export default function DashboardPage() {
     }
   };
 
+  // Fetch statistics
+  const fetchStats = async () => {
+    try {
+      setStatsLoading(true);
+      const response = await fetch('/api/stats', {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data.stats);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Only check auth if we have a session token in cookies
     const hasSessionCookie = document.cookie.includes('session_token=')
@@ -55,6 +77,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isAuthenticated) {
       fetchProjects()
+      fetchStats()
     }
   }, [isAuthenticated])
 
@@ -111,6 +134,8 @@ export default function DashboardPage() {
         setProjects([...projects, data.folder])
         setNewProject({ name: '', description: '', color: '#3B82F6' })
         setShowCreateProject(false)
+        // Refresh stats after creating project
+        fetchStats()
       } else {
         const error = await response.json()
         alert('Error creating project: ' + error.message)
@@ -172,6 +197,94 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Statistics Section - Moved above projects */}
+          <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-400 truncate">
+                        Total Keys
+                      </dt>
+                      <dd className="text-lg font-medium text-white">
+                        {statsLoading ? (
+                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                        ) : (
+                          stats.totalKeys
+                        )}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-400 truncate">
+                        Folders
+                      </dt>
+                      <dd className="text-lg font-medium text-white">
+                        {statsLoading ? (
+                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                        ) : (
+                          stats.folders
+                        )}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-400 truncate">
+                        Favorites
+                      </dt>
+                      <dd className="text-lg font-medium text-white">
+                        {statsLoading ? (
+                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                        ) : (
+                          stats.favorites
+                        )}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Projects Section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
@@ -219,6 +332,19 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigator.clipboard.writeText(project.id);
+                          // You could add a toast notification here
+                        }}
+                        className="text-xs text-gray-500 font-mono bg-gray-800 px-2 py-1 rounded hover:bg-gray-700 hover:text-gray-400 transition-colors cursor-pointer"
+                        title="Click to copy folder ID"
+                      >
+                        ID: {project.id}
+                      </button>
+                    </div>
                     <div className="mt-4 flex justify-between items-center">
                       <span className="text-sm text-gray-400">
                         {project._count?.keys || 0} keys
@@ -258,87 +384,13 @@ export default function DashboardPage() {
                   <dt className="text-sm font-medium text-gray-400">User ID</dt>
                   <dd className="mt-1 text-sm text-white font-mono">{user?.id}</dd>
                 </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-400">Current Plan</dt>
-                  <dd className="mt-1 text-sm text-white font-semibold uppercase">{userPlan}</dd>
-                </div>
               </dl>
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
-                        Total Keys
-                      </dt>
-                      <dd className="text-lg font-medium text-white">
-                        0
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
-                        Folders
-                      </dt>
-                      <dd className="text-lg font-medium text-white">
-                        1
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
-                        Favorites
-                      </dt>
-                      <dd className="text-lg font-medium text-white">
-                        0
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Subscription Status */}
+          <div className="mt-6">
+            <SubscriptionStatus />
           </div>
         </div>
       </div>

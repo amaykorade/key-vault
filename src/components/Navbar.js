@@ -49,6 +49,9 @@ export default function Navbar() {
               <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm font-medium">
                 Dashboard
               </Link>
+              <Link href="/teams" className="text-gray-300 hover:text-white text-sm font-medium">
+                Teams
+              </Link>
               <Link href="/docs" className="text-gray-300 hover:text-white text-sm font-medium">
                 Documentation
               </Link>
