@@ -8,11 +8,21 @@ export async function POST() {
     // Connect to database
     await prisma.$connect();
     
+    // Drop unused sessionToken column if it exists
+    try {
+      await prisma.$executeRawUnsafe(`
+        ALTER TABLE "Session" 
+        DROP COLUMN IF EXISTS "sessionToken"
+      `);
+      console.log('Dropped sessionToken column from Session table');
+    } catch (error) {
+      console.log('sessionToken column might not exist:', error.message);
+    }
+    
     // Add missing columns to Session table
     const sessionColumns = [
       { column: 'token', type: 'TEXT' },
       { column: 'expiresAt', type: 'TIMESTAMP(3)' },
-      { column: 'sessionToken', type: 'TEXT' },
       { column: 'createdAt', type: 'TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP' },
       { column: 'updatedAt', type: 'TIMESTAMP(3) NOT NULL' },
       { column: 'userId', type: 'TEXT NOT NULL' }
