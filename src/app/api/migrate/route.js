@@ -1,34 +1,41 @@
 import { PrismaClient } from '@prisma/client';
-import { execSync } from 'child_process';
 
 export async function POST() {
   try {
     const prisma = new PrismaClient();
     
-    // Enable UUID extension
-    await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    console.log('Starting database migration...');
     
-    // Run migrations using prisma migrate deploy
+    // Test database connection
+    await prisma.$connect();
+    console.log('Database connection successful');
+    
+    // Enable UUID extension
     try {
-      execSync('npx prisma migrate deploy', { 
+      await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+      console.log('UUID extension enabled');
+    } catch (extError) {
+      console.log('UUID extension already exists or not needed');
+    }
+    
+    // Push the schema directly (this is more reliable in serverless environments)
+    try {
+      // Import and use Prisma's push functionality
+      const { execSync } = await import('child_process');
+      
+      console.log('Pushing schema to database...');
+      execSync('npx prisma db push --accept-data-loss', { 
         stdio: 'pipe',
         env: { ...process.env }
       });
-    } catch (migrationError) {
-      console.error('Migration command error:', migrationError);
-      // Try alternative approach - push the schema
-      try {
-        execSync('npx prisma db push', { 
-          stdio: 'pipe',
-          env: { ...process.env }
-        });
-      } catch (pushError) {
-        console.error('Schema push error:', pushError);
-        throw new Error('Failed to migrate database');
-      }
+      console.log('Schema push successful');
+    } catch (pushError) {
+      console.error('Schema push error:', pushError);
+      throw new Error(`Schema push failed: ${pushError.message}`);
     }
     
     await prisma.$disconnect();
+    console.log('Database migration completed successfully');
     
     return Response.json({ 
       success: true, 
