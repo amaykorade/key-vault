@@ -12,7 +12,10 @@ export async function POST() {
     const sessionColumns = [
       { column: 'token', type: 'TEXT' },
       { column: 'expiresAt', type: 'TIMESTAMP(3)' },
-      { column: 'sessionToken', type: 'TEXT' }
+      { column: 'sessionToken', type: 'TEXT' },
+      { column: 'createdAt', type: 'TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP' },
+      { column: 'updatedAt', type: 'TIMESTAMP(3) NOT NULL' },
+      { column: 'userId', type: 'TEXT NOT NULL' }
     ];
     
     for (const { column, type } of sessionColumns) {
@@ -30,7 +33,10 @@ export async function POST() {
     // Add missing columns to RefreshToken table
     const refreshTokenColumns = [
       { column: 'token', type: 'TEXT' },
-      { column: 'expiresAt', type: 'TIMESTAMP(3)' }
+      { column: 'expiresAt', type: 'TIMESTAMP(3)' },
+      { column: 'createdAt', type: 'TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP' },
+      { column: 'updatedAt', type: 'TIMESTAMP(3) NOT NULL' },
+      { column: 'userId', type: 'TEXT NOT NULL' }
     ];
     
     for (const { column, type } of refreshTokenColumns) {
