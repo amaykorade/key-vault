@@ -332,6 +332,19 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigator.clipboard.writeText(project.id);
+                          // You could add a toast notification here
+                        }}
+                        className="text-xs text-gray-500 font-mono bg-gray-800 px-2 py-1 rounded hover:bg-gray-700 hover:text-gray-400 transition-colors cursor-pointer"
+                        title="Click to copy folder ID"
+                      >
+                        ID: {project.id}
+                      </button>
+                    </div>
                     <div className="mt-4 flex justify-between items-center">
                       <span className="text-sm text-gray-400">
                         {project._count?.keys || 0} keys

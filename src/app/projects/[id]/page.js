@@ -163,6 +163,18 @@ export default function ProjectDetailPage() {
                 <div>
                   <h1 className="text-3xl font-bold text-white">{project.name}</h1>
                   <p className="text-gray-300">{project.description || 'No description'}</p>
+                  <div className="mt-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(project.id);
+                        // You could add a toast notification here
+                      }}
+                      className="text-sm text-gray-400 font-mono bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 hover:text-gray-300 transition-colors cursor-pointer"
+                      title="Click to copy folder ID"
+                    >
+                      Folder ID: {project.id}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
