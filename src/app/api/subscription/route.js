@@ -16,19 +16,7 @@ export async function GET(request) {
       where: { id: user.id },
       select: {
         plan: true,
-        subscriptionExpiresAt: true,
-        payments: {
-          where: { status: 'captured' },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-          select: {
-            plan: true,
-            subscriptionStartDate: true,
-            subscriptionEndDate: true,
-            amount: true,
-            currency: true
-          }
-        }
+        subscriptionExpiresAt: true
       }
     });
 
@@ -47,7 +35,7 @@ export async function GET(request) {
       isActive,
       expiresAt: currentUser.subscriptionExpiresAt,
       daysUntilExpiry,
-      lastPayment: currentUser.payments[0] || null
+      lastPayment: null
     };
 
     return NextResponse.json({ subscription });
