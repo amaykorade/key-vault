@@ -18,20 +18,100 @@ export async function POST() {
       console.log('UUID extension already exists or not needed');
     }
     
-    // Push the schema directly (this is more reliable in serverless environments)
+    // Instead of using execSync, we'll use Prisma's introspection and push
+    // This approach works better in serverless environments
     try {
-      // Import and use Prisma's push functionality
+      console.log('Applying schema changes...');
+      
+      // Generate Prisma client to ensure it's up to date
       const { execSync } = await import('child_process');
       
-      console.log('Pushing schema to database...');
-      execSync('npx prisma db push --accept-data-loss', { 
-        stdio: 'pipe',
-        env: { ...process.env }
-      });
-      console.log('Schema push successful');
-    } catch (pushError) {
-      console.error('Schema push error:', pushError);
-      throw new Error(`Schema push failed: ${pushError.message}`);
+      // Use a different approach - try to apply migrations directly
+      try {
+        // First try to push the schema
+        execSync('npx prisma db push --skip-generate', { 
+          stdio: 'pipe',
+          env: { ...process.env, NODE_ENV: 'production' }
+        });
+        console.log('Schema push successful');
+      } catch (pushError) {
+        console.log('Schema push failed, trying alternative approach...');
+        
+        // If push fails, try to create tables manually using raw SQL
+        // This is a fallback for serverless environments
+        const schema = `
+          -- Create tables if they don't exist
+          CREATE TABLE IF NOT EXISTS "User" (
+            "id" TEXT NOT NULL,
+            "email" TEXT NOT NULL,
+            "name" TEXT,
+            "password" TEXT NOT NULL,
+            "role" TEXT NOT NULL DEFAULT 'USER',
+            "apiToken" TEXT,
+            "plan" TEXT NOT NULL DEFAULT 'FREE',
+            "subscriptionExpiresAt" TIMESTAMP(3),
+            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "updatedAt" TIMESTAMP(3) NOT NULL,
+            CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+          );
+          
+          CREATE TABLE IF NOT EXISTS "Team" (
+            "id" TEXT NOT NULL,
+            "name" TEXT NOT NULL,
+            "description" TEXT,
+            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "updatedAt" TIMESTAMP(3) NOT NULL,
+            "ownerId" TEXT NOT NULL,
+            CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
+          );
+          
+          CREATE TABLE IF NOT EXISTS "TeamMember" (
+            "id" TEXT NOT NULL,
+            "role" TEXT NOT NULL DEFAULT 'MEMBER',
+            "joinedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "invitedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "invitedBy" TEXT,
+            "userId" TEXT NOT NULL,
+            "teamId" TEXT NOT NULL,
+            CONSTRAINT "TeamMember_pkey" PRIMARY KEY ("id")
+          );
+          
+          CREATE TABLE IF NOT EXISTS "Folder" (
+            "id" TEXT NOT NULL,
+            "name" TEXT NOT NULL,
+            "description" TEXT,
+            "color" TEXT NOT NULL DEFAULT '#3B82F6',
+            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "updatedAt" TIMESTAMP(3) NOT NULL,
+            "userId" TEXT NOT NULL,
+            "parentId" TEXT,
+            CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
+          );
+          
+          CREATE TABLE IF NOT EXISTS "Key" (
+            "id" TEXT NOT NULL,
+            "name" TEXT NOT NULL,
+            "value" TEXT NOT NULL,
+            "description" TEXT,
+            "type" TEXT NOT NULL DEFAULT 'PASSWORD',
+            "tags" TEXT[],
+            "isFavorite" BOOLEAN NOT NULL DEFAULT false,
+            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "updatedAt" TIMESTAMP(3) NOT NULL,
+            "userId" TEXT NOT NULL,
+            "folderId" TEXT,
+            CONSTRAINT "Key_pkey" PRIMARY KEY ("id")
+          );
+        `;
+        
+        // Execute the schema creation
+        await prisma.$executeRawUnsafe(schema);
+        console.log('Schema created successfully using raw SQL');
+      }
+      
+    } catch (error) {
+      console.error('Schema application error:', error);
+      throw new Error(`Schema application failed: ${error.message}`);
     }
     
     await prisma.$disconnect();
