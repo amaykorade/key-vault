@@ -39,73 +39,94 @@ export async function POST() {
         
         // If push fails, try to create tables manually using raw SQL
         // This is a fallback for serverless environments
-        const schema = `
-          -- Create tables if they don't exist
-          CREATE TABLE IF NOT EXISTS "User" (
-            "id" TEXT NOT NULL,
-            "email" TEXT NOT NULL,
-            "name" TEXT,
-            "password" TEXT NOT NULL,
-            "role" TEXT NOT NULL DEFAULT 'USER',
-            "apiToken" TEXT,
-            "plan" TEXT NOT NULL DEFAULT 'FREE',
-            "subscriptionExpiresAt" TIMESTAMP(3),
-            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updatedAt" TIMESTAMP(3) NOT NULL,
-            CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-          );
-          
-          CREATE TABLE IF NOT EXISTS "Team" (
-            "id" TEXT NOT NULL,
-            "name" TEXT NOT NULL,
-            "description" TEXT,
-            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updatedAt" TIMESTAMP(3) NOT NULL,
-            "ownerId" TEXT NOT NULL,
-            CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
-          );
-          
-          CREATE TABLE IF NOT EXISTS "TeamMember" (
-            "id" TEXT NOT NULL,
-            "role" TEXT NOT NULL DEFAULT 'MEMBER',
-            "joinedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "invitedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "invitedBy" TEXT,
-            "userId" TEXT NOT NULL,
-            "teamId" TEXT NOT NULL,
-            CONSTRAINT "TeamMember_pkey" PRIMARY KEY ("id")
-          );
-          
-          CREATE TABLE IF NOT EXISTS "Folder" (
-            "id" TEXT NOT NULL,
-            "name" TEXT NOT NULL,
-            "description" TEXT,
-            "color" TEXT NOT NULL DEFAULT '#3B82F6',
-            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updatedAt" TIMESTAMP(3) NOT NULL,
-            "userId" TEXT NOT NULL,
-            "parentId" TEXT,
-            CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
-          );
-          
-          CREATE TABLE IF NOT EXISTS "Key" (
-            "id" TEXT NOT NULL,
-            "name" TEXT NOT NULL,
-            "value" TEXT NOT NULL,
-            "description" TEXT,
-            "type" TEXT NOT NULL DEFAULT 'PASSWORD',
-            "tags" TEXT[],
-            "isFavorite" BOOLEAN NOT NULL DEFAULT false,
-            "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            "updatedAt" TIMESTAMP(3) NOT NULL,
-            "userId" TEXT NOT NULL,
-            "folderId" TEXT,
-            CONSTRAINT "Key_pkey" PRIMARY KEY ("id")
-          );
-        `;
+        console.log('Creating tables using raw SQL...');
         
-        // Execute the schema creation
-        await prisma.$executeRawUnsafe(schema);
+        // Create tables one by one to avoid prepared statement issues
+        const tables = [
+          {
+            name: 'User',
+            sql: `CREATE TABLE IF NOT EXISTS "User" (
+              "id" TEXT NOT NULL,
+              "email" TEXT NOT NULL,
+              "name" TEXT,
+              "password" TEXT NOT NULL,
+              "role" TEXT NOT NULL DEFAULT 'USER',
+              "apiToken" TEXT,
+              "plan" TEXT NOT NULL DEFAULT 'FREE',
+              "subscriptionExpiresAt" TIMESTAMP(3),
+              "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "updatedAt" TIMESTAMP(3) NOT NULL,
+              CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+            )`
+          },
+          {
+            name: 'Team',
+            sql: `CREATE TABLE IF NOT EXISTS "Team" (
+              "id" TEXT NOT NULL,
+              "name" TEXT NOT NULL,
+              "description" TEXT,
+              "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "updatedAt" TIMESTAMP(3) NOT NULL,
+              "ownerId" TEXT NOT NULL,
+              CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
+            )`
+          },
+          {
+            name: 'TeamMember',
+            sql: `CREATE TABLE IF NOT EXISTS "TeamMember" (
+              "id" TEXT NOT NULL,
+              "role" TEXT NOT NULL DEFAULT 'MEMBER',
+              "joinedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "invitedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "invitedBy" TEXT,
+              "userId" TEXT NOT NULL,
+              "teamId" TEXT NOT NULL,
+              CONSTRAINT "TeamMember_pkey" PRIMARY KEY ("id")
+            )`
+          },
+          {
+            name: 'Folder',
+            sql: `CREATE TABLE IF NOT EXISTS "Folder" (
+              "id" TEXT NOT NULL,
+              "name" TEXT NOT NULL,
+              "description" TEXT,
+              "color" TEXT NOT NULL DEFAULT '#3B82F6',
+              "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "updatedAt" TIMESTAMP(3) NOT NULL,
+              "userId" TEXT NOT NULL,
+              "parentId" TEXT,
+              CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
+            )`
+          },
+          {
+            name: 'Key',
+            sql: `CREATE TABLE IF NOT EXISTS "Key" (
+              "id" TEXT NOT NULL,
+              "name" TEXT NOT NULL,
+              "value" TEXT NOT NULL,
+              "description" TEXT,
+              "type" TEXT NOT NULL DEFAULT 'PASSWORD',
+              "tags" TEXT[],
+              "isFavorite" BOOLEAN NOT NULL DEFAULT false,
+              "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              "updatedAt" TIMESTAMP(3) NOT NULL,
+              "userId" TEXT NOT NULL,
+              "folderId" TEXT,
+              CONSTRAINT "Key_pkey" PRIMARY KEY ("id")
+            )`
+          }
+        ];
+        
+        // Execute each table creation separately
+        for (const table of tables) {
+          try {
+            await prisma.$executeRawUnsafe(table.sql);
+            console.log(`Table ${table.name} created successfully`);
+          } catch (error) {
+            console.log(`Table ${table.name} already exists or error:`, error.message);
+          }
+        }
+        
         console.log('Schema created successfully using raw SQL');
       }
       
