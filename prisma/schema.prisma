@@ -132,8 +132,10 @@ model Folder {
 model Session {
   id        String   @id @default(cuid())
   token     String   @unique
-  expiresAt DateTime
+  expires   DateTime @map("expires")
+  expiresAt DateTime? @map("expiresAt")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   userId String

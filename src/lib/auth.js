@@ -13,12 +13,12 @@ export async function verifyPassword(password, hashedPassword) {
 
 export async function createSession(userId) {
   const token = crypto.randomBytes(32).toString('hex')
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
   const session = await prisma.session.create({
     data: {
       token,
-      expiresAt,
+      expires,
       userId
     }
   })
@@ -32,7 +32,7 @@ export async function validateSession(token) {
     include: { user: true }
   })
 
-  if (!session || session.expiresAt < new Date()) {
+  if (!session || session.expires < new Date()) {
     return null
   }
 
