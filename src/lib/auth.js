@@ -99,12 +99,14 @@ export async function getCurrentUser(request) {
 export async function createRefreshToken(userId) {
   const token = crypto.randomBytes(64).toString('hex');
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+  const now = new Date();
 
   const refreshToken = await prisma.refreshToken.create({
     data: {
       token,
       expiresAt,
-      userId
+      userId,
+      updatedAt: now
     }
   });
 
