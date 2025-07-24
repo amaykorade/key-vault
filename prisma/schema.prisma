@@ -35,7 +35,7 @@ model User {
   ownedTeams Team[] @relation("TeamOwner")
   teamMemberships TeamMember[]
 
-  @@map("users")
+  @@map("User")
 }
 
 model Team {
@@ -51,7 +51,7 @@ model Team {
   members TeamMember[]
   keyAccesses KeyAccess[]
 
-  @@map("teams")
+  @@map("Team")
 }
 
 model TeamMember {
@@ -68,7 +68,7 @@ model TeamMember {
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([userId, teamId])
-  @@map("team_members")
+  @@map("TeamMember")
 }
 
 model KeyAccess {
@@ -84,7 +84,7 @@ model KeyAccess {
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([keyId, teamId])
-  @@map("key_accesses")
+  @@map("KeyAccess")
 }
 
 model Key {
@@ -107,7 +107,7 @@ model Key {
   // Team access
   teamAccesses KeyAccess[]
 
-  @@map("keys")
+  @@map("Key")
 }
 
 model Folder {
@@ -126,7 +126,7 @@ model Folder {
   parent   Folder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children Folder[] @relation("FolderHierarchy")
 
-  @@map("folders")
+  @@map("Folder")
 }
 
 model Session {
@@ -139,7 +139,7 @@ model Session {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("sessions")
+  @@map("Session")
 }
 
 model AuditLog {
@@ -156,7 +156,7 @@ model AuditLog {
   userId String?
   user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@map("audit_logs")
+  @@map("AuditLog")
 }
 
 model RefreshToken {
@@ -170,7 +170,7 @@ model RefreshToken {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("refresh_tokens")
+  @@map("RefreshToken")
 }
 
 model Payment {
@@ -189,7 +189,7 @@ model Payment {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  @@map("payments")
+  @@map("Payment")
 }
 
 enum UserRole {
@@ -255,7 +255,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
+  @@map("Account")
 }
 
 model VerificationToken {
@@ -264,5 +264,5 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verification_tokens")
+  @@map("VerificationToken")
 }
