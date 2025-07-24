@@ -44,6 +44,7 @@ export async function POST() {
     const refreshTokenColumns = [
       { column: 'token', type: 'TEXT' },
       { column: 'expiresAt', type: 'TIMESTAMP(3)' },
+      { column: 'revoked', type: 'BOOLEAN NOT NULL DEFAULT false' },
       { column: 'createdAt', type: 'TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP' },
       { column: 'updatedAt', type: 'TIMESTAMP(3) NOT NULL' },
       { column: 'userId', type: 'TEXT NOT NULL' }
