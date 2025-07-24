@@ -264,6 +264,59 @@ export async function POST() {
         }
         
         console.log('Schema created successfully using raw SQL');
+        
+        // Add missing columns to existing tables
+        console.log('Adding missing columns to existing tables...');
+        const alterQueries = [
+          // Add missing columns to User table
+          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "subscriptionExpiresAt" TIMESTAMP(3)`,
+          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "apiToken" TEXT`,
+          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL DEFAULT 'FREE'`,
+          
+          // Add missing columns to Session table
+          `ALTER TABLE "Session" ADD COLUMN IF NOT EXISTS "sessionToken" TEXT`,
+          
+          // Add missing columns to Account table
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "refresh_token" TEXT`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "access_token" TEXT`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "expires_at" INTEGER`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "token_type" TEXT`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "scope" TEXT`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "id_token" TEXT`,
+          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "session_state" TEXT`,
+          
+          // Add missing columns to Key table
+          `ALTER TABLE "Key" ADD COLUMN IF NOT EXISTS "tags" TEXT[]`,
+          `ALTER TABLE "Key" ADD COLUMN IF NOT EXISTS "isFavorite" BOOLEAN NOT NULL DEFAULT false`,
+          
+          // Add missing columns to AuditLog table
+          `ALTER TABLE "AuditLog" ADD COLUMN IF NOT EXISTS "details" JSONB`,
+          
+          // Add missing columns to RefreshToken table
+          `ALTER TABLE "RefreshToken" ADD COLUMN IF NOT EXISTS "token" TEXT`,
+          `ALTER TABLE "RefreshToken" ADD COLUMN IF NOT EXISTS "expiresAt" TIMESTAMP(3)`,
+          
+          // Add missing columns to Payment table
+          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "razorpayOrderId" TEXT`,
+          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "razorpayPaymentId" TEXT`,
+          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL`,
+          
+          // Add missing columns to KeyAccess table
+          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "permissions" TEXT[] NOT NULL`,
+          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "grantedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "grantedBy" TEXT NOT NULL`
+        ];
+        
+        for (const query of alterQueries) {
+          try {
+            await prisma.$executeRawUnsafe(query);
+            console.log('Column added successfully');
+          } catch (error) {
+            console.log('Column already exists or error:', error.message);
+          }
+        }
+        
+        console.log('Database migration completed with all columns');
       }
       
     } catch (error) {
