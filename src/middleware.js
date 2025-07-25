@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 
 // Define protected and public routes
-const protectedRoutes = ['/dashboard', '/keys', '/folders', '/settings']
+const protectedRoutes = ['/dashboard', '/keys', '/folders', '/settings', '/api', '/teams', '/projects']
 const authRoutes = ['/auth/login', '/auth/signup']
-const publicRoutes = ['/', '/about', '/contact']
+const publicRoutes = ['/', '/about', '/contact', '/docs', '/pricing', '/privacy', '/terms']
 
 export function middleware(request) {
   const { pathname } = request.nextUrl

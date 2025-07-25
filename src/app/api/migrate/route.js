@@ -12,7 +12,7 @@ export async function POST() {
     
     // Enable UUID extension
     try {
-      await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    await prisma.$executeRaw`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
       console.log('UUID extension enabled');
     } catch (extError) {
       console.log('UUID extension already exists or not needed');

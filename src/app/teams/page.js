@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import useAuthStore from '@/stores/authStore';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -9,6 +10,7 @@ import Input from '@/components/ui/Input';
 import PlanRequirement from '@/components/PlanRequirement';
 
 export default function TeamsPage() {
+  const { user, isAuthenticated, isLoading } = useAuthStore();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,9 +22,16 @@ export default function TeamsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchTeams();
-    fetchSubscription();
-  }, []);
+    if (!isAuthenticated && !isLoading) {
+      router.push('/auth/login');
+      return;
+    }
+    
+    if (isAuthenticated) {
+      fetchTeams();
+      fetchSubscription();
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   const fetchSubscription = async () => {
     try {
@@ -95,6 +104,18 @@ export default function TeamsPage() {
       setCreating(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const handleDeleteTeam = async (teamId) => {
     if (!confirm('Are you sure you want to delete this team? This action cannot be undone.')) {

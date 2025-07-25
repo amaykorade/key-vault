@@ -15,7 +15,7 @@ const loadRazorpayScript = () => {
   });
 };
 
-const PricingTier = ({ name, price, priceSuffix, description, features, highlighted = false, buttonText = "Get Started", onUpgrade, isPaid }) => (
+const PricingTier = ({ name, price, priceSuffix, description, features, highlighted = false, buttonText = "Get Started for Free", onUpgrade, isPaid }) => (
   <Card className={`h-full flex flex-col transition-all duration-300 hover:shadow-xl ${highlighted ? 'border-2 border-blue-500 shadow-xl scale-105 relative z-10 bg-gradient-to-b from-gray-700 to-gray-800' : 'border border-gray-600 hover:border-gray-500'}`}>
     <div className="p-6 flex flex-col h-full">
       {/* Header */}

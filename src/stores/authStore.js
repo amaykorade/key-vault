@@ -8,7 +8,7 @@ const useAuthStore = create(
       user: null,
       session: null,
       isAuthenticated: false,
-      isLoading: false,
+      isLoading: true, // Start with loading true to prevent hydration mismatch
       error: null,
       hasCheckedAuth: false, // Track if we've already checked auth
 
@@ -134,6 +134,7 @@ const useAuthStore = create(
         
         // Don't check auth if we've already checked and there's no session
         if (state.hasCheckedAuth && !state.session) {
+          set({ isLoading: false })
           return
         }
         
@@ -150,8 +151,6 @@ const useAuthStore = create(
             return
           }
         }
-        
-        set({ isLoading: true })
         
         try {
           const response = await fetch('/api/auth/me', {

@@ -12,308 +12,340 @@ import {
   BarChart3, 
   CheckCircle, 
   ArrowRight, 
-  Play
+  Play,
+  Star,
+  Sparkles,
+  Terminal,
+  Database,
+  Cloud,
+  Eye,
+  Copy,
+  Clock,
+  TrendingUp,
+  ShieldCheck,
+  Cpu,
+  Server,
+  Save,
+  RotateCcw
 } from 'lucide-react';
 
 const HomePage = () => {
-
   const features = [
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-grade encryption and security protocols to keep your API keys and secrets safe from unauthorized access."
+      icon: ShieldCheck,
+      title: "Enterprise-Grade Security",
+      description: "Military-grade AES-256 encryption with zero-knowledge architecture. Your secrets are encrypted before they leave your device.",
+      gradient: "from-emerald-500 to-teal-500"
     },
     {
       icon: Zap,
-      title: "Lightning Fast",
-      description: "Access your API keys instantly with our high-performance SDK and RESTful API endpoints."
+      title: "Lightning Fast Access",
+      description: "Access your API keys in milliseconds with our globally distributed infrastructure and optimized SDK.",
+      gradient: "from-amber-500 to-orange-500"
     },
     {
       icon: Globe,
-      title: "Global Access",
-      description: "Access your keys from anywhere in the world with our globally distributed infrastructure."
+      title: "Global Infrastructure",
+      description: "Deployed across multiple regions with automatic failover and 99.9% uptime guarantee.",
+      gradient: "from-blue-500 to-indigo-500"
     },
     {
       icon: Code,
-      title: "Developer Friendly",
-      description: "Simple SDK integration with comprehensive documentation and code examples for all major languages."
+      title: "Developer First",
+      description: "Simple SDK integration with comprehensive documentation, code examples, and IDE support.",
+      gradient: "from-purple-500 to-pink-500"
     },
     {
       icon: Users,
-      title: "Team Management",
-      description: "Collaborate with your team, manage permissions, and control access levels for different environments."
+      title: "Team Collaboration",
+      description: "Granular permissions, role-based access control, and secure team sharing without compromising security.",
+      gradient: "from-cyan-500 to-blue-500"
     },
     {
       icon: BarChart3,
-      title: "Usage Analytics",
-      description: "Monitor API key usage, track performance metrics, and get detailed analytics and insights."
+      title: "Advanced Analytics",
+      description: "Monitor usage patterns, track performance metrics, and get detailed insights into your key management.",
+      gradient: "from-green-500 to-emerald-500"
     }
   ];
 
   const integrations = [
-    { name: "Node.js", logo: "🟢" },
-    { name: "Python", logo: "🐍" },
-    { name: "React", logo: "⚛️" },
-    { name: "Go", logo: "🔵" },
-    { name: "Java", logo: "☕" },
-    { name: "PHP", logo: "🐘" }
+    { name: "Node.js", logo: "🟢", color: "bg-green-500" },
+    { name: "Python", logo: "🐍", color: "bg-yellow-500" },
+    { name: "React", logo: "⚛️", color: "bg-blue-500" },
+    { name: "Go", logo: "🔵", color: "bg-cyan-500" },
+    { name: "Java", logo: "☕", color: "bg-red-500" },
+    { name: "PHP", logo: "🐘", color: "bg-purple-500" },
+    { name: ".NET", logo: "🟣", color: "bg-purple-600" },
+    { name: "Ruby", logo: "💎", color: "bg-red-600" }
   ];
 
-
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Senior DevOps Engineer",
+      company: "TechCorp",
+      content: "Key Vault has transformed how we manage secrets. The SDK integration is seamless and the security is top-notch.",
+      rating: 5
+    },
+    {
+      name: "Marcus Rodriguez",
+      role: "CTO",
+      company: "StartupXYZ",
+      content: "We switched from managing API keys in spreadsheets to Key Vault. The difference is night and day.",
+      rating: 5
+    },
+    {
+      name: "Emily Watson",
+      role: "Lead Developer",
+      company: "DevStudio",
+      content: "The team collaboration features are incredible. We can now securely share keys without worrying about security.",
+      rating: 5
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
 
       {/* Hero Section */}
-      <section className="pt-20 pb-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-32 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-emerald-500/5"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.1%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-900 text-blue-200 rounded-full text-sm font-medium mb-8">
-              <Shield className="h-4 w-4 mr-2" />
+            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-700 rounded-full text-sm font-medium mb-8 border border-emerald-200">
+              <Sparkles className="h-4 w-4 mr-2" />
               Trusted by 10,000+ developers worldwide
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Secure API Key
-              <span className="text-blue-400 block">Management Made Simple</span>
+            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 leading-tight">
+              Secure, Rotate, and Access
+              <span className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+                Your API Keys Effortlessly
+              </span>
             </h1>
             
-            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Store, manage, and access your API keys and secrets with enterprise-grade security. 
-              Our platform provides seamless integration with your applications through our powerful SDK and RESTful API.
+            <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+              Centralized key vault for developers to securely store, auto-rotate, and access secrets via SDK. 
+              No more plaintext configs or expired API tokens.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                             <a href="/auth/signup" className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center space-x-2 shadow-lg">
-                 <span>Start Free Trial</span>
-                 <ArrowRight className="h-5 w-5" />
-               </a>
-               <a href="/docs" className="px-8 py-4 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors font-semibold text-lg flex items-center space-x-2 border-2 border-gray-600">
-                 <Play className="h-5 w-5" />
-                 <span>View Documentation</span>
-               </a>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+              <a href="/auth/signup" className="group px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                <span>Get Started for Free</span>
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a href="/docs" className="px-8 py-4 bg-white text-slate-700 rounded-xl hover:bg-slate-50 transition-all font-semibold text-lg flex items-center space-x-3 border border-slate-200 shadow-lg hover:shadow-xl">
+                <Play className="h-5 w-5" />
+                <span>See Demo</span>
+              </a>
             </div>
             
-                         <div className="mt-16">
-               <div className="bg-gray-700/60 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-600/20 max-w-4xl mx-auto">
-                <div className="bg-gray-900 rounded-lg p-6 text-left">
-                  <div className="flex items-center space-x-2 mb-4">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-400 text-sm ml-4">Terminal</span>
+            {/* Code Demo */}
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-slate-200/50">
+                                  <div className="bg-slate-900 rounded-xl p-6 text-left">
+                    <div className="flex items-center space-x-2 mb-4">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      <span className="text-slate-400 text-sm ml-4 font-mono">Terminal</span>
+                    </div>
+                    <div className="font-mono text-sm leading-relaxed">
+                      <div className="text-green-400">{`$ npm install key-vault-sdk`}</div>
+                      <div className="text-slate-500">{`// Initialize the SDK`}</div>
+                      <div className="text-blue-400">{`const kv = new KeyVault('your-api-token');`}</div>
+                      <div className="text-slate-500">{`// Retrieve your secrets`}</div>
+                      <div className="text-yellow-400">{`const apiKey = await kv.getKeyValue('folder-id', 'api-key');`}</div>
+                    </div>
                   </div>
-                  <div className="font-mono text-sm text-green-400">
-                    <div>{`$ npm install key-vault-sdk`}</div>
-                    <div className="text-gray-400">{`// Initialize the SDK`}</div>
-                    <div>{`const kv = new KeyVault('your-api-token');`}</div>
-                    <div className="text-gray-400">{`// Retrieve your secrets`}</div>
-                    <div>{`const apiKey = await kv.getKeyValue('folder-id', 'api-key');`}</div>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Problem & Solution Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-              Storing API Keys Shouldn&apos;t Be This Hard
-            </h2>
-            
-            {/* Problem */}
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-xl p-8 mb-12 max-w-4xl mx-auto border border-gray-600/20 shadow-lg">
-              <h3 className="text-xl font-semibold text-red-400 mb-6">The Current Pain Points:</h3>
-              <div className="grid md:grid-cols-3 gap-6 text-left">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-red-300 text-sm font-bold">😱</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">Scattered Everywhere</h4>
-                    <p className="text-gray-300">API keys lost in Notion docs, Slack messages, and .env files scattered across projects</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-red-300 text-sm font-bold">🔥</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">Version Control Mess</h4>
-                    <p className="text-gray-300">Accidentally committed secrets, outdated keys, and no proper rotation strategy</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-red-300 text-sm font-bold">🚫</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">No Access Control</h4>
-                    <p className="text-gray-300">Team members can&apos;t access keys securely, leading to unsafe sharing practices</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Solution */}
-            <div className="bg-gradient-to-r from-green-900 to-blue-900 rounded-xl p-8 max-w-4xl mx-auto border border-gray-600/20 shadow-lg">
-              <h3 className="text-xl font-semibold text-green-400 mb-6">Our Simple Solution:</h3>
-              <div className="grid md:grid-cols-3 gap-6 text-left">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Shield className="h-4 w-4 text-green-300" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">Secure Vault</h4>
-                    <p className="text-gray-300">Enterprise-grade encryption with centralized, organized key storage</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Code className="h-4 w-4 text-green-300" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">SDK Access</h4>
-                    <p className="text-gray-300">One-line code integration - access your keys instantly from any application</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-green-800 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Globe className="h-4 w-4 text-green-300" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">Developer-Friendly</h4>
-                    <p className="text-gray-300">CLI, REST API, and beautiful dashboard - use whatever fits your workflow</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Core Features Section */}
-      <section id="features" className="py-20 bg-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Everything you need in one place
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Built for developers, trusted by teams
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">🔒</div>
-              <h3 className="text-xl font-semibold text-white mb-4">End-to-End Encryption</h3>
-              <p className="text-gray-300 leading-relaxed">Military-grade AES-256 encryption ensures your secrets are always protected, even from us.</p>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">⚡</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Instant SDK Access</h3>
-              <p className="text-gray-300 leading-relaxed">One line of code to access your keys. No more hunting through files or repositories.</p>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">👥</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Team Sharing & Access Roles</h3>
-              <p className="text-gray-300 leading-relaxed">Granular permissions and secure team sharing without compromising security.</p>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">🌐</div>
-              <h3 className="text-xl font-semibold text-white mb-4">REST + CLI + Dashboard</h3>
-              <p className="text-gray-300 leading-relaxed">Multiple ways to interact - use what works best for your development workflow.</p>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">🧪</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Secrets History & Expiry</h3>
-              <p className="text-gray-300 leading-relaxed">
-                <span>Track changes and set expiration dates for automatic rotation.</span>
-                <span className="inline-block mt-2 px-2 py-1 bg-blue-900 text-blue-200 text-xs rounded-full">Coming Soon</span>
-              </p>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-6">📁</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Folder-Based Organization</h3>
-              <p className="text-gray-300 leading-relaxed">Organize keys by project, environment, or any structure that makes sense for your team.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-24">
+      <section className="py-24 relative bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
-              Get started in 3 simple steps
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
+              How It Works
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              From setup to accessing your keys in production - it takes less than 5 minutes
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              Three simple steps to secure, access, and manage your API keys
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto mb-20">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-blue-700">
-                <span className="text-3xl font-bold text-blue-300">1</span>
+          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+            {/* Step 1: Store Securely */}
+            <div className="text-center group">
+              <div className="relative">
+                <div className="w-24 h-24 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-emerald-200">
+                  <Save className="h-12 w-12 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  1
+                </div>
               </div>
-              <h3 className="text-2xl font-semibold text-white mb-6">Create Account</h3>
-              <p className="text-gray-300 leading-relaxed text-lg">Sign up with your email. No credit card required for the free tier.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-6">Store Securely</h3>
+              <p className="text-slate-600 leading-relaxed text-lg">
+                Save your API keys in an encrypted, cloud-based vault with military-grade security.
+              </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-blue-700">
-                <span className="text-3xl font-bold text-blue-300">2</span>
+            {/* Step 2: Access Instantly */}
+            <div className="text-center group">
+              <div className="relative">
+                <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-blue-200">
+                  <Zap className="h-12 w-12 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  2
+                </div>
               </div>
-              <h3 className="text-2xl font-semibold text-white mb-6">Store Your Keys</h3>
-              <p className="text-gray-300 leading-relaxed text-lg">Use our dashboard to securely store your API keys and secrets.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-6">Access Instantly</h3>
+              <p className="text-slate-600 leading-relaxed text-lg">
+                Use your keys securely from anywhere, without hardcoding them in your applications.
+              </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-blue-700">
-                <span className="text-3xl font-bold text-blue-300">3</span>
+            {/* Step 3: Rotate Easily */}
+            <div className="text-center group">
+              <div className="relative">
+                <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-purple-200">
+                  <RotateCcw className="h-12 w-12 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                  3
+                </div>
               </div>
-              <h3 className="text-2xl font-semibold text-white mb-6">Access from Code</h3>
-              <p className="text-gray-300 leading-relaxed text-lg">Install our SDK and access your keys with a simple function call.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-6">Rotate Easily</h3>
+              <p className="text-slate-600 leading-relaxed text-lg">
+                Manually rotate keys when needed. Auto-rotation coming soon for enhanced security.
+              </p>
             </div>
           </div>
           
-          {/* Visual Flow */}
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-2xl p-12 shadow-xl border border-gray-600/20">
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="bg-gray-900 rounded-xl p-6 text-green-400 font-mono text-base">
-                  <div className="text-gray-400 mb-3 text-sm"># Step 2: Store keys</div>
-                  <div className="mb-2">$ secure-keys set prod-db</div>
-                  <div className="text-gray-400 mb-2">Enter value: ••••••••</div>
-                  <div className="text-green-400">✓ Stored securely</div>
+          {/* Visual Flow Arrows */}
+          <div className="hidden md:flex justify-center items-center mt-16 mb-12">
+            <div className="flex items-center space-x-8">
+              <div className="w-16 h-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full"></div>
+              <ArrowRight className="h-8 w-8 text-slate-400" />
+              <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+              <ArrowRight className="h-8 w-8 text-slate-400" />
+              <div className="w-16 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+            </div>
+          </div>
+          
+          {/* Call to Action */}
+          <div className="text-center">
+            <a href="/auth/signup" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all font-semibold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1">
+              <span>Get Started for Free</span>
+              <ArrowRight className="h-5 w-5 ml-3 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Features Section */}
+      <section className="py-24 relative bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
+              Core Features
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              Everything you need to secure and manage your API keys effectively
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* End-to-End Encryption */}
+            <div className="group bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-8 border border-slate-200 hover:border-blue-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">End-to-End Encryption</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Your API keys are encrypted at rest and in transit with military-grade security.
+              </p>
+            </div>
+
+            {/* Easy Manual Key Rotation */}
+            <div className="group bg-gradient-to-br from-slate-50 to-purple-50 rounded-2xl p-8 border border-slate-200 hover:border-purple-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <RotateCcw className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Easy Manual Key Rotation</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Rotate your secrets in seconds via the dashboard or API with just a few clicks.
+              </p>
+            </div>
+
+            {/* Centralized Key Access */}
+            <div className="group bg-gradient-to-br from-slate-50 to-cyan-50 rounded-2xl p-8 border border-slate-200 hover:border-cyan-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Database className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Centralized Key Access</h3>
+              <p className="text-slate-600 leading-relaxed">
+                One place to manage all your environment secrets with organized folders and projects.
+              </p>
+            </div>
+
+            {/* Multi-Environment Support */}
+            <div className="group bg-gradient-to-br from-slate-50 to-green-50 rounded-2xl p-8 border border-slate-200 hover:border-green-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Globe className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Multi-Environment Support</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Organize secrets by dev, staging, and production environments with clear separation.
+              </p>
+            </div>
+
+            {/* Developer-First UX */}
+            <div className="group bg-gradient-to-br from-slate-50 to-orange-50 rounded-2xl p-8 border border-slate-200 hover:border-orange-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Code className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Developer-First UX</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Simple, fast UI/UX designed for solo developers and teams alike with intuitive workflows.
+              </p>
+            </div>
+
+            {/* Cloud-Hosted & Scalable */}
+            <div className="group bg-gradient-to-br from-slate-50 to-indigo-50 rounded-2xl p-8 border border-slate-200 hover:border-indigo-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Cloud className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Cloud-Hosted & Scalable</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Built on secure, scalable infrastructure with zero operations overhead for your team.
+              </p>
+            </div>
+          </div>
+
+          {/* Coming Soon Feature */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-2xl p-8 border border-slate-300 relative overflow-hidden">
+              <div className="absolute top-4 right-4">
+                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  Coming Soon
+                </span>
+              </div>
+              <div className="flex items-start space-x-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <RotateCcw className="h-6 w-6 text-white" />
                 </div>
-                
-                <div className="bg-gray-900 rounded-xl p-6 text-green-400 font-mono text-base">
-                  <div className="text-gray-400 mb-3 text-sm"># Step 3: Access in code</div>
-                  <div className="mb-2">
-                    <span className="text-blue-300">const</span> key = 
-                    <span className="text-yellow-300">await</span> keys.get(
-                    <span className="text-green-300">&apos;prod-db&apos;</span>);
-                  </div>
-                  <div className="text-gray-400">{/* Access your secret */}</div>
-                </div>
-                
-                <div className="bg-gray-900 rounded-xl p-6 text-green-400 font-mono text-base">
-                  <div className="text-gray-400 mb-3 text-sm"># Result</div>
-                  <div className="text-green-400 mb-2">Connected to DB ✓</div>
-                  <div className="text-gray-400">Secure & Fast</div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Auto-Rotation</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Automated key rotation for supported platforms. Set it and forget it - your keys will rotate automatically based on your security policies.
+                  </p>
                 </div>
               </div>
             </div>
@@ -321,241 +353,562 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Demo Section */}
-      <section className="py-20 bg-gray-700">
+      {/* Comparison Section */}
+      <section className="py-16 relative bg-gradient-to-br from-slate-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              See it in action
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+              Why Use Our API Vault Instead of .env Files or DIY Vaults?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Our intuitive dashboard makes managing API keys effortless
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              See how our solution compares to traditional approaches
             </p>
           </div>
           
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-600/20">
-              <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-6">
-                <div className="flex items-center space-x-2 mb-6">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-gray-400 text-sm ml-4">Key Vault Dashboard</span>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-200/50 overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
+                <div className="p-6 border-r border-slate-700">
+                  <h3 className="text-lg font-semibold">Feature</h3>
+                </div>
+                <div className="p-6 border-r border-slate-700 text-center">
+                  <h3 className="text-lg font-semibold">.env Files</h3>
+                </div>
+                <div className="p-6 border-r border-slate-700 text-center">
+                  <h3 className="text-lg font-semibold">DIY Vault</h3>
+                </div>
+                <div className="p-6 text-center">
+                  <h3 className="text-lg font-semibold">Our Vault</h3>
+                </div>
+              </div>
+              
+              {/* Table Rows */}
+              <div className="divide-y divide-slate-200">
+                {/* Encryption at rest */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <Shield className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Encryption at rest</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
                 </div>
                 
-                {/* Mock Dashboard */}
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-white font-semibold">My API Keys</h3>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">+ Add Key</button>
+                {/* Rotation support */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <RotateCcw className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Rotation support</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-yellow-500 text-sm font-medium">🔸 Manual</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-sm font-medium">✅ Manual</span>
+                  </div>
+                </div>
+                
+                {/* Developer-friendly UI */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <Code className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Developer-friendly UI</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
+                </div>
+                
+                {/* Access via API */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <Zap className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Access via API</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-yellow-500 text-sm font-medium">🔸 Hard</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-sm font-medium">✅ Easy</span>
+                  </div>
+                </div>
+                
+                {/* Secrets versioning */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <Clock className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Secrets versioning</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
+                </div>
+                
+                {/* Multi-env support */}
+                <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
+                  <div className="p-6 border-r border-slate-200 flex items-center">
+                    <Globe className="h-5 w-5 text-slate-600 mr-3" />
+                    <span className="font-medium text-slate-900">Multi-env support</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-red-500 text-2xl">❌</span>
+                  </div>
+                  <div className="p-6 border-r border-slate-200 flex items-center justify-center">
+                    <span className="text-yellow-500 text-sm font-medium">🔸 Some</span>
+                  </div>
+                  <div className="p-6 flex items-center justify-center">
+                    <span className="text-green-500 text-2xl">✅</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Security First Section */}
+      <section className="py-20 relative bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Built with Security as a First-Class Citizen
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              Enterprise-grade security measures to protect your most sensitive data
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* AES-256 encryption */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">AES-256 Encryption</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Military-grade encryption ensures your API keys are protected at rest and in transit with industry-standard AES-256.
+              </p>
+            </div>
+
+            {/* Cloudflare/Firewall protection */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Globe className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Cloudflare Protection</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Enterprise-grade DDoS protection and firewall security powered by Cloudflare's global network infrastructure.
+              </p>
+            </div>
+
+            {/* HTTPS enforced */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <CheckCircle className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">HTTPS Enforced</h3>
+              <p className="text-slate-300 leading-relaxed">
+                All connections are secured with TLS 1.3 encryption and HTTPS is strictly enforced across all endpoints.
+              </p>
+            </div>
+
+            {/* No plaintext logs */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Eye className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">No Plaintext Logs</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Sensitive data is never logged in plaintext. All audit trails are encrypted and secure by design.
+              </p>
+            </div>
+
+            {/* Access control */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Access Control</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Granular permissions and role-based access control. Team RBAC coming soon for enterprise teams.
+              </p>
+            </div>
+
+            {/* SOC 2 Compliance */}
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <ShieldCheck className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Compliance Ready</h3>
+              <p className="text-slate-300 leading-relaxed">
+                Built with compliance in mind. SOC 2 Type II certification and GDPR compliance for enterprise customers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Built for Developers Section */}
+      <section className="py-20 relative bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Built for Developers
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              Designed with real-world developer workflows in mind
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Solo developers */}
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-blue-300 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
+                  <span className="text-2xl">🧑‍💻</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">Solo Developers</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Manage multiple API integrations across different projects without the hassle of scattered .env files. Keep all your secrets organized and secure in one place.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* SaaS startups */}
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-emerald-300 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
+                  <span className="text-2xl">🛠️</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">SaaS Startups</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Handle secrets across dev, staging, and production environments with confidence. Scale your security practices as your team and infrastructure grows.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Teams */}
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-purple-300 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
+                  <span className="text-2xl">🤝</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">Team Collaboration</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Shared secure access for teams with granular permissions and role-based access control. Team features coming soon for seamless collaboration.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Key rotation */}
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-orange-300 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
+                  <span className="text-2xl">🔁</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3">Key Rotation</h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Easily rotate keys from Stripe, SendGrid, Firebase, and other services manually. Set up automated rotation policies for enhanced security.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Roadmap Section */}
+      <section className="py-20 relative bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Roadmap / What's Coming Next
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              Exciting features on the horizon to make your development workflow even better
+            </p>
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            {/* Timeline */}
+            <div className="relative">
+              {/* Timeline Line */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-emerald-500 to-blue-500 h-full rounded-full"></div>
+              
+              {/* Timeline Items */}
+              <div className="space-y-12">
+                {/* Auto key rotation */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8 text-right">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center justify-end space-x-3 mb-3">
+                        <span className="text-2xl">🔁</span>
+                        <h3 className="text-xl font-bold text-white">Auto Key Rotation</h3>
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Automated key rotation for supported platforms. Set policies and let the system handle the rest.
+                      </p>
+                    </div>
                   </div>
                   
-                  <div className="space-y-3">
-                    <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">Stripe API Key</div>
-                        <div className="text-gray-400 text-sm">Production • Last used 2h ago</div>
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-emerald-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8"></div>
+                </div>
+
+                {/* Role-based access */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8"></div>
+                  
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-blue-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <span className="text-2xl">🔐</span>
+                        <h3 className="text-xl font-bold text-white">Role-Based Access</h3>
                       </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="bg-green-900 text-green-300 px-2 py-1 rounded text-xs">Active</span>
-                        <button className="text-gray-400 hover:text-white">👁️</button>
-                        <button className="text-gray-400 hover:text-white">📋</button>
-                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Granular permissions and role-based access control for enterprise teams and organizations.
+                      </p>
                     </div>
-                    
-                    <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">OpenAI API Key</div>
-                        <div className="text-gray-400 text-sm">Development • Last used 1d ago</div>
+                  </div>
+                </div>
+
+                {/* Usage analytics */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8 text-right">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-purple-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center justify-end space-x-3 mb-3">
+                        <span className="text-2xl">📊</span>
+                        <h3 className="text-xl font-bold text-white">Usage Analytics</h3>
                       </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="bg-blue-900 text-blue-300 px-2 py-1 rounded text-xs">Active</span>
-                        <button className="text-gray-400 hover:text-white">👁️</button>
-                        <button className="text-gray-400 hover:text-white">📋</button>
-                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Detailed insights into key usage patterns, access logs, and security metrics.
+                      </p>
                     </div>
-                    
-                    <div className="bg-gray-700 rounded-lg p-4 flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">Database URL</div>
-                        <div className="text-gray-400 text-sm">Production • Last used 5m ago</div>
+                  </div>
+                  
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-purple-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8"></div>
+                </div>
+
+                {/* Public APIs & SDKs */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8"></div>
+                  
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-pink-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-pink-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <span className="text-2xl">🌍</span>
+                        <h3 className="text-xl font-bold text-white">Public APIs & SDKs</h3>
                       </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="bg-green-900 text-green-300 px-2 py-1 rounded text-xs">Active</span>
-                        <button className="text-gray-400 hover:text-white">👁️</button>
-                        <button className="text-gray-400 hover:text-white">📋</button>
+                      <p className="text-slate-300 leading-relaxed">
+                        Comprehensive REST APIs and SDKs for Node.js, Python, Go, and more languages.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* GitHub/GitLab integrations */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8 text-right">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-orange-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center justify-end space-x-3 mb-3">
+                        <span className="text-2xl">🧩</span>
+                        <h3 className="text-xl font-bold text-white">GitHub/GitLab Integrations</h3>
                       </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Seamless integration with your existing Git workflows and CI/CD pipelines.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-orange-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8"></div>
+                </div>
+
+                {/* Vault sharing */}
+                <div className="relative flex items-center">
+                  <div className="w-1/2 pr-8"></div>
+                  
+                  {/* Timeline Dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-cyan-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  
+                  <div className="w-1/2 pl-8">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-cyan-400/50 transition-all hover:shadow-2xl">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <span className="text-2xl">📁</span>
+                        <h3 className="text-xl font-bold text-white">Vault Sharing</h3>
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Share vaults securely with team members with fine-grained access controls.
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 relative bg-gradient-to-br from-emerald-500 to-teal-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Get Started in Minutes
+            </h2>
+            <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed mb-12">
+              No credit card. No friction. Just security and control.
+            </p>
             
-            <div className="text-center mt-8">
-              <a href="/docs" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                <Play className="h-5 w-5 mr-2" />
-                View Documentation
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <a href="/auth/signup" className="group px-8 py-4 bg-white text-emerald-600 rounded-xl hover:bg-emerald-50 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                <span>Create Free Vault</span>
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <a href="/docs" className="px-8 py-4 bg-emerald-600/20 backdrop-blur-sm text-white rounded-xl hover:bg-emerald-600/30 transition-all font-semibold text-lg flex items-center space-x-3 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                <Play className="h-5 w-5" />
+                <span>See Demo</span>
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Who It's For Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Perfect for developers and teams
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Whether you&apos;re building solo or with a team, Key Vault scales with your needs
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20">
-              <div className="text-4xl mb-6">👨‍💻</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Solo Developers</h3>
-              <p className="text-gray-300 leading-relaxed mb-6">
-                Working on side projects and need a secure, simple way to manage API keys across multiple applications.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• Free tier with essential features</li>
-                <li>• Quick setup and integration</li>
-                <li>• No team management complexity</li>
-              </ul>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20 border-blue-400 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">Popular</span>
-              </div>
-              <div className="text-4xl mb-6">🚀</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Indie Hackers & SaaS Founders</h3>
-              <p className="text-gray-300 leading-relaxed mb-6">
-                Building products and need professional secret management without enterprise complexity.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• Multiple environments support</li>
-                <li>• Team collaboration features</li>
-                <li>• Usage analytics and monitoring</li>
-              </ul>
-            </div>
-            
-            <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-gray-600/20">
-              <div className="text-4xl mb-6">👥</div>
-              <h3 className="text-xl font-semibold text-white mb-4">Growing Teams</h3>
-              <p className="text-gray-300 leading-relaxed mb-6">
-                Teams that need fast onboarding, secure sharing, and don&apos;t want to manage complex infrastructure.
-              </p>
-              <ul className="text-sm text-gray-300 space-y-2">
-                <li>• Role-based access control</li>
-                <li>• Fast team member onboarding</li>
-                <li>• Audit logs and compliance</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-xl p-8 border border-gray-600/20">
-              <div className="text-3xl font-bold text-blue-400 mb-2">99.9%</div>
-              <div className="text-gray-300 font-medium">Uptime</div>
-            </div>
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-xl p-8 border border-gray-600/20">
-              <div className="text-3xl font-bold text-blue-400 mb-2">10K+</div>
-              <div className="text-gray-300 font-medium">Developers</div>
-            </div>
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-xl p-8 border border-gray-600/20">
-              <div className="text-3xl font-bold text-blue-400 mb-2">1M+</div>
-              <div className="text-gray-300 font-medium">API Keys Secured</div>
-            </div>
-            <div className="bg-gray-700/60 backdrop-blur-sm rounded-xl p-8 border border-gray-600/20">
-              <div className="text-3xl font-bold text-blue-400 mb-2">50+</div>
-              <div className="text-gray-300 font-medium">Integrations</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Integrations Section */}
-      <section id="integrations" className="py-20 bg-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Integrates with your favorite tools
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Our SDK supports all major programming languages and frameworks
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {integrations.map((integration, index) => (
-              <div key={index} className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-gray-600/20 hover:shadow-xl transition-shadow">
-                <div className="text-4xl mb-4">{integration.logo}</div>
-                <div className="font-semibold text-white">{integration.name}</div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <a href="/docs" className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              View All Integrations
-            </a>
-          </div>
-        </div>
-      </section>
-
-
+      
 
       {/* CTA Section */}
-      <section className="py-20">
+      {/* <section className="py-20 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-12 text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <div className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl p-12 text-white shadow-2xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to secure your API keys?
             </h2>
             <p className="text-xl mb-8 text-blue-100">
               Join thousands of developers who trust Key Vault for their API key management
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/auth/signup" className="px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-colors font-semibold text-lg">
+              <a href="/auth/signup" className="px-8 py-4 bg-white text-teal-600 rounded-xl hover:bg-gray-50 transition-all font-semibold text-lg shadow-lg">
                 Start Free Trial
               </a>
-              <a href="/docs" className="px-8 py-4 bg-blue-500 text-white rounded-xl hover:bg-blue-400 transition-colors font-semibold text-lg border border-blue-400">
+              <a href="/docs" className="px-8 py-4 bg-teal-500 text-white rounded-xl hover:bg-teal-400 transition-all font-semibold text-lg border border-teal-400 shadow-lg">
                 View Documentation
               </a>
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="bg-gray-800/80 backdrop-blur-sm border-t border-gray-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="p-2 bg-blue-600 rounded-xl">
-                <Key className="h-5 w-5 text-white" />
+      <footer className="bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Brand Section */}
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl">
+                  <Key className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-bold">Key Vault</span>
               </div>
-              <span className="text-lg font-bold text-white">Key Vault</span>
+              <p className="text-slate-300 mb-4 max-w-md">
+                Secure, rotate, and access your API keys effortlessly. Built for developers who care about security.
+              </p>
+              <div className="flex items-center space-x-4">
+                <span className="inline-flex items-center px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30">
+                  🚀 MVP Live
+                </span>
+                <div className="flex space-x-3">
+                  <a href="https://github.com" className="text-slate-400 hover:text-white transition-colors">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                  </a>
+                  <a href="https://twitter.com" className="text-slate-400 hover:text-white transition-colors">
+                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
             </div>
-            
-            <div className="flex space-x-6 text-gray-300">
-              <a href="/pricing" className="hover:text-blue-400">Pricing</a>
-              <a href="/docs" className="hover:text-blue-400">Docs</a>
-              <a href="/api" className="hover:text-blue-400">API</a>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="/docs" className="hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="/api" className="hover:text-white transition-colors">API Reference</a></li>
+                <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="/integrations" className="hover:text-white transition-colors">Integrations</a></li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
+              </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-600 mt-6 pt-6 text-center text-gray-400 text-sm">
-            <p>&copy; 2025 Key Vault</p>
+
+          {/* Bottom Section */}
+          <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-slate-400 text-sm">
+              &copy; 2025 Key Vault. All rights reserved.
+            </p>
+            <div className="flex items-center space-x-4 mt-4 md:mt-0">
+              <span className="text-slate-400 text-sm">Made with ❤️ for developers</span>
+            </div>
           </div>
         </div>
       </footer>

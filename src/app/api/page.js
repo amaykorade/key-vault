@@ -30,6 +30,10 @@ export default function ApiPage() {
     if (user) fetchToken();
   }, [user]);
 
+  useEffect(() => {
+    if (user) fetchToken();
+  }, [user]);
+
   const fetchToken = async () => {
     setLoading(true);
     setError('');
@@ -75,7 +79,15 @@ export default function ApiPage() {
     setShowToken(!showToken);
   };
 
-  if (isLoading || !isAuthenticated) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return null;
   }
 
