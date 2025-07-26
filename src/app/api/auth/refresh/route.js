@@ -10,9 +10,9 @@ export async function POST(request) {
     }
 
     // Find refresh token in DB
-    const dbToken = await prisma.refreshToken.findUnique({
+    const dbToken = await prisma.refresh_tokens.findUnique({
       where: { token: refreshTokenValue },
-      include: { user: true }
+      include: { users: true }
     })
 
     if (!dbToken || dbToken.revoked || dbToken.expiresAt < new Date()) {
@@ -26,7 +26,7 @@ export async function POST(request) {
     // Issue new session token
     const session = await createSession(dbToken.userId)
     // Optionally, rotate refresh token
-    await prisma.refreshToken.update({
+          await prisma.refresh_tokens.update({
       where: { token: dbToken.token },
       data: { revoked: true }
     })

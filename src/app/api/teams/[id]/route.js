@@ -14,19 +14,19 @@ export async function GET(request, { params }) {
 
     const { id } = params;
 
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: {
         id,
         OR: [
           { ownerId: user.id },
-          { members: { some: { userId: user.id } } }
+          { team_members: { some: { userId: user.id } } }
         ]
       },
       include: {
         owner: {
           select: { id: true, name: true, email: true }
         },
-        members: {
+        team_members: {
           include: {
             user: {
               select: { id: true, name: true, email: true }
@@ -70,7 +70,7 @@ export async function PUT(request, { params }) {
     const { name, description } = await request.json();
 
     // Check if user is team owner
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id, ownerId: user.id }
     });
 
@@ -78,7 +78,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: 'Team not found or access denied' }, { status: 404 });
     }
 
-    const updatedTeam = await prisma.team.update({
+    const updatedTeam = await prisma.teams.update({
       where: { id },
       data: {
         name: name?.trim(),
@@ -88,7 +88,7 @@ export async function PUT(request, { params }) {
         owner: {
           select: { id: true, name: true, email: true }
         },
-        members: {
+        team_members: {
           include: {
             user: {
               select: { id: true, name: true, email: true }
@@ -99,7 +99,7 @@ export async function PUT(request, { params }) {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'UPDATE',
         resource: 'team',
@@ -127,7 +127,7 @@ export async function DELETE(request, { params }) {
     const { id } = params;
 
     // Check if user is team owner
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id, ownerId: user.id }
     });
 
@@ -136,12 +136,12 @@ export async function DELETE(request, { params }) {
     }
 
     // Delete team (cascades to members and key accesses)
-    await prisma.team.delete({
+    await prisma.teams.delete({
       where: { id }
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'DELETE',
         resource: 'team',

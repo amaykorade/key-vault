@@ -176,8 +176,8 @@ const HomePage = () => {
             <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Three simple steps to secure, access, and manage your API keys
             </p>
-          </div>
-          
+                </div>
+                
           <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
             {/* Step 1: Store Securely */}
             <div className="text-center group">
@@ -200,23 +200,23 @@ const HomePage = () => {
               <div className="relative">
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-blue-200">
                   <Zap className="h-12 w-12 text-white" />
-                </div>
+                    </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   2
-                </div>
-              </div>
+                      </div>
+                    </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-6">Access Instantly</h3>
               <p className="text-slate-600 leading-relaxed text-lg">
                 Use your keys securely from anywhere, without hardcoding them in your applications.
               </p>
-            </div>
-            
+                  </div>
+                  
             {/* Step 3: Rotate Easily */}
             <div className="text-center group">
               <div className="relative">
                 <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-purple-200">
                   <RotateCcw className="h-12 w-12 text-white" />
-                </div>
+                    </div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   3
                 </div>
@@ -236,7 +236,7 @@ const HomePage = () => {
               <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
               <ArrowRight className="h-8 w-8 text-slate-400" />
               <div className="w-16 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
-            </div>
+        </div>
           </div>
           
           {/* Call to Action */}
@@ -272,7 +272,7 @@ const HomePage = () => {
                 Your API keys are encrypted at rest and in transit with military-grade security.
               </p>
             </div>
-
+            
             {/* Easy Manual Key Rotation */}
             <div className="group bg-gradient-to-br from-slate-50 to-purple-50 rounded-2xl p-8 border border-slate-200 hover:border-purple-300 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -283,7 +283,7 @@ const HomePage = () => {
                 Rotate your secrets in seconds via the dashboard or API with just a few clicks.
               </p>
             </div>
-
+            
             {/* Centralized Key Access */}
             <div className="group bg-gradient-to-br from-slate-50 to-cyan-50 rounded-2xl p-8 border border-slate-200 hover:border-cyan-300 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -304,8 +304,8 @@ const HomePage = () => {
               <p className="text-slate-600 leading-relaxed">
                 Organize secrets by dev, staging, and production environments with clear separation.
               </p>
-            </div>
-
+          </div>
+          
             {/* Developer-First UX */}
             <div className="group bg-gradient-to-br from-slate-50 to-orange-50 rounded-2xl p-8 border border-slate-200 hover:border-orange-300 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -315,8 +315,8 @@ const HomePage = () => {
               <p className="text-slate-600 leading-relaxed">
                 Simple, fast UI/UX designed for solo developers and teams alike with intuitive workflows.
               </p>
-            </div>
-
+                  </div>
+                  
             {/* Cloud-Hosted & Scalable */}
             <div className="group bg-gradient-to-br from-slate-50 to-indigo-50 rounded-2xl p-8 border border-slate-200 hover:border-indigo-300 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -326,9 +326,9 @@ const HomePage = () => {
               <p className="text-slate-600 leading-relaxed">
                 Built on secure, scalable infrastructure with zero operations overhead for your team.
               </p>
-            </div>
-          </div>
-
+                    </div>
+                  </div>
+                  
           {/* Coming Soon Feature */}
           <div className="mt-16 max-w-4xl mx-auto">
             <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-2xl p-8 border border-slate-300 relative overflow-hidden">
@@ -346,8 +346,8 @@ const HomePage = () => {
                   <p className="text-slate-600 leading-relaxed">
                     Automated key rotation for supported platforms. Set it and forget it - your keys will rotate automatically based on your security policies.
                   </p>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -417,8 +417,8 @@ const HomePage = () => {
                   <div className="p-6 flex items-center justify-center">
                     <span className="text-green-500 text-sm font-medium">✅ Manual</span>
                   </div>
-                </div>
-                
+                  </div>
+                  
                 {/* Developer-friendly UI */}
                 <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
                   <div className="p-6 border-r border-slate-200 flex items-center">
@@ -430,12 +430,12 @@ const HomePage = () => {
                   </div>
                   <div className="p-6 border-r border-slate-200 flex items-center justify-center">
                     <span className="text-red-500 text-2xl">❌</span>
-                  </div>
+                      </div>
                   <div className="p-6 flex items-center justify-center">
                     <span className="text-green-500 text-2xl">✅</span>
-                  </div>
-                </div>
-                
+                      </div>
+                    </div>
+                    
                 {/* Access via API */}
                 <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
                   <div className="p-6 border-r border-slate-200 flex items-center">
@@ -447,12 +447,12 @@ const HomePage = () => {
                   </div>
                   <div className="p-6 border-r border-slate-200 flex items-center justify-center">
                     <span className="text-yellow-500 text-sm font-medium">🔸 Hard</span>
-                  </div>
+                      </div>
                   <div className="p-6 flex items-center justify-center">
                     <span className="text-green-500 text-sm font-medium">✅ Easy</span>
-                  </div>
-                </div>
-                
+                      </div>
+                    </div>
+                    
                 {/* Secrets versioning */}
                 <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
                   <div className="p-6 border-r border-slate-200 flex items-center">
@@ -464,11 +464,11 @@ const HomePage = () => {
                   </div>
                   <div className="p-6 border-r border-slate-200 flex items-center justify-center">
                     <span className="text-green-500 text-2xl">✅</span>
-                  </div>
+                      </div>
                   <div className="p-6 flex items-center justify-center">
                     <span className="text-green-500 text-2xl">✅</span>
-                  </div>
-                </div>
+                      </div>
+                    </div>
                 
                 {/* Multi-env support */}
                 <div className="grid grid-cols-4 hover:bg-slate-50 transition-colors">
@@ -509,23 +509,23 @@ const HomePage = () => {
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Shield className="h-6 w-6 text-white" />
-              </div>
+                </div>
               <h3 className="text-xl font-bold text-white mb-4">AES-256 Encryption</h3>
               <p className="text-slate-300 leading-relaxed">
                 Military-grade encryption ensures your API keys are protected at rest and in transit with industry-standard AES-256.
               </p>
-            </div>
+                  </div>
 
             {/* Cloudflare/Firewall protection */}
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Globe className="h-6 w-6 text-white" />
-              </div>
+                  </div>
               <h3 className="text-xl font-bold text-white mb-4">Cloudflare Protection</h3>
               <p className="text-slate-300 leading-relaxed">
-                Enterprise-grade DDoS protection and firewall security powered by Cloudflare's global network infrastructure.
+                Enterprise-grade DDoS protection and firewall security powered by Cloudflare&apos;s global network infrastructure.
               </p>
-            </div>
+                </div>
 
             {/* HTTPS enforced */}
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
@@ -535,9 +535,9 @@ const HomePage = () => {
               <h3 className="text-xl font-bold text-white mb-4">HTTPS Enforced</h3>
               <p className="text-slate-300 leading-relaxed">
                 All connections are secured with TLS 1.3 encryption and HTTPS is strictly enforced across all endpoints.
-              </p>
-            </div>
-
+            </p>
+          </div>
+          
             {/* No plaintext logs */}
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -548,18 +548,18 @@ const HomePage = () => {
                 Sensitive data is never logged in plaintext. All audit trails are encrypted and secure by design.
               </p>
             </div>
-
+            
             {/* Access control */}
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Users className="h-6 w-6 text-white" />
-              </div>
+               </div>
               <h3 className="text-xl font-bold text-white mb-4">Access Control</h3>
               <p className="text-slate-300 leading-relaxed">
                 Granular permissions and role-based access control. Team RBAC coming soon for enterprise teams.
               </p>
             </div>
-
+            
             {/* SOC 2 Compliance */}
             <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -655,7 +655,7 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Roadmap / What's Coming Next
+              Roadmap / What&apos;s Coming Next
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Exciting features on the horizon to make your development workflow even better
@@ -816,7 +816,7 @@ const HomePage = () => {
                 <span>See Demo</span>
               </a>
             </div>
-          </div>
+            </div>
         </div>
       </section>
 
@@ -852,7 +852,7 @@ const HomePage = () => {
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl">
-                  <Key className="h-5 w-5 text-white" />
+                <Key className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xl font-bold">Key Vault</span>
               </div>
@@ -883,12 +883,11 @@ const HomePage = () => {
               <h3 className="text-lg font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-slate-300">
                 <li><a href="/docs" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="/api" className="hover:text-white transition-colors">API Reference</a></li>
                 <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
                 <li><a href="/integrations" className="hover:text-white transition-colors">Integrations</a></li>
               </ul>
             </div>
-
+            
             {/* Company */}
             <div>
               <h3 className="text-lg font-semibold mb-4">Company</h3>
@@ -900,7 +899,7 @@ const HomePage = () => {
               </ul>
             </div>
           </div>
-
+          
           {/* Bottom Section */}
           <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm">

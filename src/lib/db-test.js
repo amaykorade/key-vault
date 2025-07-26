@@ -9,13 +9,13 @@ export async function testDatabaseConnection() {
     console.log('✅ Database connection successful!')
     
     // Test query
-    const userCount = await prisma.user.count()
+    const userCount = await prisma.users.count()
     console.log(`📊 Users in database: ${userCount}`)
     
-    const keyCount = await prisma.key.count()
+    const keyCount = await prisma.keys.count()
     console.log(`🔑 Keys in database: ${keyCount}`)
     
-    const folderCount = await prisma.folder.count()
+    const folderCount = await prisma.folders.count()
     console.log(`📁 Folders in database: ${folderCount}`)
     
     console.log('✅ Database test completed successfully!')

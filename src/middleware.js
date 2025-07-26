@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 // Define protected and public routes
 const protectedRoutes = ['/dashboard', '/keys', '/folders', '/settings', '/api', '/teams', '/projects']
-const authRoutes = ['/auth/login', '/auth/signup']
+const authRoutes = ['/auth/login', '/auth/signup', '/auth/google/callback']
 const publicRoutes = ['/', '/about', '/contact', '/docs', '/pricing', '/privacy', '/terms']
 
 export function middleware(request) {
@@ -12,13 +12,19 @@ export function middleware(request) {
   // Check if user is authenticated by looking for session token
   const isAuthenticated = !!sessionToken
 
+  // Check if current path is an auth route
+  const isAuthRoute = authRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
+  
+  // Check if current path is a protected route
+  const isProtectedRoute = protectedRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
+
   // If user is on auth routes but already authenticated, redirect to dashboard
-  if (isAuthenticated && authRoutes.some(route => pathname.startsWith(route))) {
+  if (isAuthenticated && isAuthRoute) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   // If user is on protected routes but not authenticated, redirect to login
-  if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
+  if (!isAuthenticated && isProtectedRoute) {
     const loginUrl = new URL('/auth/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)

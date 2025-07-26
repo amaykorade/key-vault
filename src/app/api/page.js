@@ -81,8 +81,8 @@ export default function ApiPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="text-gray-900">Loading...</div>
       </div>
     );
   }
@@ -92,21 +92,21 @@ export default function ApiPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-800 py-10 px-4 flex justify-center items-start">
-      <div className="w-full max-w-2xl bg-gray-700 rounded-xl shadow-lg p-8 border border-gray-600">
-        <h1 className="text-2xl font-bold text-white mb-2">API Access</h1>
-        <p className="text-gray-300 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-10 px-4 flex justify-center items-start">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">API Access</h1>
+        <p className="text-gray-600 mb-6">
           Use the following API base URL and your personal API token to access the Key Vault SDK and REST API.
         </p>
-        <h2 className="text-lg font-semibold text-white mb-2">API Base URL</h2>
-        <div className="bg-gray-900 rounded-lg p-3 text-sm font-mono select-all mb-6 text-gray-100 border border-gray-700">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">API Base URL</h2>
+        <div className="bg-gray-100 rounded-lg p-3 text-sm font-mono select-all mb-6 text-gray-900 border border-gray-300">
           {apiUrl}
         </div>
-        <h2 className="text-lg font-semibold text-white mb-2">Your API Token</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">Your API Token</h2>
         {loading ? (
-          <div className="text-gray-400 mb-4">Loading token...</div>
+          <div className="text-gray-600 mb-4">Loading token...</div>
         ) : error ? (
-          <div className="text-red-400 mb-4">{error}</div>
+          <div className="text-red-600 mb-4">{error}</div>
         ) : (
           <div className="space-y-3 mb-4">
             <div className="flex items-center gap-2">
@@ -115,13 +115,13 @@ export default function ApiPage() {
                   type={showToken ? "text" : "password"}
                   value={token}
                   readOnly
-                  className="w-full bg-gray-900 px-3 py-2 border border-gray-600 rounded font-mono text-sm text-gray-100"
+                  className="w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded font-mono text-sm text-gray-900"
                   placeholder="Click 'Show Token' to reveal your API token"
                 />
               </div>
               <button
                 onClick={toggleTokenVisibility}
-                className="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-500 text-sm"
+                className="px-3 py-2 bg-gray-200 text-gray-900 rounded hover:bg-gray-300 text-sm transition-colors"
               >
                 {showToken ? 'Hide' : 'Show Token'}
               </button>
@@ -129,14 +129,14 @@ export default function ApiPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopy}
-                className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm transition-colors"
                 disabled={!showToken}
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
               <button
                 onClick={handleRegenerate}
-                className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm transition-colors"
                 disabled={regenLoading}
               >
                 {regenLoading ? 'Regenerating...' : 'Regenerate'}
@@ -144,16 +144,16 @@ export default function ApiPage() {
             </div>
           </div>
         )}
-        <p className="text-xs text-gray-400 mb-8">
+        <p className="text-xs text-gray-500 mb-8">
           Keep your API token secure. Do not share it or expose it in client-side code.
         </p>
-        <h2 className="text-lg font-semibold text-white mb-2">How to Use</h2>
-        <ul className="list-disc pl-5 mb-8 text-gray-300">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">How to Use</h2>
+        <ul className="list-disc pl-5 mb-8 text-gray-600">
           <li>Use the API base URL and your token in the SDK or direct API requests.</li>
           <li>You can regenerate your token at any time. This will invalidate the previous token.</li>
         </ul>
-        <h2 className="text-lg font-semibold text-white mb-2">SDK Quick Start</h2>
-        <pre className="bg-gray-800 rounded-lg p-4 text-sm text-gray-300 overflow-x-auto mb-4 border border-gray-600">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">SDK Quick Start</h2>
+        <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto mb-4 border border-gray-300">
           <code>{`import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
@@ -168,7 +168,7 @@ const { keys } = await kv.listKeys({ folderId: 'FOLDER_ID' });
 const key = await kv.getKey('KEY_ID', { includeValue: true });
 `}</code>
         </pre>
-        <Link href="/docs" className="text-blue-400 hover:underline font-medium">
+        <Link href="/docs" className="text-blue-600 hover:underline font-medium">
           Read full SDK documentation
         </Link>
       </div>

@@ -13,7 +13,7 @@ async function main() {
 
   // Create test user
   const hashedPassword = await bcrypt.hash('testpassword123', 10);
-  const user = await prisma.user.upsert({
+  const user = await prisma.users.upsert({
     where: { email: 'test@example.com' },
     update: {},
     create: {
@@ -26,7 +26,7 @@ async function main() {
   console.log('✅ Created test user:', user.email);
 
   // Create a default folder
-  const folder = await prisma.folder.upsert({
+  const folder = await prisma.folders.upsert({
     where: { 
       id: 'default'  // Using a fixed ID for the default folder
     },
@@ -66,7 +66,7 @@ async function main() {
   ];
 
   for (const keyData of testKeys) {
-        const key = await prisma.key.create({
+        const key = await prisma.keys.create({
           data: {
         ...keyData,
         userId: user.id,

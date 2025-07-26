@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from './ui/Button';
 import Card from './ui/Card';
 
@@ -9,6 +10,7 @@ export default function SubscriptionStatus() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [renewing, setRenewing] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     fetchSubscription();
@@ -61,6 +63,10 @@ export default function SubscriptionStatus() {
     }
   };
 
+  const handleUpgrade = () => {
+    router.push('/pricing');
+  };
+
   const getPlanColor = (plan) => {
     switch (plan) {
       case 'FREE': return 'bg-gray-600';
@@ -86,18 +92,18 @@ export default function SubscriptionStatus() {
   if (loading) {
     return (
       <Card className="animate-pulse">
-        <div className="h-6 bg-gray-700 rounded w-1/3 mb-4"></div>
-        <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
-        <div className="h-4 bg-gray-700 rounded w-1/4"></div>
+        <div className="h-6 bg-gray-300 rounded w-1/3 mb-4"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/4"></div>
       </Card>
     );
   }
 
   if (error) {
     return (
-      <Card className="border border-red-600">
-        <div className="text-red-400 mb-2">Error loading subscription</div>
-        <div className="text-gray-400 text-sm">{error}</div>
+      <Card className="border border-red-300">
+        <div className="text-red-600 mb-2">Error loading subscription</div>
+        <div className="text-gray-600 text-sm">{error}</div>
       </Card>
     );
   }
@@ -106,7 +112,7 @@ export default function SubscriptionStatus() {
     <Card>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-white">Subscription Status</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Subscription Status</h3>
           <div className="flex items-center space-x-2 mt-1">
             <span className={`${getPlanColor(subscription.plan)} text-white px-2 py-1 rounded-full text-xs font-medium`}>
               {subscription.plan} PLAN
@@ -126,8 +132,8 @@ export default function SubscriptionStatus() {
 
       {subscription.isActive && subscription.expiresAt && (
         <div className="mb-4">
-          <div className="text-gray-400 text-sm mb-1">Expires on</div>
-          <div className="text-white font-medium">
+          <div className="text-gray-600 text-sm mb-1">Expires on</div>
+          <div className="text-gray-900 font-medium">
             {new Date(subscription.expiresAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -135,7 +141,7 @@ export default function SubscriptionStatus() {
             })}
           </div>
           {subscription.daysUntilExpiry > 0 && (
-            <div className="text-sm text-gray-400 mt-1">
+            <div className="text-sm text-gray-600 mt-1">
               {subscription.daysUntilExpiry} day{subscription.daysUntilExpiry !== 1 ? 's' : ''} remaining
             </div>
           )}
@@ -143,27 +149,27 @@ export default function SubscriptionStatus() {
       )}
 
       {!subscription.isActive && (
-        <div className="mb-4 p-3 bg-red-900 border border-red-700 rounded-lg">
-          <div className="text-red-200 text-sm">
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="text-red-700 text-sm">
             Your subscription has expired. Renew to continue using premium features.
           </div>
         </div>
       )}
 
       {subscription.daysUntilExpiry <= 7 && subscription.daysUntilExpiry > 0 && (
-        <div className="mb-4 p-3 bg-yellow-900 border border-yellow-700 rounded-lg">
-          <div className="text-yellow-200 text-sm">
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="text-yellow-700 text-sm">
             Your subscription expires soon. Consider renewing to avoid service interruption.
           </div>
         </div>
       )}
 
       <div className="mb-4">
-        <div className="text-gray-400 text-sm mb-2">Current Plan Features:</div>
+        <div className="text-gray-600 text-sm mb-2">Current Plan Features:</div>
         <ul className="space-y-1">
           {getPlanFeatures(subscription.plan).map((feature, index) => (
-            <li key={index} className="text-white text-sm flex items-center">
-              <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <li key={index} className="text-gray-900 text-sm flex items-center">
+              <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               {feature}
@@ -183,7 +189,7 @@ export default function SubscriptionStatus() {
           </Button>
           
           {subscription.lastPayment && (
-            <div className="text-xs text-gray-400 text-center">
+            <div className="text-xs text-gray-500 text-center">
               Last payment: ${(subscription.lastPayment.amount / 100).toFixed(2)} {subscription.lastPayment.currency}
             </div>
           )}
@@ -193,7 +199,7 @@ export default function SubscriptionStatus() {
       {subscription.plan === 'FREE' && (
         <div className="text-center">
           <Button
-            onClick={() => window.location.href = '/pricing'}
+            onClick={handleUpgrade}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             Upgrade Plan

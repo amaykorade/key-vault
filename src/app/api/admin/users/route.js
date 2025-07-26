@@ -22,7 +22,7 @@ export async function GET(request) {
     }
 
     // Fetch all users
-    const users = await prisma.user.findMany({
+    const users = await prisma.users.findMany({
       select: {
         id: true,
         email: true,

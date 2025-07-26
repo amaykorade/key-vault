@@ -40,7 +40,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Check if user exists
-    const userToDelete = await prisma.user.findUnique({
+    const userToDelete = await prisma.users.findUnique({
       where: { id: userId }
     })
 
@@ -52,7 +52,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Delete user (this will cascade delete all related data)
-    await prisma.user.delete({
+          await prisma.users.delete({
       where: { id: userId }
     })
 

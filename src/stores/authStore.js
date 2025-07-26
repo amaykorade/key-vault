@@ -8,15 +8,17 @@ const useAuthStore = create(
       user: null,
       session: null,
       isAuthenticated: false,
-      isLoading: true, // Start with loading true to prevent hydration mismatch
+      isLoading: false, // Start with loading false to prevent UI blocking
       error: null,
       hasCheckedAuth: false, // Track if we've already checked auth
+      isInitialized: false, // Track if auth has been initialized
 
       // Actions
       setUser: (user) => set({ 
         user, 
         isAuthenticated: !!user,
-        error: null 
+        error: null,
+        isInitialized: true
       }),
 
       setSession: (session) => set({ session }),
@@ -24,6 +26,68 @@ const useAuthStore = create(
       setLoading: (isLoading) => set({ isLoading }),
 
       setError: (error) => set({ error }),
+
+      // Initialize auth state from session
+      initializeAuth: async () => {
+        const state = get()
+        
+        // Don't re-initialize if already done
+        if (state.isInitialized) {
+          return
+        }
+
+        set({ isLoading: true })
+
+        try {
+          // Check if there's a session cookie
+          const hasSessionCookie = typeof document !== 'undefined' && 
+            document.cookie.includes('session_token=')
+
+          if (hasSessionCookie) {
+            const response = await fetch('/api/auth/me', {
+              credentials: 'include',
+            })
+
+            if (response.ok) {
+              const data = await response.json()
+              set({ 
+                user: data.user, 
+                isAuthenticated: true,
+                isLoading: false,
+                error: null,
+                isInitialized: true
+              })
+            } else {
+              // Clear auth state if session is invalid
+              set({ 
+                user: null, 
+                isAuthenticated: false,
+                isLoading: false,
+                error: null,
+                isInitialized: true
+              })
+            }
+          } else {
+            // No session cookie, clear auth state
+            set({ 
+              user: null, 
+              isAuthenticated: false,
+              isLoading: false,
+              error: null,
+              isInitialized: true
+            })
+          }
+        } catch (error) {
+          console.error('Error initializing auth:', error)
+          set({ 
+            user: null, 
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+            isInitialized: true
+          })
+        }
+      },
 
       login: async (email, password) => {
         set({ isLoading: true, error: null })
@@ -51,7 +115,8 @@ const useAuthStore = create(
             session: data.session,
             isAuthenticated: true,
             isLoading: false,
-            error: null 
+            error: null,
+            isInitialized: true
           })
 
           return { success: true, user: data.user }
@@ -89,7 +154,8 @@ const useAuthStore = create(
             session: data.session,
             isAuthenticated: true,
             isLoading: false,
-            error: null 
+            error: null,
+            isInitialized: true
           })
 
           return { success: true, user: data.user }
@@ -125,67 +191,9 @@ const useAuthStore = create(
           isAuthenticated: false,
           isLoading: false,
           error: null,
-          hasCheckedAuth: false
+          hasCheckedAuth: false,
+          isInitialized: true
         })
-      },
-
-      checkAuth: async () => {
-        const state = get()
-        
-        // Don't check auth if we've already checked and there's no session
-        if (state.hasCheckedAuth && !state.session) {
-          set({ isLoading: false })
-          return
-        }
-        
-        // Check if there's a session cookie before making the API call
-        if (typeof document !== 'undefined') {
-          const hasSessionCookie = document.cookie.includes('session_token=')
-          if (!hasSessionCookie) {
-            set({ 
-              user: null, 
-              isAuthenticated: false,
-              isLoading: false,
-              hasCheckedAuth: true
-            })
-            return
-          }
-        }
-        
-        try {
-          const response = await fetch('/api/auth/me', {
-            credentials: 'include',
-          })
-
-          if (response.ok) {
-            const data = await response.json()
-            set({ 
-              user: data.user, 
-              isAuthenticated: true,
-              isLoading: false,
-              hasCheckedAuth: true
-            })
-          } else {
-            // Don't log errors for expected 401 responses
-            set({ 
-              user: null, 
-              isAuthenticated: false,
-              isLoading: false,
-              hasCheckedAuth: true
-            })
-          }
-        } catch (error) {
-          // Only log unexpected errors, not network issues
-          if (error.name !== 'TypeError') {
-            console.error('Auth check error:', error)
-          }
-          set({ 
-            user: null, 
-            isAuthenticated: false,
-            isLoading: false,
-            hasCheckedAuth: true
-          })
-        }
       },
 
       clearError: () => set({ error: null }),
@@ -201,13 +209,12 @@ const useAuthStore = create(
       },
     }),
     {
-      name: 'auth-storage',
+      name: 'auth-storage', // unique name for localStorage key
       partialize: (state) => ({ 
-        user: state.user,
-        session: state.session,
+        user: state.user, 
         isAuthenticated: state.isAuthenticated,
-        hasCheckedAuth: state.hasCheckedAuth
-      }),
+        isInitialized: state.isInitialized
+      }), // only persist these fields
     }
   )
 )

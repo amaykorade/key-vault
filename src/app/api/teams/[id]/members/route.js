@@ -20,12 +20,12 @@ export async function POST(request, { params }) {
     }
 
     // Check if user is team owner or admin
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id: teamId },
       include: {
-        members: {
+        team_team_members: {
           where: { userId: user.id },
-          include: { user: true }
+          include: { users: true }
         }
       }
     });
@@ -35,7 +35,7 @@ export async function POST(request, { params }) {
     }
 
     const isOwner = team.ownerId === user.id;
-    const isAdmin = team.members.some(member => 
+    const isAdmin = team.team_members.some(member => 
       member.userId === user.id && member.role === 'ADMIN'
     );
 
@@ -44,7 +44,7 @@ export async function POST(request, { params }) {
     }
 
     // Find user by email
-    const targetUser = await prisma.user.findUnique({
+          const targetUser = await prisma.users.findUnique({
       where: { email: email.trim().toLowerCase() }
     });
 
@@ -53,7 +53,7 @@ export async function POST(request, { params }) {
     }
 
     // Check if user is already a member
-    const existingMember = await prisma.teamMember.findUnique({
+    const existingMember = await prisma.team_members.findUnique({
       where: {
         userId_teamId: {
           userId: targetUser.id,
@@ -67,7 +67,7 @@ export async function POST(request, { params }) {
     }
 
     // Add member to team
-    const member = await prisma.teamMember.create({
+    const member = await prisma.team_members.create({
       data: {
         userId: targetUser.id,
         teamId,
@@ -82,7 +82,7 @@ export async function POST(request, { params }) {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'CREATE',
         resource: 'team_member',
@@ -120,10 +120,10 @@ export async function DELETE(request, { params }) {
     }
 
     // Check if user is team owner or admin
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id: teamId },
       include: {
-        members: {
+        team_members: {
           where: { userId: user.id }
         }
       }
@@ -134,7 +134,7 @@ export async function DELETE(request, { params }) {
     }
 
     const isOwner = team.ownerId === user.id;
-    const isAdmin = team.members.some(member => 
+    const isAdmin = team.team_members.some(member => 
       member.userId === user.id && member.role === 'ADMIN'
     );
 
@@ -143,7 +143,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Get member to remove
-    const memberToRemove = await prisma.teamMember.findFirst({
+    const memberToRemove = await prisma.team_members.findFirst({
       where: {
         id: memberId,
         teamId
@@ -170,12 +170,12 @@ export async function DELETE(request, { params }) {
     }
 
     // Remove member
-    await prisma.teamMember.delete({
+    await prisma.team_members.delete({
       where: { id: memberId }
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'DELETE',
         resource: 'team_member',

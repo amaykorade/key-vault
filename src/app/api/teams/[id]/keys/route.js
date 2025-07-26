@@ -24,10 +24,10 @@ export async function POST(request, { params }) {
     }
 
     // Check if user is team owner or admin
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id: teamId },
       include: {
-        members: {
+        team_members: {
           where: { userId: user.id }
         }
       }
@@ -38,7 +38,7 @@ export async function POST(request, { params }) {
     }
 
     const isOwner = team.ownerId === user.id;
-    const isAdmin = team.members.some(member => 
+    const isAdmin = team.team_members.some(member => 
       member.userId === user.id && member.role === 'ADMIN'
     );
 
@@ -47,7 +47,7 @@ export async function POST(request, { params }) {
     }
 
     // Check if key exists and user owns it
-    const key = await prisma.key.findFirst({
+            const key = await prisma.keys.findFirst({
       where: { id: keyId, userId: user.id }
     });
 
@@ -56,7 +56,7 @@ export async function POST(request, { params }) {
     }
 
     // Check if access already exists
-    const existingAccess = await prisma.keyAccess.findUnique({
+    const existingAccess = await prisma.key_accesses.findUnique({
       where: {
         keyId_teamId: {
           keyId,
@@ -70,7 +70,7 @@ export async function POST(request, { params }) {
     }
 
     // Grant access
-    const keyAccess = await prisma.keyAccess.create({
+    const keyAccess = await prisma.key_accesses.create({
       data: {
         keyId,
         teamId,
@@ -81,14 +81,14 @@ export async function POST(request, { params }) {
         key: {
           select: { id: true, name: true, description: true, type: true }
         },
-        team: {
+        teams: {
           select: { id: true, name: true }
         }
       }
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'SHARE',
         resource: 'key_access',
@@ -128,10 +128,10 @@ export async function DELETE(request, { params }) {
     }
 
     // Check if user is team owner or admin
-    const team = await prisma.team.findFirst({
+    const team = await prisma.teams.findFirst({
       where: { id: teamId },
       include: {
-        members: {
+        team_members: {
           where: { userId: user.id }
         }
       }
@@ -142,7 +142,7 @@ export async function DELETE(request, { params }) {
     }
 
     const isOwner = team.ownerId === user.id;
-    const isAdmin = team.members.some(member => 
+    const isAdmin = team.team_members.some(member => 
       member.userId === user.id && member.role === 'ADMIN'
     );
 
@@ -151,7 +151,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Get key access to revoke
-    const keyAccess = await prisma.keyAccess.findFirst({
+    const keyAccess = await prisma.key_accesses.findFirst({
       where: {
         keyId,
         teamId
@@ -160,7 +160,7 @@ export async function DELETE(request, { params }) {
         key: {
           select: { id: true, name: true }
         },
-        team: {
+        teams: {
           select: { id: true, name: true }
         }
       }
@@ -172,7 +172,7 @@ export async function DELETE(request, { params }) {
 
     // Check if user owns the key or granted the access
     if (keyAccess.grantedBy !== user.id) {
-      const key = await prisma.key.findFirst({
+      const key = await prisma.keys.findFirst({
         where: { id: keyId, userId: user.id }
       });
       
@@ -182,12 +182,12 @@ export async function DELETE(request, { params }) {
     }
 
     // Revoke access
-    await prisma.keyAccess.delete({
+    await prisma.key_accesses.delete({
       where: { id: keyAccess.id }
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'REVOKE',
         resource: 'key_access',
@@ -197,7 +197,7 @@ export async function DELETE(request, { params }) {
           keyId, 
           keyName: keyAccess.key.name,
           teamId, 
-          teamName: keyAccess.team.name
+          teamName: keyAccess.teams.name
         }
       }
     });

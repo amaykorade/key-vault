@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from 'react';
 import { User, ChevronDown } from 'lucide-react';
 
 export default function Navbar() {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, isInitialized } = useAuthStore();
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -31,9 +31,18 @@ export default function Navbar() {
   }, [profileOpen]);
 
   const handleLogout = async () => {
-    await logout();
-    router.push('/auth/login');
+    try {
+      await logout();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force redirect even if logout fails
+      router.push('/auth/login');
+    }
   };
+
+  // Determine if user is authenticated - only show authenticated state after initialization
+  const isUserAuthenticated = isInitialized && isAuthenticated && user;
 
   return (
     <nav className="bg-slate-900 border-b border-slate-700 sticky top-0 z-40">
@@ -46,27 +55,31 @@ export default function Navbar() {
               <span className="text-xl font-bold text-white">Key Vault</span>
             </Link>
             <div className="hidden sm:flex sm:space-x-6 ml-6">
-              <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm font-medium">
-                Dashboard
-              </Link>
-              <Link href="/teams" className="text-gray-300 hover:text-white text-sm font-medium">
-                Teams
-              </Link>
+              {isUserAuthenticated ? (
+                <>
+                  <Link href="/dashboard" className="text-gray-300 hover:text-white text-sm font-medium">
+                    Dashboard
+                  </Link>
+                  <Link href="/teams" className="text-gray-300 hover:text-white text-sm font-medium">
+                    Teams
+                  </Link>
+                  <Link href="/api" className="text-gray-300 hover:text-white text-sm font-medium">
+                    API
+                  </Link>
+                </>
+              ) : null}
               <Link href="/docs" className="text-gray-300 hover:text-white text-sm font-medium">
                 Documentation
               </Link>
               <Link href="/pricing" className="text-gray-300 hover:text-white text-sm font-medium">
                 Pricing
               </Link>
-              <Link href="/api" className="text-gray-300 hover:text-white text-sm font-medium">
-                API
-              </Link>
             </div>
           </div>
 
           {/* Right section: User dropdown or auth buttons */}
           <div className="flex items-center">
-            {isAuthenticated && user ? (
+            {isUserAuthenticated ? (
               <div className="ml-3 relative" ref={dropdownRef}>
                 <button
                   onClick={() => setProfileOpen((open) => !open)}
@@ -81,11 +94,11 @@ export default function Navbar() {
                       <p className="text-sm font-medium text-white">{user.name}</p>
                       <p className="text-sm text-gray-300">{user.email}</p>
                     </div>
-                                      <Link
-                    href="/settings"
-                    className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white"
-                    onClick={() => setProfileOpen(false)}
-                  >
+                    <Link
+                      href="/settings"
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white"
+                      onClick={() => setProfileOpen(false)}
+                    >
                       Settings
                     </Link>
                     <button

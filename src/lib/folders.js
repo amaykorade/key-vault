@@ -3,7 +3,7 @@ import prisma from './database.js'
 export async function createFolder(userId, folderData) {
   const { name, description, color, parentId } = folderData
   
-  return await prisma.folder.create({
+  return await prisma.folders.create({
     data: {
       name,
       description,
@@ -12,12 +12,12 @@ export async function createFolder(userId, folderData) {
       userId
     },
     include: {
-      parent: true,
-      children: true,
+      folders: true,
+      other_folders: true,
       _count: {
         select: {
           keys: true,
-          children: true
+          other_folders: true
         }
       }
     }
@@ -25,14 +25,14 @@ export async function createFolder(userId, folderData) {
 }
 
 export async function getFolder(folderId, userId) {
-  return await prisma.folder.findFirst({
+  return await prisma.folders.findFirst({
     where: {
       id: folderId,
       userId
     },
     include: {
-      parent: true,
-      children: true,
+      folders: true,
+      other_folders: true,
       keys: {
         orderBy: {
           updatedAt: 'desc'
@@ -41,7 +41,7 @@ export async function getFolder(folderId, userId) {
       _count: {
         select: {
           keys: true,
-          children: true
+          other_folders: true
         }
       }
     }
@@ -56,7 +56,7 @@ export async function updateFolder(folderId, userId, folderData) {
     throw new Error('Folder cannot be its own parent')
   }
   
-  return await prisma.folder.update({
+  return await prisma.folders.update({
     where: {
       id: folderId,
       userId
@@ -68,12 +68,12 @@ export async function updateFolder(folderId, userId, folderData) {
       parentId
     },
     include: {
-      parent: true,
-      children: true,
+      folders: true,
+      other_folders: true,
       _count: {
         select: {
           keys: true,
-          children: true
+          other_folders: true
         }
       }
     }
@@ -85,7 +85,7 @@ export async function deleteFolder(folderId, userId) {
   const subfolderIds = await getSubfolderIds(folderId, userId)
   
   // Move all keys from subfolders to root level
-  await prisma.key.updateMany({
+  await prisma.keys.updateMany({
     where: {
       folderId: {
         in: [folderId, ...subfolderIds]
@@ -98,7 +98,7 @@ export async function deleteFolder(folderId, userId) {
   })
   
   // Delete all subfolders
-  await prisma.folder.deleteMany({
+  await prisma.folders.deleteMany({
     where: {
       id: {
         in: [folderId, ...subfolderIds]
@@ -109,7 +109,7 @@ export async function deleteFolder(folderId, userId) {
 }
 
 async function getSubfolderIds(folderId, userId) {
-  const subfolders = await prisma.folder.findMany({
+  const subfolders = await prisma.folders.findMany({
     where: {
       parentId: folderId,
       userId
@@ -129,18 +129,18 @@ async function getSubfolderIds(folderId, userId) {
 }
 
 export async function getUserFolders(userId) {
-  return await prisma.folder.findMany({
+  return await prisma.folders.findMany({
     where: {
       userId,
       parentId: null // Only root folders
     },
     include: {
-      children: {
+      other_folders: {
         include: {
           _count: {
             select: {
               keys: true,
-              children: true
+              other_folders: true
             }
           }
         }
@@ -148,7 +148,7 @@ export async function getUserFolders(userId) {
       _count: {
         select: {
           keys: true,
-          children: true
+          other_folders: true
         }
       }
     },
@@ -159,7 +159,7 @@ export async function getUserFolders(userId) {
 }
 
 export async function getFolderTree(userId) {
-  const folders = await prisma.folder.findMany({
+  const folders = await prisma.folders.findMany({
     where: { userId },
     include: {
       _count: {
@@ -202,7 +202,7 @@ export async function getFolderTree(userId) {
 }
 
 export async function moveKeysToFolder(keyIds, folderId, userId) {
-  return await prisma.key.updateMany({
+  return await prisma.keys.updateMany({
     where: {
       id: {
         in: keyIds

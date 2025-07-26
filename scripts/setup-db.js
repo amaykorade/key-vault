@@ -33,7 +33,7 @@ async function setupDatabase() {
     console.log('✅ Migrations completed!\n')
 
     // Check if admin user exists
-    const adminUser = await prisma.user.findFirst({
+    const adminUser = await prisma.users.findFirst({
       where: { role: 'ADMIN' }
     })
 
@@ -59,7 +59,7 @@ async function setupDatabase() {
 
     const hashedPassword = await bcrypt.hash(password, 12)
     
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: {
         email,
         password: hashedPassword,
@@ -74,7 +74,7 @@ async function setupDatabase() {
 
     // Create default folder
     console.log('📁 Creating default folder...')
-    await prisma.folder.create({
+    await prisma.folders.create({
       data: {
         name: 'General',
         description: 'Default folder for your keys',

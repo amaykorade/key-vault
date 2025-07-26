@@ -89,17 +89,17 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-300">
+          <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link 
               href="/auth/signup" 
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-slate-600 hover:text-slate-500"
             >
               create a new account
             </Link>
@@ -157,9 +157,9 @@ const LoginForm = () => {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Remember me
                 </label>
               </div>
@@ -167,7 +167,7 @@ const LoginForm = () => {
               <div className="text-sm">
                 <Link 
                   href="/auth/forgot-password" 
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-slate-600 hover:text-slate-500"
                 >
                   Forgot your password?
                 </Link>

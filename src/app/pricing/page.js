@@ -16,20 +16,20 @@ const loadRazorpayScript = () => {
 };
 
 const PricingTier = ({ name, price, priceSuffix, description, features, highlighted = false, buttonText = "Get Started for Free", onUpgrade, isPaid }) => (
-  <Card className={`h-full flex flex-col transition-all duration-300 hover:shadow-xl ${highlighted ? 'border-2 border-blue-500 shadow-xl scale-105 relative z-10 bg-gradient-to-b from-gray-700 to-gray-800' : 'border border-gray-600 hover:border-gray-500'}`}>
+  <Card className={`h-full flex flex-col transition-all duration-300 hover:shadow-xl ${highlighted ? 'border-2 border-slate-500 shadow-xl scale-105 relative z-10 bg-gradient-to-b from-slate-50 to-white' : 'border border-gray-200 hover:border-gray-300'}`}>
     <div className="p-6 flex flex-col h-full">
       {/* Header */}
       <div className="text-center mb-6">
         {highlighted && (
-          <div className="inline-flex items-center px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-full mb-4">
+          <div className="inline-flex items-center px-3 py-1 bg-slate-600 text-white text-xs font-semibold rounded-full mb-4">
             Most Popular
           </div>
         )}
-        <h3 className="text-xl font-bold mb-3 text-white">{name}</h3>
-        <p className="text-gray-400 text-sm mb-4 leading-relaxed">{description}</p>
+        <h3 className="text-xl font-bold mb-3 text-gray-900">{name}</h3>
+        <p className="text-gray-600 text-sm mb-4 leading-relaxed">{description}</p>
         <div className="flex items-baseline justify-center">
-          <span className="text-3xl font-bold text-white">${price}</span>
-          <span className="text-sm text-gray-400 ml-1">{priceSuffix}</span>
+          <span className="text-3xl font-bold text-gray-900">${price}</span>
+          <span className="text-sm text-gray-500 ml-1">{priceSuffix}</span>
         </div>
       </div>
       {/* Features */}
@@ -38,7 +38,7 @@ const PricingTier = ({ name, price, priceSuffix, description, features, highligh
           {features.map((feature, index) => (
             <li key={index} className="flex items-start">
               <svg 
-                className="h-4 w-4 text-green-400 mr-3 mt-0.5 flex-shrink-0" 
+                className="h-4 w-4 text-green-600 mr-3 mt-0.5 flex-shrink-0" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -50,7 +50,7 @@ const PricingTier = ({ name, price, priceSuffix, description, features, highligh
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+              <span className="text-gray-600 text-sm leading-relaxed">{feature}</span>
             </li>
           ))}
         </ul>
@@ -198,13 +198,13 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="bg-gray-800">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-white sm:text-4xl mb-3">
+          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-3">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Choose the plan that best fits your needs. Start free, upgrade when you need more.
           </p>
         </div>
@@ -217,7 +217,7 @@ export default function PricingPage() {
           ))}
         </div>
         <div className="mt-12 text-center">
-          <p className="text-gray-400 text-sm max-w-2xl mx-auto">
+          <p className="text-gray-500 text-sm max-w-2xl mx-auto">
             All plans include: SSL encryption, unlimited API calls, and basic analytics
           </p>
         </div>

@@ -31,7 +31,7 @@ export async function createKey(userId, folderId, keyData) {
   const encryptedValue = encrypt(value, getEncryptionKey())
 
   try {
-    const key = await prisma.key.create({
+    const key = await prisma.keys.create({
       data: {
         name,
         description,
@@ -61,11 +61,11 @@ export async function createKey(userId, folderId, keyData) {
 export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) {
   try {
     // Get user's teams
-    const userTeams = await prisma.team.findMany({
+    const userTeams = await prisma.teams.findMany({
       where: {
         OR: [
           { ownerId: userId },
-          { members: { some: { userId } } }
+          { team_members: { some: { userId } } }
         ]
       },
       select: { id: true }
@@ -74,12 +74,12 @@ export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) 
     const teamIds = userTeams.map(team => team.id)
 
     // Get keys that user owns or has team access to
-    const keys = await prisma.key.findMany({
+    const keys = await prisma.keys.findMany({
       where: {
         folderId,
         OR: [
           { userId }, // User's own keys
-          { teamAccesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
+          { key_accesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
         ]
       },
       orderBy: {
@@ -88,10 +88,10 @@ export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) 
       take: limit,
       skip: offset,
       include: {
-        teamAccesses: {
+        key_accesses: {
           where: { teamId: { in: teamIds } },
           include: {
-            team: {
+            teams: {
               select: { id: true, name: true }
             }
           }
@@ -99,12 +99,12 @@ export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) 
       }
     })
 
-    const total = await prisma.key.count({
+    const total = await prisma.keys.count({
       where: {
         folderId,
         OR: [
           { userId },
-          { teamAccesses: { some: { teamId: { in: teamIds } } } }
+          { key_accesses: { some: { teamId: { in: teamIds } } } }
         ]
       }
     })
@@ -118,11 +118,11 @@ export async function getKeysByFolder(userId, folderId, limit = 20, offset = 0) 
 export async function getKeyById(userId, keyId) {
   try {
     // Get user's teams
-    const userTeams = await prisma.team.findMany({
+    const userTeams = await prisma.teams.findMany({
       where: {
         OR: [
           { ownerId: userId },
-          { members: { some: { userId } } }
+          { team_members: { some: { userId } } }
         ]
       },
       select: { id: true }
@@ -130,19 +130,19 @@ export async function getKeyById(userId, keyId) {
 
     const teamIds = userTeams.map(team => team.id)
 
-    const key = await prisma.key.findFirst({
+    const key = await prisma.keys.findFirst({
       where: {
         id: keyId,
         OR: [
           { userId }, // User's own keys
-          { teamAccesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
+          { key_accesses: { some: { teamId: { in: teamIds } } } } // Team shared keys
         ]
       },
       include: {
-        teamAccesses: {
+        key_accesses: {
           where: { teamId: { in: teamIds } },
           include: {
-            team: {
+            teams: {
               select: { id: true, name: true }
             }
           }
@@ -164,7 +164,7 @@ export async function updateKey(userId, keyId, keyData) {
   const { name, description, value, type, tags, isFavorite } = keyData
 
   try {
-    const existingKey = await prisma.key.findFirst({
+    const existingKey = await prisma.keys.findFirst({
       where: {
         id: keyId,
         userId
@@ -188,7 +188,7 @@ export async function updateKey(userId, keyId, keyData) {
       updateData.value = encrypt(value, getEncryptionKey())
     }
 
-    const key = await prisma.key.update({
+    const key = await prisma.keys.update({
       where: { id: keyId },
       data: updateData
     })
@@ -208,7 +208,7 @@ export async function updateKey(userId, keyId, keyData) {
 
 export async function deleteKey(userId, keyId) {
   try {
-    const key = await prisma.key.findFirst({
+    const key = await prisma.keys.findFirst({
       where: {
         id: keyId,
         userId
@@ -219,7 +219,7 @@ export async function deleteKey(userId, keyId) {
       throw new Error('Key not found')
     }
 
-    await prisma.key.delete({
+    await prisma.keys.delete({
       where: { id: keyId }
     })
 

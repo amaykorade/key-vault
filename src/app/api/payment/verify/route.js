@@ -33,7 +33,7 @@ export async function POST(request) {
     subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
 
     // Update user plan and subscription expiration
-    await prisma.user.update({
+            await prisma.users.update({
       where: { id: user.id },
       data: { 
         plan: plan.toUpperCase(),
@@ -42,7 +42,7 @@ export async function POST(request) {
     });
 
     // Store payment info with subscription dates
-    await prisma.payment.create({
+    await prisma.payments.create({
       data: {
         userId: user.id,
         orderId: razorpay_order_id,

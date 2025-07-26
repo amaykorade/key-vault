@@ -44,10 +44,11 @@ export default function ProjectDetailPage() {
   }
 
   useEffect(() => {
-    if (isAuthenticated && params.id) {
+    // Fetch data immediately since middleware ensures we're authenticated
+    if (params.id) {
       fetchProjectDetails()
     }
-  }, [isAuthenticated, params.id])
+  }, [params.id])
 
   const handleAddKeySuccess = (newKey) => {
     setKeys(prevKeys => [newKey, ...prevKeys])
@@ -110,18 +111,18 @@ export default function ProjectDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-400"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-400 mb-4">Error</h1>
-          <p className="text-gray-300 mb-4">{error}</p>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
           <Link href="/dashboard">
             <Button variant="primary">Back to Dashboard</Button>
           </Link>
@@ -132,9 +133,9 @@ export default function ProjectDetailPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Project Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Project Not Found</h1>
           <Link href="/dashboard">
             <Button variant="primary">Back to Dashboard</Button>
           </Link>
@@ -144,7 +145,7 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           {/* Header */}
@@ -161,15 +162,15 @@ export default function ProjectDetailPage() {
                   style={{ backgroundColor: project.color }}
                 ></div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">{project.name}</h1>
-                  <p className="text-gray-300">{project.description || 'No description'}</p>
+                  <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
+                  <p className="text-gray-600">{project.description || 'No description'}</p>
                   <div className="mt-2">
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(project.id);
                         // You could add a toast notification here
                       }}
-                      className="text-sm text-gray-400 font-mono bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 hover:text-gray-300 transition-colors cursor-pointer"
+                      className="text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
                       title="Click to copy folder ID"
                     >
                       Folder ID: {project.id}
@@ -202,10 +203,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-300 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Total Keys
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {keys.length}
                       </dd>
                     </dl>
@@ -226,10 +227,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-300 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Active Keys
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {keys.filter(key => !key.isFavorite).length}
                       </dd>
                     </dl>
@@ -250,10 +251,10 @@ export default function ProjectDetailPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-300 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Favorites
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {keys.filter(key => key.isFavorite).length}
                       </dd>
                     </dl>
@@ -265,7 +266,7 @@ export default function ProjectDetailPage() {
 
           {/* Keys List */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Keys</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Keys</h2>
             
             {keys.length === 0 ? (
               <Card>
@@ -275,8 +276,8 @@ export default function ProjectDetailPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                     </svg>
                   </div>
-                  <h3 className="mt-2 text-sm font-medium text-white">No keys yet</h3>
-                  <p className="mt-1 text-sm text-gray-300">Get started by adding your first key to this project.</p>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No keys yet</h3>
+                  <p className="mt-1 text-sm text-gray-500">Get started by adding your first key to this project.</p>
                   <div className="mt-6">
                     <Button 
                       variant="primary"
@@ -290,26 +291,26 @@ export default function ProjectDetailPage() {
             ) : (
               <div className="grid grid-cols-1 gap-4">
                 {keys.map((key) => (
-                  <Card key={key.id} className="hover:shadow-md transition-shadow">
+                  <Card key={key.id} className="hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between p-4">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <div className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
-                            <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                             </svg>
                           </div>
                         </div>
                         <div className="ml-4">
                           <div className="flex items-center">
-                            <h3 className="text-lg font-medium text-white">{key.name}</h3>
+                            <h3 className="text-lg font-medium text-gray-900">{key.name}</h3>
                             {key.isFavorite && (
-                              <svg className="ml-2 w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                              <svg className="ml-2 w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                               </svg>
                             )}
                           </div>
-                          <p className="text-sm text-gray-300">{key.description || 'No description'}</p>
+                          <p className="text-sm text-gray-600">{key.description || 'No description'}</p>
                           <div className="flex items-center mt-1">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                               key.type === 'PASSWORD' ? 'bg-green-100 text-green-800' :
@@ -322,12 +323,12 @@ export default function ProjectDetailPage() {
                             {key.tags && key.tags.length > 0 && (
                               <div className="ml-2 flex space-x-1">
                                 {key.tags.slice(0, 2).map((tag, index) => (
-                                  <span key={index} className="inline-flex px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded">
+                                  <span key={index} className="inline-flex px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded">
                                     {tag}
                                   </span>
                                 ))}
                                 {key.tags.length > 2 && (
-                                  <span className="inline-flex px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded">
+                                  <span className="inline-flex px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded">
                                     +{key.tags.length - 2}
                                   </span>
                                 )}

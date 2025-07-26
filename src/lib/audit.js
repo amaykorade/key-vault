@@ -2,7 +2,7 @@ import prisma from './database.js'
 
 export async function logAction(action, resource, userId, details = {}, requestInfo = {}) {
   try {
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action,
         resource,
@@ -34,10 +34,10 @@ export async function getAuditLogs(userId, options = {}) {
     })
   }
   
-  return await prisma.auditLog.findMany({
+  return await prisma.audit_logs.findMany({
     where,
     include: {
-      user: {
+      users: {
         select: {
           id: true,
           email: true,
@@ -54,7 +54,7 @@ export async function getAuditLogs(userId, options = {}) {
 }
 
 export async function getAuditStats(userId, startDate, endDate) {
-  const stats = await prisma.auditLog.groupBy({
+  const stats = await prisma.audit_logs.groupBy({
     by: ['action'],
     where: {
       userId,

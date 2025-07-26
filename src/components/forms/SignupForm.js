@@ -108,17 +108,17 @@ const SignupForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-300">
+          <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link 
               href="/auth/login" 
-              className="font-medium text-blue-400 hover:text-blue-300"
+              className="font-medium text-slate-600 hover:text-slate-500"
             >
               sign in to your existing account
             </Link>
@@ -128,7 +128,7 @@ const SignupForm = () => {
         <Card>
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-900 border border-red-700 rounded-md p-4">
+              <div className="bg-red-50 border border-red-200 rounded-md p-4">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -136,7 +136,7 @@ const SignupForm = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-300">
+                    <h3 className="text-sm font-medium text-red-800">
                       {error}
                     </h3>
                   </div>
@@ -218,20 +218,20 @@ const SignupForm = () => {
                 name="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-slate-600 focus:ring-slate-500 border-gray-300 rounded"
               />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                 I agree to the{' '}
                 <Link 
                   href="/terms" 
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-slate-600 hover:text-slate-500"
                 >
                   Terms of Service
                 </Link>{' '}
                 and{' '}
                 <Link 
                   href="/privacy" 
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-slate-600 hover:text-slate-500"
                 >
                   Privacy Policy
                 </Link>

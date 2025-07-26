@@ -12,7 +12,7 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: {
         plan: true,
@@ -60,7 +60,7 @@ export async function POST(request) {
     }
 
     // Check if user already has an active subscription
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: { subscriptionExpiresAt: true }
     });
@@ -81,7 +81,7 @@ export async function POST(request) {
     }
 
     // Update user subscription
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: user.id },
       data: {
         plan: plan.toUpperCase(),
@@ -90,7 +90,7 @@ export async function POST(request) {
     });
 
     // Create a renewal payment record (without actual payment for now)
-    await prisma.payment.create({
+    await prisma.payments.create({
       data: {
         userId: user.id,
         orderId: `renewal_${Date.now()}`,
@@ -106,7 +106,7 @@ export async function POST(request) {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
         action: 'UPDATE',
         resource: 'subscription',

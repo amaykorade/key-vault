@@ -13,26 +13,26 @@ export async function GET(request) {
     }
 
     // Get teams where user is owner or member
-    const teams = await prisma.team.findMany({
+    const teams = await prisma.teams.findMany({
       where: {
         OR: [
           { ownerId: user.id },
-          { members: { some: { userId: user.id } } }
+          { team_members: { some: { userId: user.id } } }
         ]
       },
       include: {
-        owner: {
+        users: {
           select: { id: true, name: true, email: true }
         },
-        members: {
+        team_members: {
           include: {
-            user: {
+            users: {
               select: { id: true, name: true, email: true }
             }
           }
         },
         _count: {
-          select: { members: true, keyAccesses: true }
+          select: { team_members: true, key_accesses: true }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -60,7 +60,7 @@ export async function POST(request) {
     }
 
     // Check if user has TEAM plan with active subscription
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: { plan: true, subscriptionExpiresAt: true }
     });
@@ -74,19 +74,19 @@ export async function POST(request) {
       }, { status: 403 });
     }
 
-    const team = await prisma.team.create({
+          const team = await prisma.teams.create({
       data: {
         name: name.trim(),
         description: description?.trim(),
         ownerId: user.id
       },
       include: {
-        owner: {
+        users: {
           select: { id: true, name: true, email: true }
         },
-        members: {
+        team_members: {
           include: {
-            user: {
+            users: {
               select: { id: true, name: true, email: true }
             }
           }
@@ -95,7 +95,7 @@ export async function POST(request) {
     });
 
     // Create audit log
-    await prisma.auditLog.create({
+          await prisma.audit_logs.create({
       data: {
         action: 'CREATE',
         resource: 'team',

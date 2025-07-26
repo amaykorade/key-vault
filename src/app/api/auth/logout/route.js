@@ -15,7 +15,7 @@ export async function POST(request) {
 
     if (refreshToken) {
       // Revoke refresh token in database
-      await prisma.refreshToken.updateMany({
+      await prisma.refresh_tokens.updateMany({
         where: { token: refreshToken },
         data: { revoked: true }
       })

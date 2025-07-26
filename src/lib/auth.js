@@ -13,12 +13,12 @@ export async function verifyPassword(password, hashedPassword) {
 
 export async function createSession(userId) {
   const token = crypto.randomBytes(32).toString('hex')
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
-  const session = await prisma.session.create({
+  const session = await prisma.sessions.create({
     data: {
       token,
-      expires,
+      expiresAt,
       userId
     }
   })
@@ -27,20 +27,20 @@ export async function createSession(userId) {
 }
 
 export async function validateSession(token) {
-  const session = await prisma.session.findUnique({
+  const session = await prisma.sessions.findUnique({
     where: { token },
-    include: { user: true }
+    include: { users: true }
   })
 
-  if (!session || session.expires < new Date()) {
+  if (!session || session.expiresAt < new Date()) {
     return null
   }
 
-  return session.user
+  return session.users
 }
 
 export async function deleteSession(token) {
-  await prisma.session.delete({
+  await prisma.sessions.delete({
     where: { token }
   })
 }
@@ -48,7 +48,7 @@ export async function deleteSession(token) {
 export async function createUser(email, password, name = null) {
   const hashedPassword = await hashPassword(password)
   
-  return await prisma.user.create({
+  return await prisma.users.create({
     data: {
       email,
       password: hashedPassword,
@@ -58,7 +58,7 @@ export async function createUser(email, password, name = null) {
 }
 
 export async function authenticateUser(email, password) {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { email }
   })
 
@@ -83,7 +83,7 @@ export async function getCurrentUser(request) {
     let user = await validateSession(token);
     if (user) return user;
     // Try API token
-    user = await prisma.user.findUnique({ where: { apiToken: token } });
+    user = await prisma.users.findUnique({ where: { apiToken: token } });
     if (user) return user;
   }
 
@@ -99,14 +99,12 @@ export async function getCurrentUser(request) {
 export async function createRefreshToken(userId) {
   const token = crypto.randomBytes(64).toString('hex');
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
-  const now = new Date();
 
-  const refreshToken = await prisma.refreshToken.create({
+  const refreshToken = await prisma.refresh_tokens.create({
     data: {
       token,
       expiresAt,
-      userId,
-      updatedAt: now
+      userId
     }
   });
 

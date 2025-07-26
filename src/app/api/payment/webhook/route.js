@@ -27,12 +27,12 @@ export async function POST(request) {
       const plan = notes.plan;
       if (userId && plan) {
         // Update user plan
-        await prisma.user.update({
+        await prisma.users.update({
           where: { id: userId },
           data: { plan: plan.toUpperCase() },
         });
         // Store payment info (idempotent)
-        await prisma.payment.upsert({
+        await prisma.payments.upsert({
           where: { paymentId: paymentEntity.id },
           update: {
             status: paymentEntity.status,

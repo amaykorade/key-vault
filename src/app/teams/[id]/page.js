@@ -87,7 +87,7 @@ export default function TeamDetailPage() {
 
       setTeam({
         ...team,
-        members: [...team.members, data.member]
+        members: [...teams.members, data.member]
       });
       setAddMemberForm({ email: '', role: 'MEMBER' });
       setShowAddMemberModal(false);
@@ -115,7 +115,7 @@ export default function TeamDetailPage() {
 
       setTeam({
         ...team,
-        members: team.members.filter(member => member.id !== memberId)
+        members: team.team_members.filter(member => member.id !== memberId)
       });
     } catch (error) {
       setError(error.message);
@@ -148,7 +148,7 @@ export default function TeamDetailPage() {
 
       setTeam({
         ...team,
-        keyAccesses: [...team.keyAccesses, data.keyAccess]
+        keyAccesses: [...teams.keyAccesses, data.keyAccess]
       });
       setShareKeyForm({ keyId: '', permissions: ['READ'] });
       setShowShareKeyModal(false);
@@ -323,7 +323,7 @@ export default function TeamDetailPage() {
             </div>
 
             <div className="space-y-4">
-              {team.members.map(member => (
+              {team.team_members.map(member => (
                 <Card key={member.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">

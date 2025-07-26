@@ -9,7 +9,7 @@ async function checkExpiredSubscriptions() {
     const now = new Date();
     
     // Find users with expired subscriptions
-    const expiredUsers = await prisma.user.findMany({
+    const expiredUsers = await prisma.users.findMany({
       where: {
         subscriptionExpiresAt: {
           lt: now
@@ -33,7 +33,7 @@ async function checkExpiredSubscriptions() {
       console.log(`Processing user: ${user.email} (${user.name})`);
       
       // Downgrade to FREE plan
-      await prisma.user.update({
+      await prisma.users.update({
         where: { id: user.id },
         data: {
           plan: 'FREE',
@@ -42,7 +42,7 @@ async function checkExpiredSubscriptions() {
       });
 
       // Create audit log
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
           action: 'UPDATE',
           resource: 'subscription',
@@ -64,7 +64,7 @@ async function checkExpiredSubscriptions() {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
-    const expiringSoonUsers = await prisma.user.findMany({
+    const expiringSoonUsers = await prisma.users.findMany({
       where: {
         subscriptionExpiresAt: {
           gte: now,
@@ -90,7 +90,7 @@ async function checkExpiredSubscriptions() {
       console.log(`${user.email} subscription expires in ${daysUntilExpiry} days`);
       
       // Create audit log for expiring soon notification
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
           action: 'READ',
           resource: 'subscription',

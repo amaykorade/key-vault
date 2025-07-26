@@ -16,7 +16,7 @@ export async function POST(request) {
     }
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.users.findUnique({
       where: { email }
     })
 
@@ -36,7 +36,7 @@ export async function POST(request) {
     const refreshToken = await createRefreshToken(user.id)
 
     // Create default folder for the user
-    await prisma.folder.create({
+    await prisma.folders.create({
       data: {
         name: 'General',
         description: 'Default folder for your keys',

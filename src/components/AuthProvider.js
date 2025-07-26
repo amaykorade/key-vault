@@ -1,28 +1,36 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useAuthStore from '../stores/authStore'
 
 export default function AuthProvider({ children }) {
-  const [isHydrated, setIsHydrated] = useState(false)
-  const { checkAuth } = useAuthStore()
+  const { checkAuth, setLoading } = useAuthStore()
 
   useEffect(() => {
-    // Mark as hydrated after component mounts
-    setIsHydrated(true)
+    // Ensure loading is set to false immediately to prevent UI blocking
+    setLoading(false)
     
-    // Check authentication status
-    checkAuth()
-  }, [checkAuth])
+    // Check authentication status in the background
+    const initAuth = async () => {
+      try {
+        await checkAuth()
+      } catch (error) {
+        console.error('AuthProvider: Error during auth check:', error)
+        // Ensure loading is set to false even if checkAuth fails
+        setLoading(false)
+      }
+    }
 
-  // Show loading state while hydrating to prevent hydration mismatch
-  if (!isHydrated) {
-    return (
-      <div className="min-h-screen bg-gray-800 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    )
-  }
+    // Add a timeout as a fallback to ensure loading doesn't get stuck
+    const timeoutId = setTimeout(() => {
+      setLoading(false)
+    }, 3000) // 3 second timeout
 
+    initAuth()
+
+    return () => clearTimeout(timeoutId)
+  }, [checkAuth, setLoading])
+
+  // Render children immediately without any loading state
   return children
 } 

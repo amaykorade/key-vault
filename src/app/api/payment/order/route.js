@@ -4,7 +4,7 @@ import { getCurrentUser } from '../../../../lib/auth';
 
 const plans = {
   pro: { amount: 9 * 100, currency: 'USD', description: 'Pro Plan Subscription' },
-  team: { amount: 29 * 100, currency: 'USD', description: 'Team Plan Subscription' },
+  teams: { amount: 29 * 100, currency: 'USD', description: 'Team Plan Subscription' },
 };
 
 const razorpay = new Razorpay({

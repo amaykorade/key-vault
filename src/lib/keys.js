@@ -7,7 +7,7 @@ export async function createKey(userId, keyData, masterPassword) {
   // Encrypt the key value with master password
   const encryptedValue = encrypt(value, masterPassword)
   
-  return await prisma.key.create({
+  return await prisma.keys.create({
     data: {
       name,
       description,
@@ -24,7 +24,7 @@ export async function createKey(userId, keyData, masterPassword) {
 }
 
 export async function getKey(keyId, userId, masterPassword) {
-  const key = await prisma.key.findFirst({
+  const key = await prisma.keys.findFirst({
     where: {
       id: keyId,
       userId
@@ -56,7 +56,7 @@ export async function updateKey(keyId, userId, keyData, masterPassword) {
     encryptedValue = encrypt(value, masterPassword)
   }
   
-  return await prisma.key.update({
+  return await prisma.keys.update({
     where: {
       id: keyId,
       userId
@@ -76,7 +76,7 @@ export async function updateKey(keyId, userId, keyData, masterPassword) {
 }
 
 export async function deleteKey(keyId, userId) {
-  return await prisma.key.delete({
+  return await prisma.keys.delete({
     where: {
       id: keyId,
       userId
@@ -101,7 +101,7 @@ export async function getUserKeys(userId, options = {}) {
     })
   }
   
-  return await prisma.key.findMany({
+  return await prisma.keys.findMany({
     where,
     include: {
       folder: true
@@ -113,7 +113,7 @@ export async function getUserKeys(userId, options = {}) {
 }
 
 export async function toggleFavorite(keyId, userId) {
-  const key = await prisma.key.findFirst({
+  const key = await prisma.keys.findFirst({
     where: {
       id: keyId,
       userId
@@ -124,7 +124,7 @@ export async function toggleFavorite(keyId, userId) {
     throw new Error('Key not found')
   }
   
-  return await prisma.key.update({
+  return await prisma.keys.update({
     where: {
       id: keyId
     },
@@ -136,9 +136,9 @@ export async function toggleFavorite(keyId, userId) {
 
 export async function getKeyStats(userId) {
   const [totalKeys, favoriteKeys, keysByType] = await Promise.all([
-    prisma.key.count({ where: { userId } }),
-    prisma.key.count({ where: { userId, isFavorite: true } }),
-    prisma.key.groupBy({
+    prisma.keys.count({ where: { userId } }),
+    prisma.keys.count({ where: { userId, isFavorite: true } }),
+    prisma.keys.groupBy({
       by: ['type'],
       where: { userId },
       _count: true

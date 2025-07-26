@@ -11,7 +11,7 @@ import SubscriptionStatus from '../../components/SubscriptionStatus'
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { user, isAuthenticated, isLoading, logout, checkAuth } = useAuthStore()
+  const { user, isAuthenticated, isLoading, logout } = useAuthStore()
   const [projects, setProjects] = useState([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [showCreateProject, setShowCreateProject] = useState(false)
@@ -67,19 +67,10 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    // Only check auth if we have a session token in cookies
-    const hasSessionCookie = document.cookie.includes('session_token=')
-    if (hasSessionCookie) {
-      checkAuth()
-    }
-  }, [checkAuth])
-
-  useEffect(() => {
-    if (isAuthenticated) {
+    // Fetch data immediately since middleware ensures we're authenticated
       fetchProjects()
       fetchStats()
-    }
-  }, [isAuthenticated])
+  }, [])
 
   useEffect(() => {
     if (showCreateProject) {
@@ -107,18 +98,13 @@ export default function DashboardPage() {
   const handleCreateProject = async (e) => {
     e.preventDefault();
     await fetchPlanAndProjectCount(); // Always check before submit
+    
     if (userPlan === 'FREE' && projectCount >= 1) {
-      alert('Free plan users can only create 1 project. Upgrade to add more.');
+      alert('Free plan users can only create 1 project. Please upgrade to add more.');
       return;
     }
     
-    if (!newProject.name.trim()) {
-      alert('Project name is required')
-      return
-    }
-
-    setCreatingProject(true)
-    
+    setCreatingProject(true);
     try {
       const response = await fetch('/api/folders', {
         method: 'POST',
@@ -126,54 +112,54 @@ export default function DashboardPage() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(newProject)
-      })
+        body: JSON.stringify(newProject),
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        setProjects([...projects, data.folder])
-        setNewProject({ name: '', description: '', color: '#3B82F6' })
-        setShowCreateProject(false)
-        // Refresh stats after creating project
-        fetchStats()
+        setNewProject({ name: '', description: '', color: '#3B82F6' });
+        setShowCreateProject(false);
+        fetchProjects(); // Refresh the projects list
       } else {
-        const error = await response.json()
-        alert('Error creating project: ' + error.message)
+        const error = await response.json();
+        alert(error.message || 'Failed to create project');
       }
     } catch (error) {
-      alert('Error creating project: ' + error.message)
+      console.error('Error creating project:', error);
+      alert('Failed to create project');
     } finally {
-      setCreatingProject(false)
+      setCreatingProject(false);
     }
-  }
+  };
 
   const handleLogout = async () => {
-    await logout()
-    router.push('/auth/login')
+    try {
+      await logout();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.push('/auth/login');
   }
+  };
 
-  if (isLoading) {
+  // Show loading only briefly while data loads
+  if (loadingProjects && projects.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     )
   }
 
-  if (!isAuthenticated) {
-    return null // Middleware will handle redirect
-  }
-
   return (
-    <div className="min-h-screen bg-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-bold text-gray-900">
                 Welcome back, {user?.name || 'User'}!
               </h1>
-              <p className="mt-2 text-gray-300">
+              <p className="mt-2 text-gray-600">
                 Manage your secure keys and passwords
               </p>
             </div>
@@ -191,15 +177,12 @@ export default function DashboardPage() {
                   </Button>
                 </Link>
               )}
-              <Button onClick={handleLogout} variant="outline">
-                Sign Out
-              </Button>
             </div>
           </div>
 
           {/* Statistics Section - Moved above projects */}
           <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -211,12 +194,12 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Total Keys
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {statsLoading ? (
-                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                          <div className="animate-pulse bg-gray-300 h-6 w-8 rounded"></div>
                         ) : (
                           stats.totalKeys
                         )}
@@ -227,7 +210,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -240,12 +223,12 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Folders
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {statsLoading ? (
-                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                          <div className="animate-pulse bg-gray-300 h-6 w-8 rounded"></div>
                         ) : (
                           stats.folders
                         )}
@@ -256,7 +239,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+            <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -268,12 +251,12 @@ export default function DashboardPage() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-600 truncate">
                         Favorites
                       </dt>
-                      <dd className="text-lg font-medium text-white">
+                      <dd className="text-lg font-medium text-gray-900">
                         {statsLoading ? (
-                          <div className="animate-pulse bg-gray-600 h-6 w-8 rounded"></div>
+                          <div className="animate-pulse bg-gray-300 h-6 w-8 rounded"></div>
                         ) : (
                           stats.favorites
                         )}
@@ -288,7 +271,7 @@ export default function DashboardPage() {
           {/* Projects Section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-white">Your Projects</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Your Projects</h2>
             </div>
             
             {loadingProjects ? (
@@ -304,8 +287,8 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
                     </svg>
                   </div>
-                  <h3 className="mt-2 text-sm font-medium text-white">No projects</h3>
-                  <p className="mt-1 text-sm text-gray-400">Get started by creating your first project.</p>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No projects</h3>
+                  <p className="mt-1 text-sm text-gray-500">Get started by creating your first project.</p>
                   <div className="mt-6">
                     <Button
                       onClick={() => setShowCreateProject(true)}
@@ -319,7 +302,7 @@ export default function DashboardPage() {
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {projects.map((project) => (
-                  <Card key={project.id} className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card key={project.id} className="hover:shadow-lg transition-shadow cursor-pointer">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center">
                         <div 
@@ -327,8 +310,8 @@ export default function DashboardPage() {
                           style={{ backgroundColor: project.color }}
                         ></div>
                         <div>
-                          <h3 className="text-lg font-medium text-white">{project.name}</h3>
-                          <p className="text-sm text-gray-400">{project.description || 'No description'}</p>
+                          <h3 className="text-lg font-medium text-gray-900">{project.name}</h3>
+                          <p className="text-sm text-gray-600">{project.description || 'No description'}</p>
                         </div>
                       </div>
                     </div>
@@ -339,14 +322,14 @@ export default function DashboardPage() {
                           navigator.clipboard.writeText(project.id);
                           // You could add a toast notification here
                         }}
-                        className="text-xs text-gray-500 font-mono bg-gray-800 px-2 py-1 rounded hover:bg-gray-700 hover:text-gray-400 transition-colors cursor-pointer"
+                        className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
                         title="Click to copy folder ID"
                       >
                         ID: {project.id}
                       </button>
                     </div>
                     <div className="mt-4 flex justify-between items-center">
-                      <span className="text-sm text-gray-400">
+                      <span className="text-sm text-gray-600">
                         {project._count?.keys || 0} keys
                       </span>
                       <Link href={`/projects/${project.id}`}>
@@ -362,27 +345,27 @@ export default function DashboardPage() {
           </div>
 
           {/* Account Information */}
-          <div className="bg-gray-700 overflow-hidden shadow rounded-lg">
+          <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
             <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-white mb-4">
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
                 Account Information
               </h3>
               <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                 <div>
-                  <dt className="text-sm font-medium text-gray-400">Name</dt>
-                  <dd className="mt-1 text-sm text-white">{user?.name}</dd>
+                  <dt className="text-sm font-medium text-gray-600">Name</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{user?.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-400">Email</dt>
-                  <dd className="mt-1 text-sm text-white">{user?.email}</dd>
+                  <dt className="text-sm font-medium text-gray-600">Email</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{user?.email}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-400">Role</dt>
-                  <dd className="mt-1 text-sm text-white capitalize">{user?.role}</dd>
+                  <dt className="text-sm font-medium text-gray-600">Role</dt>
+                  <dd className="mt-1 text-sm text-gray-900 capitalize">{user?.role}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-400">User ID</dt>
-                  <dd className="mt-1 text-sm text-white font-mono">{user?.id}</dd>
+                  <dt className="text-sm font-medium text-gray-600">User ID</dt>
+                  <dd className="mt-1 text-sm text-gray-900 font-mono">{user?.id}</dd>
                 </div>
               </dl>
             </div>
@@ -398,9 +381,9 @@ export default function DashboardPage() {
       {/* Create Project Modal */}
       {showCreateProject && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-700">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-white mb-4">Create New Project</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Project</h3>
               <form onSubmit={handleCreateProject}>
                 <div className="space-y-4">
                   <Input
@@ -423,7 +406,7 @@ export default function DashboardPage() {
                   />
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Project Color
                     </label>
                     <div className="flex space-x-2">
@@ -432,7 +415,7 @@ export default function DashboardPage() {
                           key={color}
                           type="button"
                           className={`w-8 h-8 rounded-full border-2 ${
-                            newProject.color === color ? 'border-white' : 'border-gray-500'
+                            newProject.color === color ? 'border-gray-900' : 'border-gray-300'
                           }`}
                           style={{ backgroundColor: color }}
                           onClick={() => setNewProject({...newProject, color})}
@@ -442,8 +425,8 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 {userPlan === 'FREE' && projectCount >= 1 && (
-                  <div className="text-sm text-red-400 bg-red-900 p-3 rounded-md mb-2 mt-4">
-                    Free plan users can only create 1 project. <a href="/pricing" className="text-blue-400 underline">Upgrade to add more.</a>
+                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md mb-2 mt-4 border border-red-200">
+                    Free plan users can only create 1 project. <a href="/pricing" className="text-blue-600 underline">Upgrade to add more.</a>
                   </div>
                 )}
                 <div className="flex justify-end space-x-3 mt-6">

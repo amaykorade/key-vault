@@ -46,7 +46,7 @@ export async function POST(request) {
       },
       session: {
         token: session.token,
-        expiresAt: session.expires
+        expiresAt: session.expiresAt
       },
       refreshToken: {
         expiresAt: refreshToken.expiresAt

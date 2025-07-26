@@ -15,7 +15,7 @@ export async function POST(request) {
     }
 
     // Check subscription status
-    const currentUser = await prisma.user.findUnique({
+    const currentUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: { plan: true, subscriptionExpiresAt: true }
     });
@@ -25,7 +25,7 @@ export async function POST(request) {
 
     // Enforce plan limits based on active subscription
     if (currentUser.plan === 'FREE' || !hasActiveSubscription) {
-      const totalSecrets = await prisma.key.count({ where: { userId: user.id } });
+      const totalSecrets = await prisma.keys.count({ where: { userId: user.id } });
       if (totalSecrets >= 5) {
         return NextResponse.json({ 
           success: false, 
@@ -33,7 +33,7 @@ export async function POST(request) {
         }, { status: 403 });
       }
     } else if (currentUser.plan === 'PRO' && hasActiveSubscription) {
-      const totalSecrets = await prisma.key.count({ where: { userId: user.id } });
+      const totalSecrets = await prisma.keys.count({ where: { userId: user.id } });
       if (totalSecrets >= 100) {
         return NextResponse.json({ 
           success: false, 

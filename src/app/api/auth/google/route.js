@@ -55,13 +55,13 @@ export async function POST(request) {
     }
 
     // Check if user exists in our database
-    let user = await prisma.user.findUnique({
+    let user = await prisma.users.findUnique({
       where: { email: userData.email }
     });
 
     if (!user) {
       // Create new user
-      user = await prisma.user.create({
+      user = await prisma.users.create({
         data: {
           email: userData.email,
           name: userData.name,
@@ -76,7 +76,7 @@ export async function POST(request) {
     const sessionToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-    await prisma.session.create({
+          await prisma.sessions.create({
       data: {
         token: sessionToken,
         userId: user.id,

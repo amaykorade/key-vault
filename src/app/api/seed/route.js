@@ -7,7 +7,7 @@ export async function POST() {
   try {
     // Create test user first
     const hashedPassword = await bcrypt.hash('Password123', 10);
-    const user = await prisma.user.upsert({
+    const user = await prisma.users.upsert({
       where: { email: 'test@example.com' },
       update: {},
       create: {
@@ -18,7 +18,7 @@ export async function POST() {
     });
 
     // Create default folder
-    await prisma.folder.upsert({
+          await prisma.folders.upsert({
       where: { id: 'default' },
       update: {},
       create: {
@@ -30,7 +30,7 @@ export async function POST() {
     });
 
     // Create some test keys
-    await prisma.key.create({
+            await prisma.keys.create({
       data: {
         name: 'Database Password',
         description: 'Production database password',

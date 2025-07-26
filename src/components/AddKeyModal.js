@@ -182,10 +182,10 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-gray-700 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-                          <h2 className="text-xl font-semibold text-white">Add New Key</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Add New Key</h2>
             <button
               onClick={handleClose}
               disabled={loading}
@@ -199,7 +199,7 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Key Name *
               </label>
               <Input
@@ -215,7 +215,7 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
               <textarea
@@ -224,13 +224,13 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Enter description (optional)"
-                className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white bg-gray-800 placeholder-gray-400"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-500"
                 rows="3"
               />
             </div>
 
             <div>
-              <label htmlFor="value" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="value" className="block text-sm font-medium text-gray-700 mb-1">
                 Key Value *
               </label>
               <textarea
@@ -239,19 +239,19 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 value={formData.value}
                 onChange={handleInputChange}
                 placeholder="Enter key value"
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white bg-gray-800 placeholder-gray-400 ${
-                  errors.value ? 'border-red-500' : 'border-gray-600'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-500 ${
+                  errors.value ? 'border-red-500' : 'border-gray-300'
                 }`}
                 rows="4"
                 required
               />
               {errors.value && (
-                <p className="mt-1 text-sm text-red-400">{errors.value}</p>
+                <p className="mt-1 text-sm text-red-600">{errors.value}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-1">
                 Key Type *
               </label>
               <select
@@ -259,24 +259,24 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 name="type"
                 value={formData.type}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white bg-gray-800 ${
-                  errors.type ? 'border-red-500' : 'border-gray-600'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white ${
+                  errors.type ? 'border-red-500' : 'border-gray-300'
                 }`}
                 required
               >
                 {keyTypes.map(type => (
-                  <option key={type.value} value={type.value} className="bg-gray-800 text-white">
+                  <option key={type.value} value={type.value} className="bg-white text-gray-900">
                     {type.label}
                   </option>
                 ))}
               </select>
               {errors.type && (
-                <p className="mt-1 text-sm text-red-400">{errors.type}</p>
+                <p className="mt-1 text-sm text-red-600">{errors.type}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-300 mb-1">
+              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
                 Tags
               </label>
               <Input
@@ -287,7 +287,7 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 onChange={handleInputChange}
                 placeholder="Enter tags separated by commas"
               />
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-gray-500">
                 Separate multiple tags with commas (e.g., production, api, backend)
               </p>
             </div>
@@ -299,21 +299,21 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId }) {
                 type="checkbox"
                 checked={formData.isFavorite}
                 onChange={handleInputChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-800"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded bg-white"
               />
-              <label htmlFor="isFavorite" className="ml-2 block text-sm text-gray-300">
+              <label htmlFor="isFavorite" className="ml-2 block text-sm text-gray-700">
                 Mark as favorite
               </label>
             </div>
 
             {errors.submit && (
-              <div className="text-sm text-red-400 bg-red-900/20 p-3 rounded-md border border-red-500/20">
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-200">
                 {errors.submit}
               </div>
             )}
             {userPlan === 'FREE' && secretCount >= 5 && (
-              <div className="text-sm text-red-400 bg-red-900/20 p-3 rounded-md mb-2 border border-red-500/20">
-                Free plan users can only create up to 5 secrets. <a href="/pricing" className="text-blue-400 underline">Upgrade to add more.</a>
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md mb-2 border border-red-200">
+                Free plan users can only create up to 5 secrets. <a href="/pricing" className="text-blue-600 underline">Upgrade to add more.</a>
               </div>
             )}
 

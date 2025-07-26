@@ -14,7 +14,7 @@ export async function GET(request) {
     const keyStats = await getKeyStats(user.id);
     
     // Get folder count
-    const folderCount = await prisma.folder.count({
+    const folderCount = await prisma.folders.count({
       where: { userId: user.id }
     });
 
