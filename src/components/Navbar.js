@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import useAuthStore from '../stores/authStore';
 import Button from './ui/Button';
 import { useState, useRef, useEffect } from 'react';
-import { User, ChevronDown } from 'lucide-react';
+import { User, ChevronDown, Key } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, logout, isInitialized } = useAuthStore();
@@ -51,7 +51,9 @@ export default function Navbar() {
           {/* Left section: Logo and nav links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="/file.svg" width={28} height={28} alt="Key Vault Logo" />
+              <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
+                <Key className="h-5 w-5 text-white" />
+              </div>
               <span className="text-xl font-bold text-white">Key Vault</span>
             </Link>
             <div className="hidden sm:flex sm:space-x-6 ml-6">

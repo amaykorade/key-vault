@@ -35,7 +35,7 @@ const HomePage = () => {
       icon: ShieldCheck,
       title: "Enterprise-Grade Security",
       description: "Military-grade AES-256 encryption with zero-knowledge architecture. Your secrets are encrypted before they leave your device.",
-      gradient: "from-emerald-500 to-teal-500"
+      gradient: "from-blue-500 to-indigo-500"
     },
     {
       icon: Zap,
@@ -65,12 +65,12 @@ const HomePage = () => {
       icon: BarChart3,
       title: "Advanced Analytics",
       description: "Monitor usage patterns, track performance metrics, and get detailed insights into your key management.",
-      gradient: "from-green-500 to-emerald-500"
+      gradient: "from-indigo-500 to-purple-500"
     }
   ];
 
   const integrations = [
-    { name: "Node.js", logo: "🟢", color: "bg-green-500" },
+    { name: "Node.js", logo: "🟢", color: "bg-blue-500" },
     { name: "Python", logo: "🐍", color: "bg-yellow-500" },
     { name: "React", logo: "⚛️", color: "bg-blue-500" },
     { name: "Go", logo: "🔵", color: "bg-cyan-500" },
@@ -109,19 +109,19 @@ const HomePage = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-emerald-500/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5"></div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.1%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-700 rounded-full text-sm font-medium mb-8 border border-emerald-200">
+            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-blue-700 rounded-full text-sm font-medium mb-8 border border-blue-200">
               <Sparkles className="h-4 w-4 mr-2" />
-              Trusted by 10,000+ developers worldwide
+              Trusted by developers worldwide
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 leading-tight">
               Secure, Rotate, and Access
-              <span className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Your API Keys Effortlessly
               </span>
             </h1>
@@ -132,7 +132,7 @@ const HomePage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-              <a href="/auth/signup" className="group px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+              <a href="/auth/signup" className="group px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <span>Get Started for Free</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
@@ -149,11 +149,11 @@ const HomePage = () => {
                     <div className="flex items-center space-x-2 mb-4">
                       <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                       <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                       <span className="text-slate-400 text-sm ml-4 font-mono">Terminal</span>
                     </div>
                     <div className="font-mono text-sm leading-relaxed">
-                      <div className="text-green-400">{`$ npm install key-vault-sdk`}</div>
+                      <div className="text-blue-400">{`$ npm install key-vault-sdk`}</div>
                       <div className="text-slate-500">{`// Initialize the SDK`}</div>
                       <div className="text-blue-400">{`const kv = new KeyVault('your-api-token');`}</div>
                       <div className="text-slate-500">{`// Retrieve your secrets`}</div>
@@ -182,10 +182,10 @@ const HomePage = () => {
             {/* Step 1: Store Securely */}
             <div className="text-center group">
               <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-emerald-200">
+                <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-all duration-300 shadow-xl border-4 border-blue-200">
                   <Save className="h-12 w-12 text-white" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   1
                 </div>
               </div>
@@ -231,7 +231,7 @@ const HomePage = () => {
           {/* Visual Flow Arrows */}
           <div className="hidden md:flex justify-center items-center mt-16 mb-12">
             <div className="flex items-center space-x-8">
-              <div className="w-16 h-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full"></div>
+              <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
               <ArrowRight className="h-8 w-8 text-slate-400" />
               <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
               <ArrowRight className="h-8 w-8 text-slate-400" />
@@ -241,7 +241,7 @@ const HomePage = () => {
           
           {/* Call to Action */}
           <div className="text-center">
-            <a href="/auth/signup" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all font-semibold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1">
+            <a href="/auth/signup" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all font-semibold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1">
               <span>Get Started for Free</span>
               <ArrowRight className="h-5 w-5 ml-3 group-hover:translate-x-1 transition-transform" />
             </a>
@@ -264,7 +264,7 @@ const HomePage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* End-to-End Encryption */}
             <div className="group bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-8 border border-slate-200 hover:border-blue-300 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">End-to-End Encryption</h3>
@@ -296,8 +296,8 @@ const HomePage = () => {
             </div>
 
             {/* Multi-Environment Support */}
-            <div className="group bg-gradient-to-br from-slate-50 to-green-50 rounded-2xl p-8 border border-slate-200 hover:border-green-300 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <div className="group bg-gradient-to-br from-slate-50 to-indigo-50 rounded-2xl p-8 border border-slate-200 hover:border-indigo-300 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Globe className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-4">Multi-Environment Support</h3>
@@ -395,10 +395,10 @@ const HomePage = () => {
                     <span className="text-red-500 text-2xl">❌</span>
                   </div>
                   <div className="p-6 border-r border-slate-200 flex items-center justify-center">
-                    <span className="text-green-500 text-2xl">✅</span>
+                    <span className="text-blue-500 text-2xl">✅</span>
                   </div>
                   <div className="p-6 flex items-center justify-center">
-                    <span className="text-green-500 text-2xl">✅</span>
+                    <span className="text-blue-500 text-2xl">✅</span>
                   </div>
                 </div>
                 
@@ -415,7 +415,7 @@ const HomePage = () => {
                     <span className="text-yellow-500 text-sm font-medium">🔸 Manual</span>
                   </div>
                   <div className="p-6 flex items-center justify-center">
-                    <span className="text-green-500 text-sm font-medium">✅ Manual</span>
+                    <span className="text-blue-500 text-sm font-medium">✅ Manual</span>
                   </div>
                   </div>
                   
@@ -449,7 +449,7 @@ const HomePage = () => {
                     <span className="text-yellow-500 text-sm font-medium">🔸 Hard</span>
                       </div>
                   <div className="p-6 flex items-center justify-center">
-                    <span className="text-green-500 text-sm font-medium">✅ Easy</span>
+                    <span className="text-blue-500 text-sm font-medium">✅ Easy</span>
                       </div>
                     </div>
                     
@@ -463,10 +463,10 @@ const HomePage = () => {
                     <span className="text-red-500 text-2xl">❌</span>
                   </div>
                   <div className="p-6 border-r border-slate-200 flex items-center justify-center">
-                    <span className="text-green-500 text-2xl">✅</span>
+                    <span className="text-blue-500 text-2xl">✅</span>
                       </div>
                   <div className="p-6 flex items-center justify-center">
-                    <span className="text-green-500 text-2xl">✅</span>
+                    <span className="text-blue-500 text-2xl">✅</span>
                       </div>
                     </div>
                 
@@ -483,7 +483,7 @@ const HomePage = () => {
                     <span className="text-yellow-500 text-sm font-medium">🔸 Some</span>
                   </div>
                   <div className="p-6 flex items-center justify-center">
-                    <span className="text-green-500 text-2xl">✅</span>
+                    <span className="text-blue-500 text-2xl">✅</span>
                   </div>
                 </div>
               </div>
@@ -506,8 +506,8 @@ const HomePage = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* AES-256 encryption */}
-            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-blue-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <Shield className="h-6 w-6 text-white" />
                 </div>
               <h3 className="text-xl font-bold text-white mb-4">AES-256 Encryption</h3>
@@ -528,8 +528,8 @@ const HomePage = () => {
                 </div>
 
             {/* HTTPS enforced */}
-            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+            <div className="group bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-blue-400/50 transition-all hover:shadow-2xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                 <CheckCircle className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">HTTPS Enforced</h3>
@@ -603,9 +603,9 @@ const HomePage = () => {
             </div>
 
             {/* SaaS startups */}
-            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-emerald-300 transition-all hover:shadow-2xl hover:-translate-y-1">
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 hover:border-blue-300 transition-all hover:shadow-2xl hover:-translate-y-1">
               <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
+                                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg">
                   <span className="text-2xl">🛠️</span>
                 </div>
                 <div>
@@ -666,14 +666,14 @@ const HomePage = () => {
             {/* Timeline */}
             <div className="relative">
               {/* Timeline Line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-emerald-500 to-blue-500 h-full rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-500 to-indigo-500 h-full rounded-full"></div>
               
               {/* Timeline Items */}
               <div className="space-y-12">
                 {/* Auto key rotation */}
                 <div className="relative flex items-center">
                   <div className="w-1/2 pr-8 text-right">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-emerald-400/50 transition-all hover:shadow-2xl">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-blue-400/50 transition-all hover:shadow-2xl">
                       <div className="flex items-center justify-end space-x-3 mb-3">
                         <span className="text-2xl">🔁</span>
                         <h3 className="text-xl font-bold text-white">Auto Key Rotation</h3>
@@ -685,7 +685,7 @@ const HomePage = () => {
                   </div>
                   
                   {/* Timeline Dot */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-emerald-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full border-4 border-slate-900 shadow-lg"></div>
                   
                   <div className="w-1/2 pl-8"></div>
                 </div>
@@ -796,22 +796,22 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 relative bg-gradient-to-br from-emerald-500 to-teal-500">
+      <section className="py-20 relative bg-gradient-to-br from-blue-500 to-indigo-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Get Started in Minutes
             </h2>
-            <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed mb-12">
+                          <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed mb-12">
               No credit card. No friction. Just security and control.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <a href="/auth/signup" className="group px-8 py-4 bg-white text-emerald-600 rounded-xl hover:bg-emerald-50 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                              <a href="/auth/signup" className="group px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all font-semibold text-lg flex items-center space-x-3 shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <span>Create Free Vault</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
-              <a href="/docs" className="px-8 py-4 bg-emerald-600/20 backdrop-blur-sm text-white rounded-xl hover:bg-emerald-600/30 transition-all font-semibold text-lg flex items-center space-x-3 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                              <a href="/docs" className="px-8 py-4 bg-blue-600/20 backdrop-blur-sm text-white rounded-xl hover:bg-blue-600/30 transition-all font-semibold text-lg flex items-center space-x-3 border border-white/20 shadow-xl hover:shadow-2xl hover:-translate-y-1">
                 <Play className="h-5 w-5" />
                 <span>See Demo</span>
               </a>
@@ -825,7 +825,7 @@ const HomePage = () => {
       {/* CTA Section */}
       {/* <section className="py-20 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl p-12 text-white shadow-2xl">
+                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-12 text-white shadow-2xl">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Ready to secure your API keys?
             </h2>
@@ -851,7 +851,7 @@ const HomePage = () => {
             {/* Brand Section */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl">
+                <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
                 <Key className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xl font-bold">Key Vault</span>
@@ -860,7 +860,7 @@ const HomePage = () => {
                 Secure, rotate, and access your API keys effortlessly. Built for developers who care about security.
               </p>
               <div className="flex items-center space-x-4">
-                <span className="inline-flex items-center px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30">
+                <span className="inline-flex items-center px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-semibold rounded-full border border-blue-500/30">
                   🚀 MVP Live
                 </span>
                 <div className="flex space-x-3">

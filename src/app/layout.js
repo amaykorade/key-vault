@@ -17,6 +17,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   title: 'Key Vault - Secure API Key Management',
   description: 'Centralized key vault for developers to securely store, auto-rotate, and access secrets via SDK. No more plaintext configs or expired API tokens.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({ children }) {
