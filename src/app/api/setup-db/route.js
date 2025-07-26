@@ -165,6 +165,46 @@ export async function POST() {
       )
     `);
     
+    // Create teams table
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "teams" (
+        "id" TEXT NOT NULL,
+        "name" TEXT NOT NULL,
+        "description" TEXT,
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP(3) NOT NULL,
+        "ownerId" TEXT NOT NULL,
+        CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
+      )
+    `);
+    
+    // Create team_members table
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "team_members" (
+        "id" TEXT NOT NULL,
+        "role" TEXT NOT NULL DEFAULT 'MEMBER',
+        "joinedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "invitedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "invitedBy" TEXT,
+        "userId" TEXT NOT NULL,
+        "teamId" TEXT NOT NULL,
+        CONSTRAINT "team_members_pkey" PRIMARY KEY ("id")
+      )
+    `);
+    
+    // Create key_accesses table
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "key_accesses" (
+        "id" TEXT NOT NULL,
+        "permissions" TEXT[] NOT NULL,
+        "grantedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "grantedBy" TEXT NOT NULL,
+        "keyId" TEXT NOT NULL,
+        "teamId" TEXT NOT NULL,
+        CONSTRAINT "key_accesses_pkey" PRIMARY KEY ("id")
+      )
+    `);
+    
     // Add unique constraints (one by one to avoid errors if they already exist)
     try {
       await prisma.$executeRawUnsafe(`ALTER TABLE "users" ADD CONSTRAINT "users_email_key" UNIQUE ("email")`);
@@ -247,6 +287,50 @@ export async function POST() {
     
     try {
       await prisma.$executeRawUnsafe(`ALTER TABLE "folders" ADD CONSTRAINT "folders_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "folders"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    // Add foreign key constraints for teams and related tables
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "teams" ADD CONSTRAINT "teams_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "team_members" ADD CONSTRAINT "team_members_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "team_members" ADD CONSTRAINT "team_members_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "key_accesses" ADD CONSTRAINT "key_accesses_keyId_fkey" FOREIGN KEY ("keyId") REFERENCES "keys"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "key_accesses" ADD CONSTRAINT "key_accesses_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    // Add unique constraints for teams and related tables
+    try {
+      await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "team_members_userId_teamId_key" ON "team_members"("userId", "teamId")`);
+    } catch (e) {
+      // Constraint might already exist
+    }
+    
+    try {
+      await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "key_accesses_keyId_teamId_key" ON "key_accesses"("keyId", "teamId")`);
     } catch (e) {
       // Constraint might already exist
     }
