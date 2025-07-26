@@ -268,43 +268,45 @@ export async function POST() {
         // Add missing columns to existing tables
         console.log('Adding missing columns to existing tables...');
         const alterQueries = [
-          // Add missing columns to User table
-          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "subscriptionExpiresAt" TIMESTAMP(3)`,
-          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "apiToken" TEXT`,
-          `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL DEFAULT 'FREE'`,
+          // Add missing columns to users table
+          `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "subscriptionExpiresAt" TIMESTAMP(3)`,
+          `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "apiToken" TEXT`,
+          `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL DEFAULT 'FREE'`,
           
-          // Add missing columns to Session table
-          `ALTER TABLE "Session" ADD COLUMN IF NOT EXISTS "sessionToken" TEXT`,
+          // Add missing columns to sessions table
+          `ALTER TABLE "sessions" ADD COLUMN IF NOT EXISTS "token" TEXT`,
           
-          // Add missing columns to Account table
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "refresh_token" TEXT`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "access_token" TEXT`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "expires_at" INTEGER`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "token_type" TEXT`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "scope" TEXT`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "id_token" TEXT`,
-          `ALTER TABLE "Account" ADD COLUMN IF NOT EXISTS "session_state" TEXT`,
+          // Add missing columns to accounts table
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "refresh_token" TEXT`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "access_token" TEXT`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "expires_at" INTEGER`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "token_type" TEXT`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "scope" TEXT`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "id_token" TEXT`,
+          `ALTER TABLE "accounts" ADD COLUMN IF NOT EXISTS "session_state" TEXT`,
           
-          // Add missing columns to Key table
-          `ALTER TABLE "Key" ADD COLUMN IF NOT EXISTS "tags" TEXT[]`,
-          `ALTER TABLE "Key" ADD COLUMN IF NOT EXISTS "isFavorite" BOOLEAN NOT NULL DEFAULT false`,
+          // Add missing columns to keys table
+          `ALTER TABLE "keys" ADD COLUMN IF NOT EXISTS "tags" TEXT[]`,
+          `ALTER TABLE "keys" ADD COLUMN IF NOT EXISTS "isFavorite" BOOLEAN NOT NULL DEFAULT false`,
           
-          // Add missing columns to AuditLog table
-          `ALTER TABLE "AuditLog" ADD COLUMN IF NOT EXISTS "details" JSONB`,
+          // Add missing columns to audit_logs table
+          `ALTER TABLE "audit_logs" ADD COLUMN IF NOT EXISTS "details" JSONB`,
           
-          // Add missing columns to RefreshToken table
-          `ALTER TABLE "RefreshToken" ADD COLUMN IF NOT EXISTS "token" TEXT`,
-          `ALTER TABLE "RefreshToken" ADD COLUMN IF NOT EXISTS "expiresAt" TIMESTAMP(3)`,
+          // Add missing columns to refresh_tokens table
+          `ALTER TABLE "refresh_tokens" ADD COLUMN IF NOT EXISTS "token" TEXT`,
+          `ALTER TABLE "refresh_tokens" ADD COLUMN IF NOT EXISTS "expiresAt" TIMESTAMP(3)`,
           
-          // Add missing columns to Payment table
-          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "razorpayOrderId" TEXT`,
-          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "razorpayPaymentId" TEXT`,
-          `ALTER TABLE "Payment" ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL`,
+          // Add missing columns to payments table
+          `ALTER TABLE "payments" ADD COLUMN IF NOT EXISTS "orderId" TEXT`,
+          `ALTER TABLE "payments" ADD COLUMN IF NOT EXISTS "paymentId" TEXT`,
+          `ALTER TABLE "payments" ADD COLUMN IF NOT EXISTS "signature" TEXT`,
+          `ALTER TABLE "payments" ADD COLUMN IF NOT EXISTS "subscriptionEndDate" TIMESTAMP(3)`,
+          `ALTER TABLE "payments" ADD COLUMN IF NOT EXISTS "subscriptionStartDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
           
-          // Add missing columns to KeyAccess table
-          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "permissions" TEXT[] NOT NULL`,
-          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "grantedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
-          `ALTER TABLE "KeyAccess" ADD COLUMN IF NOT EXISTS "grantedBy" TEXT NOT NULL`
+          // Add missing columns to key_accesses table
+          `ALTER TABLE "key_accesses" ADD COLUMN IF NOT EXISTS "permissions" TEXT[] NOT NULL`,
+          `ALTER TABLE "key_accesses" ADD COLUMN IF NOT EXISTS "grantedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+          `ALTER TABLE "key_accesses" ADD COLUMN IF NOT EXISTS "grantedBy" TEXT NOT NULL`
         ];
         
         for (const query of alterQueries) {
