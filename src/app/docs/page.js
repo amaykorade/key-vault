@@ -19,6 +19,7 @@ export default function DocsPage() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Table of Contents</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <a href="#sdk" className="text-slate-600 hover:text-slate-500 hover:underline">JavaScript SDK</a>
+            <a href="#python-sdk" className="text-slate-600 hover:text-slate-500 hover:underline">Python SDK</a>
             <a href="#api" className="text-slate-600 hover:text-slate-500 hover:underline">REST API</a>
             <a href="#authentication" className="text-slate-600 hover:text-slate-500 hover:underline">Authentication</a>
             <a href="#security" className="text-slate-600 hover:text-slate-500 hover:underline">Security</a>
@@ -300,6 +301,171 @@ const secrets = {
     console.error('Failed to retrieve DB_URL:', error.message);
   }
 }`}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Python SDK Section */}
+          <section id="python-sdk" className="scroll-mt-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Python SDK</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              The Key Vault Python SDK allows you to securely access your vault keys from Python applications. 
+              <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
+            </p>
+
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Installation</h3>
+                <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
+                  <code className="text-green-600 text-sm">pip install key-vault-sdk</code>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Getting Started</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 1: Get Your API Token</h4>
+                    <ol className="space-y-2 text-gray-600 ml-6">
+                      <li>1. Login to your Key Vault application</li>
+                      <li>2. Navigate to the &quot;API&quot; page</li>
+                      <li>3. Copy your API token</li>
+                    </ol>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 2: Initialize the SDK</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`from key_vault_sdk import KeyVault
+
+# Initialize the SDK
+kv = KeyVault(
+    api_url="https://yourdomain.com/api",
+    token="your-api-token-here"
+)`}</code>
+                      </pre>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`# Get a specific secret value by name
+secret_value = kv.get_key_by_name("folder-id", "DB_URL")
+print("Secret retrieved successfully")
+
+# Or get all keys in a folder
+result = kv.list_keys(folder_id="folder-id")
+print("Available keys:", [k['name'] for k in result['keys']])`}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">API Reference</h3>
+                
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(api_url, token, timeout=30)</code>
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>api_url</strong> (str): Base URL of your Key Vault API</li>
+                      <li><strong>token</strong> (str): Your API token for authentication</li>
+                      <li><strong>timeout</strong> (int, optional): Request timeout in seconds</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">list_keys(folder_id, limit=20, offset=0)</code>
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>folder_id</strong> (str, required): Folder to list keys from</li>
+                      <li><strong>limit</strong> (int, optional): Number of keys to return (default: 20)</li>
+                      <li><strong>offset</strong> (int, optional): Number of keys to skip (default: 0)</li>
+                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">dict</code> - Dictionary with keys list and pagination info</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">get_key(key_id, include_value=False)</code>
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>key_id</strong> (str, required): The key&apos;s ID</li>
+                      <li><strong>include_value</strong> (bool, optional): If True, include the decrypted key value</li>
+                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">dict</code> - Key object with metadata and optionally the value</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">get_key_by_name(folder_id, key_name)</code>
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>folder_id</strong> (str, required): Folder containing the key</li>
+                      <li><strong>key_name</strong> (str, required): Name of the key to retrieve</li>
+                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">str</code> - The decrypted secret value</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Usage Examples</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Simple Key Retrieval</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`from key_vault_sdk import KeyVault
+
+# Initialize
+kv = KeyVault(
+    api_url="https://yourdomain.com/api",
+    token="your-api-token"
+)
+
+# Get a key by name
+api_key = kv.get_key_by_name("folder-id", "key-name")
+print(f"API Key: {api_key}")
+
+# Get multiple keys
+keys = kv.get_multiple_keys(
+    folder_id="folder-id",
+    key_names=["stripe-key", "database-password"]
+)
+print(f"Retrieved keys: {keys}")`}</code>
+                      </pre>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Error Handling</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`from key_vault_sdk import KeyVault, KeyVaultError, KeyVaultAuthError, KeyVaultNotFoundError
+
+try:
+    secret = kv.get_key_by_name("folder-id", "secret-name")
+    # Use secret
+except KeyVaultNotFoundError:
+    print("Secret not found")
+except KeyVaultAuthError:
+    print("Invalid API token")
+except KeyVaultError as e:
+    print(f"Failed to retrieve secret: {e}")`}</code>
                       </pre>
                     </div>
                   </div>
