@@ -1,7 +1,7 @@
 {
   "name": "key-vault-sdk",
-  "version": "1.0.1",
-  "description": "SDK for accessing Key Vault API (Node.js, ESM & CommonJS)",
+  "version": "1.0.2",
+  "description": "JavaScript SDK for accessing Key Vault API (Node.js, ESM & CommonJS) - Python SDK also available",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -31,7 +31,10 @@
     "sdk",
     "secrets",
     "api",
-    "vault"
+    "vault",
+    "javascript",
+    "typescript",
+    "nodejs"
   ],
   "author": "Amay Korade <amaykorade5@gmail.com>",
   "license": "MIT"

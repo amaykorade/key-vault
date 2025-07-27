@@ -16,7 +16,8 @@ A modern, secure secret management application built with Next.js, featuring enc
 - **Search & Filter**: Find secrets quickly with advanced filtering
 
 ### 🚀 Developer Experience
-- **JavaScript SDK**: Easy integration with your applications
+- **JavaScript SDK**: Easy integration with Node.js/TypeScript applications
+- **Python SDK**: Simple Python integration for your applications
 - **RESTful API**: Full API access for automation
 - **Multiple Key Types**: Passwords, API keys, SSH keys, certificates, and more
 
@@ -78,23 +79,56 @@ A modern, secure secret management application built with Next.js, featuring enc
 
 ## SDK Usage
 
-### Installation
+Key Vault provides SDKs for multiple programming languages:
+
+### JavaScript/TypeScript SDK
+
+#### Installation
 ```bash
 npm install key-vault-sdk
 ```
 
-### Basic Usage
+#### Basic Usage
 ```javascript
 import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'your-api-token'
+  getToken: () => 'your-api-token',
+  onAuthError: () => console.log('Token expired')
 });
 
-// Get a specific key's value
-const secretValue = await kv.getKeyValue('your-folder-id', 'key-name');
-console.log('Secret retrieved successfully');
+// Get a key by name
+async function getKey(keyName, folderId) {
+  const { keys } = await kv.listKeys({ folderId, limit: 100 });
+  const key = keys.find(k => k.name === keyName);
+  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
+  return keyWithValue.value;
+}
+
+const apiKey = await getKey('key-name', 'folder-id');
+```
+
+### Python SDK
+
+#### Installation
+```bash
+pip install key-vault-sdk
+```
+
+#### Basic Usage
+```python
+from key_vault_sdk import KeyVault
+
+# Initialize
+kv = KeyVault(
+    api_url="https://yourdomain.com/api",
+    token="your-api-token"
+)
+
+# Get a key by name
+api_key = kv.get_key_by_name("folder-id", "key-name")
+print(f"API Key: {api_key}")
 ```
 
 ### Advanced Usage

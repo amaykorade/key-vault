@@ -2,6 +2,8 @@
 
 A JavaScript SDK for securely accessing your Key Vault API keys and values. Supports both ES Modules and CommonJS.
 
+> **Looking for Python?** We also have a [Python SDK](https://github.com/amaykorade/key-vault/tree/main/python-sdk) available!
+
 ## Installation
 
 ```bash
@@ -140,6 +142,22 @@ try {
   console.error('Failed to get key:', error.message);
 }
 ```
+
+## Available SDKs
+
+Key Vault provides SDKs for multiple programming languages:
+
+### JavaScript/TypeScript
+```bash
+npm install key-vault-sdk
+```
+
+### Python
+```bash
+pip install key-vault-sdk
+```
+
+Visit our [GitHub repository](https://github.com/amaykorade/key-vault) for more SDKs and documentation.
 
 ## Building
 
