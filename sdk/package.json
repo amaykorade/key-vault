@@ -1,14 +1,38 @@
 {
   "name": "key-vault-sdk",
-  "version": "1.0.0",
-  "description": "SDK for accessing Key Vault API (Node.js, ESM)",
-  "main": "index.js",
-  "type": "module",
+  "version": "1.0.1",
+  "description": "SDK for accessing Key Vault API (Node.js, ESM & CommonJS)",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "devDependencies": {
+    "rollup": "^4.9.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/amaykorade/key-vault"
   },
-  "keywords": ["keyvault", "sdk", "secrets", "api", "vault"],
+  "keywords": [
+    "keyvault",
+    "sdk",
+    "secrets",
+    "api",
+    "vault"
+  ],
   "author": "Amay Korade <amaykorade5@gmail.com>",
   "license": "MIT"
-} 
+}

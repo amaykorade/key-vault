@@ -153,21 +153,54 @@ export default function ApiPage() {
           <li>You can regenerate your token at any time. This will invalidate the previous token.</li>
         </ul>
         <h2 className="text-lg font-semibold text-gray-900 mb-2">SDK Quick Start</h2>
-        <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto mb-4 border border-gray-300">
-          <code>{`import KeyVault from 'key-vault-sdk';
+        
+        <div className="space-y-4 mb-4">
+          <div>
+            <h3 className="text-md font-semibold text-gray-900 mb-2">ES Modules</h3>
+            <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto border border-gray-300">
+              <code>{`import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: '${apiUrl}',
-  token: '${token || 'YOUR_API_TOKEN'}',
+  getToken: () => '${token || 'YOUR_API_TOKEN'}',
+  onAuthError: () => console.log('Token expired')
 });
 
-// List keys
-const { keys } = await kv.listKeys({ folderId: 'FOLDER_ID' });
+// Get a key by name
+async function getKey(keyName, folderId) {
+  const { keys } = await kv.listKeys({ folderId, limit: 100 });
+  const key = keys.find(k => k.name === keyName);
+  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
+  return keyWithValue.value;
+}
 
-// Get a key
-const key = await kv.getKey('KEY_ID', { includeValue: true });
-`}</code>
-        </pre>
+const apiKey = await getKey('key-name', 'FOLDER_ID');`}</code>
+            </pre>
+          </div>
+          
+          <div>
+            <h3 className="text-md font-semibold text-gray-900 mb-2">CommonJS</h3>
+            <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto border border-gray-300">
+              <code>{`const KeyVault = require('key-vault-sdk');
+
+const kv = new KeyVault({
+  apiUrl: '${apiUrl}',
+  getToken: () => '${token || 'YOUR_API_TOKEN'}',
+  onAuthError: () => console.log('Token expired')
+});
+
+// Get a key by name
+async function getKey(keyName, folderId) {
+  const { keys } = await kv.listKeys({ folderId, limit: 100 });
+  const key = keys.find(k => k.name === keyName);
+  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
+  return keyWithValue.value;
+}
+
+const apiKey = await getKey('key-name', 'FOLDER_ID');`}</code>
+            </pre>
+          </div>
+        </div>
         <Link href="/docs" className="text-blue-600 hover:underline font-medium">
           Read full SDK documentation
         </Link>

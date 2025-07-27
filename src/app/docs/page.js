@@ -35,7 +35,9 @@ export default function DocsPage() {
             <p className="text-lg text-gray-600 mb-8">
               The Key Vault SDK allows you to securely access your vault keys from JavaScript/TypeScript projects. 
               <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
-      </p>
+              <br /><br />
+              <strong className="text-green-600">✅ Supports both ES Modules and CommonJS</strong> - works in any JavaScript environment!
+            </p>
 
             <div className="space-y-8">
               <div>
@@ -60,15 +62,37 @@ export default function DocsPage() {
 
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 2: Initialize the SDK</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`import KeyVault from 'key-vault-sdk';
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <h5 className="text-lg font-semibold text-gray-900 mb-2">ES Modules (Recommended)</h5>
+                        <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                          <pre className="text-green-600 text-sm">
+                            <code>{`import KeyVault from 'key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'tok_your-api-token-here'
+  getToken: () => 'your-api-token',
+  onAuthError: () => console.log('Token expired')
 });`}</code>
-                      </pre>
+                          </pre>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-lg font-semibold text-gray-900 mb-2">CommonJS</h5>
+                        <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                          <pre className="text-green-600 text-sm">
+                            <code>{`const KeyVault = require('key-vault-sdk');
+
+const kv = new KeyVault({
+  apiUrl: 'https://yourdomain.com/api',
+  getToken: () => 'your-api-token',
+  onAuthError: () => console.log('Token expired')
+});`}</code>
+                          </pre>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -76,9 +100,16 @@ const kv = new KeyVault({
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
                     <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                       <pre className="text-green-600 text-sm">
-                        <code>{`// Get a specific secret value by name
-const secretValue = await kv.getKeyValue('folder-id', 'DB_URL');
-console.log('Secret retrieved successfully');
+                        <code>{`// Simple function to get a key by name
+async function getKey(keyName, folderId) {
+  const { keys } = await kv.listKeys({ folderId, limit: 100 });
+  const key = keys.find(k => k.name === keyName);
+  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
+  return keyWithValue.value;
+}
+
+// Usage
+const apiKey = await getKey('key-name', 'folder-id');
 
 // Or get all keys in a folder
 const { keys } = await kv.listKeys({ folderId: 'folder-id' });
@@ -95,21 +126,24 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                 <div className="space-y-6">
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken &#125;)</code>
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken, onAuthError? &#125;)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-600">
                       <li><strong>apiUrl</strong> (string): Base URL of your Key Vault API</li>
                       <li><strong>getToken</strong> (function): Function that returns your API token</li>
+                      <li><strong>onAuthError</strong> (function, optional): Callback for authentication errors</li>
                     </ul>
                   </div>
 
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">listKeys(&#123; folderId &#125;)</code>
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">listKeys(&#123; folderId, limit?, offset? &#125;)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-600">
                       <li><strong>folderId</strong> (string, required): Folder to list keys from</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">&#123; keys &#125;</code> - Array of key metadata (no values)</li>
+                      <li><strong>limit</strong> (number, optional): Number of keys to return (default: 20)</li>
+                      <li><strong>offset</strong> (number, optional): Number of keys to skip (default: 0)</li>
+                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">&#123; keys, total, limit, offset &#125;</code> - Array of key metadata (no values)</li>
                     </ul>
                   </div>
 
@@ -126,13 +160,53 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
 
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">getKeyValue(folderId, keyName)</code>
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">getKey(keyId, &#123; includeValue? &#125;)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-600">
-                      <li><strong>folderId</strong> (string, required): Folder containing the key</li>
-                      <li><strong>keyName</strong> (string, required): Name of the key to retrieve</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">string</code> - The decrypted secret value</li>
+                      <li><strong>keyId</strong> (string, required): The key&apos;s ID</li>
+                      <li><strong>includeValue</strong> (boolean, optional): If true, includes the decrypted key value</li>
+                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">key</code> object with metadata and optionally the value</li>
                     </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Module Format Support</h3>
+                <p className="text-gray-600 mb-6">
+                  The SDK automatically detects your module system and provides the appropriate format. 
+                  No configuration needed - it just works!
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">ES Modules</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`// package.json: "type": "module"
+import KeyVault from 'key-vault-sdk';
+
+const kv = new KeyVault({
+  apiUrl: 'https://yourdomain.com/api',
+  getToken: () => 'your-token'
+});`}</code>
+                      </pre>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">CommonJS</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`// package.json: no "type" field
+const KeyVault = require('key-vault-sdk');
+
+const kv = new KeyVault({
+  apiUrl: 'https://yourdomain.com/api',
+  getToken: () => 'your-token'
+});`}</code>
+                      </pre>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -141,6 +215,25 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">Usage Examples</h3>
                 
                 <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Simple Key Retrieval</h4>
+                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                      <pre className="text-green-600 text-sm">
+                        <code>{`// Simple function to get any key by name
+async function getKey(keyName, folderId) {
+  const { keys } = await kv.listKeys({ folderId, limit: 100 });
+  const key = keys.find(k => k.name === keyName);
+  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
+  return keyWithValue.value;
+}
+
+// Usage
+const apiKey = await getKey('stripe-secret-key', 'your-folder-id');
+const dbPassword = await getKey('database-password', 'your-folder-id');`}</code>
+                      </pre>
+                    </div>
+                  </div>
+
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Get Database URL from Key Vault</h4>
                     <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
@@ -524,6 +617,11 @@ Content-Type: application/json
               <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">How secure is the encryption?</h3>
                 <p className="text-gray-600">We use AES-256-GCM encryption with unique salts and IVs for each secret. The encryption key is stored securely and never exposed.</p>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Does the SDK support CommonJS?</h3>
+                <p className="text-gray-600">Yes! The SDK supports both ES Modules and CommonJS. It automatically detects your module system and provides the appropriate format.</p>
               </div>
 
               <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
