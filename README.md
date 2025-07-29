@@ -85,12 +85,12 @@ Key Vault provides SDKs for multiple programming languages:
 
 #### Installation
 ```bash
-npm install key-vault-sdk
+npm install amay-key-vault-sdk
 ```
 
 #### Basic Usage
 ```javascript
-import KeyVault from 'key-vault-sdk';
+import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -113,7 +113,7 @@ const apiKey = await getKey('key-name', 'folder-id');
 
 #### Installation
 ```bash
-pip install key-vault-sdk
+pip install amay-key-vault-sdk
 ```
 
 #### Basic Usage
@@ -151,7 +151,7 @@ const key = await kv.getKey('key-id', { includeValue: true });
 
 #### Method 1: Using the SDK (Recommended)
 ```javascript
-import KeyVault from 'key-vault-sdk';
+import KeyVault from 'amay-key-vault-sdk';
 
 // Initialize the SDK
 const kv = new KeyVault({

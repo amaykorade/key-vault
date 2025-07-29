@@ -158,7 +158,7 @@ export default function ApiPage() {
           <div>
             <h3 className="text-md font-semibold text-gray-900 mb-2">ES Modules</h3>
             <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto border border-gray-300">
-              <code>{`import KeyVault from 'key-vault-sdk';
+              <code>{`import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: '${apiUrl}',
@@ -181,7 +181,7 @@ const apiKey = await getKey('key-name', 'FOLDER_ID');`}</code>
           <div>
             <h3 className="text-md font-semibold text-gray-900 mb-2">CommonJS</h3>
             <pre className="bg-gray-100 rounded-lg p-4 text-sm text-gray-900 overflow-x-auto border border-gray-300">
-              <code>{`const KeyVault = require('key-vault-sdk');
+              <code>{`const KeyVault = require('amay-key-vault-sdk');
 
 const kv = new KeyVault({
   apiUrl: '${apiUrl}',

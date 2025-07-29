@@ -1,5 +1,5 @@
 {
-  "name": "key-vault-sdk",
+  "name": "amay-key-vault-sdk",
   "version": "1.0.2",
   "description": "JavaScript SDK for accessing Key Vault API (Node.js, ESM & CommonJS) - Python SDK also available",
   "main": "./dist/index.cjs",
@@ -18,9 +18,9 @@
     "dev": "rollup -c -w"
   },
   "devDependencies": {
-    "rollup": "^4.9.0",
     "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0"
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "rollup": "^4.9.0"
   },
   "repository": {
     "type": "git",
@@ -37,5 +37,8 @@
     "nodejs"
   ],
   "author": "Amay Korade <amaykorade5@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "amay-key-vault-sdk": "^1.0.2"
+  }
 }

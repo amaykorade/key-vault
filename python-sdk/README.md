@@ -4,8 +4,21 @@ A Python SDK for securely accessing your Key Vault API keys and values. This SDK
 
 ## Installation
 
+### Option 1: Install from PyPI (Recommended)
 ```bash
-pip install key-vault-sdk
+pip install amay-key-vault-sdk
+```
+
+### Option 2: Install from GitHub
+```bash
+pip install git+https://github.com/amaykorade/key-vault.git#subdirectory=python-sdk
+```
+
+### Option 3: Install locally for development
+```bash
+git clone https://github.com/amaykorade/key-vault.git
+cd key-vault/python-sdk
+pip install -e .
 ```
 
 ## Quick Start

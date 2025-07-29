@@ -153,7 +153,7 @@ const HomePage = () => {
                       <span className="text-slate-400 text-sm ml-4 font-mono">Terminal</span>
                     </div>
                     <div className="font-mono text-sm leading-relaxed">
-                      <div className="text-blue-400">{`$ npm install key-vault-sdk`}</div>
+                      <div className="text-blue-400">{`$ npm install amay-key-vault-sdk`}</div>
                       <div className="text-slate-500">{`// Initialize the SDK`}</div>
                       <div className="text-blue-400">{`const kv = new KeyVault('your-api-token');`}</div>
                       <div className="text-slate-500">{`// Retrieve your secrets`}</div>

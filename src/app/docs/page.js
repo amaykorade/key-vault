@@ -44,7 +44,7 @@ export default function DocsPage() {
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">Installation</h3>
                 <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                  <code className="text-green-600 text-sm">npm install key-vault-sdk</code>
+                  <code className="text-green-600 text-sm">npm install amay-key-vault-sdk</code>
                 </div>
               </div>
 
@@ -69,7 +69,7 @@ export default function DocsPage() {
                         <h5 className="text-lg font-semibold text-gray-900 mb-2">ES Modules (Recommended)</h5>
                         <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                           <pre className="text-green-600 text-sm">
-                            <code>{`import KeyVault from 'key-vault-sdk';
+                            <code>{`import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -84,7 +84,7 @@ const kv = new KeyVault({
                         <h5 className="text-lg font-semibold text-gray-900 mb-2">CommonJS</h5>
                         <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                           <pre className="text-green-600 text-sm">
-                            <code>{`const KeyVault = require('key-vault-sdk');
+                            <code>{`const KeyVault = require('amay-key-vault-sdk');
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -185,7 +185,7 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                     <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                       <pre className="text-green-600 text-sm">
                         <code>{`// package.json: "type": "module"
-import KeyVault from 'key-vault-sdk';
+import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -200,7 +200,7 @@ const kv = new KeyVault({
                     <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                       <pre className="text-green-600 text-sm">
                         <code>{`// package.json: no "type" field
-const KeyVault = require('key-vault-sdk');
+const KeyVault = require('amay-key-vault-sdk');
 
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
@@ -321,7 +321,7 @@ const secrets = {
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">Installation</h3>
                 <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                  <code className="text-green-600 text-sm">pip install key-vault-sdk</code>
+                  <code className="text-green-600 text-sm">pip install amay-key-vault-sdk</code>
                 </div>
               </div>
 

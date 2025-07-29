@@ -7,7 +7,7 @@ A JavaScript SDK for securely accessing your Key Vault API keys and values. Supp
 ## Installation
 
 ```bash
-npm install key-vault-sdk
+npm install amay-key-vault-sdk
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install key-vault-sdk
 ### ES Modules (Recommended)
 
 ```javascript
-import KeyVault from 'key-vault-sdk';
+import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: 'https://your-app.vercel.app/api',
@@ -37,7 +37,7 @@ const apiKey = await getKey('key-name', 'folder-id');
 ### CommonJS
 
 ```javascript
-const KeyVault = require('key-vault-sdk');
+const KeyVault = require('amay-key-vault-sdk');
 
 const kv = new KeyVault({
   apiUrl: 'https://your-app.vercel.app/api',
@@ -118,7 +118,7 @@ const keys = await getKeys(['stripe-key', 'openai-key'], 'folder-id');
 ### Environment Variables
 
 ```javascript
-import KeyVault from 'key-vault-sdk';
+import KeyVault from 'amay-key-vault-sdk';
 
 const kv = new KeyVault({
   apiUrl: process.env.KEY_VAULT_API_URL,
@@ -149,12 +149,12 @@ Key Vault provides SDKs for multiple programming languages:
 
 ### JavaScript/TypeScript
 ```bash
-npm install key-vault-sdk
+npm install amay-key-vault-sdk
 ```
 
 ### Python
 ```bash
-pip install key-vault-sdk
+pip install amay-key-vault-sdk
 ```
 
 Visit our [GitHub repository](https://github.com/amaykorade/key-vault) for more SDKs and documentation.
