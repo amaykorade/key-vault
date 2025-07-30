@@ -67,7 +67,11 @@ class KeyVault:
             KeyVaultAuthError: For authentication errors
             KeyVaultNotFoundError: For not found errors
         """
-        url = urljoin(self.api_url, endpoint)
+        # Fix URL construction to preserve the /api path
+        if endpoint.startswith('/'):
+            url = self.api_url + endpoint
+        else:
+            url = self.api_url + '/' + endpoint
         
         try:
             response = self.session.request(
@@ -245,9 +249,7 @@ class KeyVault:
         """
         response = self._make_request('GET', '/folders')
         
-        if not response.get('success', True):
-            raise KeyVaultError(response.get('error', 'Failed to list folders'))
-        
+        # The /folders endpoint returns { "folders": [...] } without a success field
         return response.get('folders', [])
     
     def test_connection(self) -> bool:

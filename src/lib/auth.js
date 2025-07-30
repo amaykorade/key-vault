@@ -77,11 +77,14 @@ export async function authenticateUser(email, password) {
 export async function getCurrentUser(request) {
   // 1. Check for Bearer token in Authorization header
   const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
+  
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
+    
     // Try session token first
     let user = await validateSession(token);
     if (user) return user;
+    
     // Try API token
     user = await prisma.users.findUnique({ where: { apiToken: token } });
     if (user) return user;

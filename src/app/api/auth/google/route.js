@@ -48,6 +48,7 @@ export async function POST(request) {
     const userData = await userResponse.json();
 
     if (!userResponse.ok) {
+      console.error('Google user info error:', userData);
       return NextResponse.json(
         { message: 'Failed to get user info' },
         { status: 400 }
@@ -60,23 +61,22 @@ export async function POST(request) {
     });
 
     if (!user) {
-      // Create new user
-      user = await prisma.users.create({
-        data: {
+      return NextResponse.json(
+        { 
+          message: 'Account not found. Please sign up first.',
+          requiresSignup: true,
           email: userData.email,
-          name: userData.name,
-          password: '', // Google users don't need password
-          role: 'USER',
-          plan: 'FREE'
-        }
-      });
+          name: userData.name
+        },
+        { status: 404 }
+      );
     }
 
     // Create session token
     const sessionToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-          await prisma.sessions.create({
+    await prisma.sessions.create({
       data: {
         token: sessionToken,
         userId: user.id,

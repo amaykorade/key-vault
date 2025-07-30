@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="amay-key-vault-sdk",
-    version="1.0.0",
+    version="1.0.1",
     author="Amay Korade",
     author_email="amaykorade5@gmail.com",
     description="Python SDK for accessing Key Vault API keys and values",

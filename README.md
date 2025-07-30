@@ -381,6 +381,16 @@ See `env.example` for all required environment variables.
 - [ ] Set up webhook endpoints
 - [ ] Test payment integration
 
+## Version Information
+
+### SDK Versions
+- **Python SDK**: v1.0.1 - [PyPI Package](https://pypi.org/project/amay-key-vault-sdk/)
+- **JavaScript SDK**: v1.0.0 - [npm Package](https://www.npmjs.com/package/amay-key-vault-sdk)
+
+### Recent Updates
+- **Python SDK v1.0.1** (2025-07-30): Fixed URL construction bug that was causing API requests to fail
+- **Python SDK v1.0.0** (2025-07-23): Initial release with basic functionality
+
 ## Support
 
 - **Documentation**: Check the `/docs` page in the application

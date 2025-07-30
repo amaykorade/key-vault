@@ -315,6 +315,8 @@ const secrets = {
             <p className="text-lg text-gray-600 mb-8">
               The Key Vault Python SDK allows you to securely access your vault keys from Python applications. 
               <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
+              <br /><br />
+              <strong className="text-green-600">✅ Latest Version: v1.0.1</strong> - Fixed URL construction bug for improved reliability.
             </p>
 
             <div className="space-y-8">

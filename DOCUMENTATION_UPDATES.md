@@ -78,10 +78,18 @@ from key_vault_sdk import KeyVault  # Import statement unchanged
 
 ## Package Status
 
-- ✅ **Python SDK**: Published on PyPI as `amay-key-vault-sdk`
+- ✅ **Python SDK**: Published on PyPI as `amay-key-vault-sdk` (v1.0.1)
 - ✅ **JavaScript SDK**: Published on npm as `amay-key-vault-sdk`
 - ✅ **Documentation**: All references updated consistently
 - ✅ **Web Application**: All examples updated
+
+## Recent Bug Fixes
+
+### Python SDK v1.0.1 (2025-07-30)
+- **Fixed**: URL construction issue that was causing API requests to return HTML instead of JSON
+- **Root Cause**: `urljoin` function was incorrectly handling API URLs, removing the `/api` segment
+- **Solution**: Replaced `urljoin` with direct string concatenation to preserve `/api` path
+- **Impact**: SDK now correctly hits `/api/folders` instead of `/folders`
 
 ## Next Steps
 

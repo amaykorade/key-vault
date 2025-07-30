@@ -1,3 +1,50 @@
+Metadata-Version: 2.4
+Name: amay-key-vault-sdk
+Version: 1.0.1
+Summary: Python SDK for accessing Key Vault API keys and values
+Home-page: https://github.com/amaykorade/key-vault
+Author: Amay Korade
+Author-email: amaykorade5@gmail.com
+Project-URL: Bug Reports, https://github.com/amaykorade/key-vault/issues
+Project-URL: Source, https://github.com/amaykorade/key-vault
+Project-URL: Documentation, https://github.com/amaykorade/key-vault#readme
+Keywords: keyvault,sdk,secrets,api,vault,python
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Security
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests>=2.25.0
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.18.0; extra == "dev"
+Requires-Dist: black>=21.0; extra == "dev"
+Requires-Dist: flake8>=3.8; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license-file
+Dynamic: project-url
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # Key Vault Python SDK
 
 A Python SDK for securely accessing your Key Vault API keys and values. This SDK provides a simple interface for retrieving encrypted secrets programmatically.
