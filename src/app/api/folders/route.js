@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser } from '../../../lib/auth'
 import { createFolder, getUserFolders } from '../../../lib/folders'
+import prisma from '../../../lib/database'
 
 export async function GET(request) {
   try {
@@ -12,6 +13,23 @@ export async function GET(request) {
         { message: 'Not authenticated' },
         { status: 401 }
       )
+    }
+
+    // Check subscription status for folder access
+    const currentUser = await prisma.users.findUnique({
+      where: { id: user.id },
+      select: { plan: true, subscriptionExpiresAt: true }
+    });
+
+    const now = new Date();
+    const hasActiveSubscription = currentUser.subscriptionExpiresAt && currentUser.subscriptionExpiresAt > now;
+
+    // Block folder access for expired subscriptions (except FREE plan)
+    if (currentUser.plan !== 'FREE' && !hasActiveSubscription) {
+      return NextResponse.json({ 
+        message: 'Your subscription has expired. Renew your subscription to access your projects.',
+        requiresRenewal: true
+      }, { status: 403 });
     }
 
     // Get user's folders

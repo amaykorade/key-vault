@@ -51,10 +51,8 @@ export default function Navbar() {
           {/* Left section: Logo and nav links */}
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
-                <Key className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">Key Vault</span>
+                              <img src="/logo-large.svg" alt="API Vault" className="h-10 w-10" />
+              <span className="text-xl font-bold text-white">API Vault</span>
             </Link>
             <div className="hidden sm:flex sm:space-x-6 ml-6">
               {isUserAuthenticated ? (

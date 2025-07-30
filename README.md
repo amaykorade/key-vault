@@ -391,6 +391,29 @@ See `env.example` for all required environment variables.
 - **Python SDK v1.0.1** (2025-07-30): Fixed URL construction bug that was causing API requests to fail
 - **Python SDK v1.0.0** (2025-07-23): Initial release with basic functionality
 
+## 🎨 Logo Assets
+
+High-quality logo files are available in the `public/` directory:
+
+### SVG Files (Vector Format)
+- **`logo.svg`** - Standard logo for general use
+- **`logo-large.svg`** - Large logo for navigation and marketing materials
+- **`logo-simple.svg`** - Simple logo for small spaces (40x40)
+- **`favicon.svg`** - Browser favicon (48x48, enhanced visibility)
+
+### PNG Files (Raster Format)
+- **`public/png/`** - High-quality PNG versions in multiple sizes
+- **16x16 to 960x960** - Various sizes for different use cases
+- **Transparent backgrounds** - Perfect for any background
+
+### Commands
+- `npm run generate:logos` - Check all logo files
+- `npm run convert:logos` - Convert SVG to PNG (requires puppeteer)
+- `npm run download:logos` - Get download instructions
+
+### Download
+- **ZIP Archive**: `key-vault-logos.zip` (475 KB) - All logos in one file
+
 ## Support
 
 - **Documentation**: Check the `/docs` page in the application

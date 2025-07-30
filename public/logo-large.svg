@@ -1,0 +1,47 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="logoGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadowLarge" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="url(#logoGradientLarge)" filter="url(#shadowLarge)"/>
+  
+  <!-- Key body -->
+  <path d="M40 50C40 44.4772 44.4772 40 50 40H70C75.5228 40 80 44.4772 80 50V70C80 75.5228 75.5228 80 70 80H50C44.4772 80 40 75.5228 40 70V50Z" fill="white" opacity="0.95"/>
+  
+  <!-- Key hole -->
+  <circle cx="60" cy="60" r="8" fill="url(#logoGradientLarge)"/>
+  <rect x="55" y="60" width="10" height="15" fill="url(#logoGradientLarge)"/>
+  
+  <!-- Key teeth -->
+  <rect x="45" y="55" width="5" height="10" fill="url(#logoGradientLarge)" rx="2.5"/>
+  <rect x="70" y="55" width="5" height="10" fill="url(#logoGradientLarge)" rx="2.5"/>
+  <rect x="50" y="65" width="5" height="5" fill="url(#logoGradientLarge)" rx="2.5"/>
+  <rect x="65" y="65" width="5" height="5" fill="url(#logoGradientLarge)" rx="2.5"/>
+  
+  <!-- Security shield overlay -->
+  <path d="M60 20L75 30V45C75 60 60 80 60 80C60 80 45 60 45 45V30L60 20Z" fill="none" stroke="white" stroke-width="3" opacity="0.4"/>
+  
+  <!-- Lock icon inside shield -->
+  <rect x="55" y="35" width="10" height="8" fill="white" opacity="0.9" rx="2"/>
+  <circle cx="60" cy="40" r="2.5" fill="url(#logoGradientLarge)"/>
+  
+  <!-- Additional security elements -->
+  <circle cx="60" cy="60" r="45" fill="none" stroke="white" stroke-width="1" opacity="0.2"/>
+  <circle cx="60" cy="60" r="35" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/>
+</svg> 

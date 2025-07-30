@@ -830,7 +830,7 @@ const HomePage = () => {
               Ready to secure your API keys?
             </h2>
             <p className="text-xl mb-8 text-blue-100">
-              Join thousands of developers who trust Key Vault for their API key management
+              Join thousands of developers who trust API Vault for their API key management
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/auth/signup" className="px-8 py-4 bg-white text-teal-600 rounded-xl hover:bg-gray-50 transition-all font-semibold text-lg shadow-lg">
@@ -851,10 +851,8 @@ const HomePage = () => {
             {/* Brand Section */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
-                <Key className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">Key Vault</span>
+                <img src="/logo-large.svg" alt="API Vault" className="h-8 w-8" />
+                <span className="text-xl font-bold">API Vault</span>
               </div>
               <p className="text-slate-300 mb-4 max-w-md">
                 Secure, rotate, and access your API keys effortlessly. Built for developers who care about security.
@@ -903,7 +901,7 @@ const HomePage = () => {
           {/* Bottom Section */}
           <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm">
-              &copy; 2025 Key Vault. All rights reserved.
+              &copy; 2025 API Vault. All rights reserved.
             </p>
             <div className="flex items-center space-x-4 mt-4 md:mt-0">
               <span className="text-slate-400 text-sm">Made with ❤️ for developers</span>

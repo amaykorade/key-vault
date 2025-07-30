@@ -3,6 +3,7 @@ import { getCurrentUser } from '../../../../lib/auth.js'
 import { getKeyById, updateKey, deleteKey, decryptKeyValue, validateKeyData } from '../../../../lib/keyManagement.js'
 // import { checkUserRateLimit } from '../../../../lib/rateLimit.js'
 import { logKeyAccess } from '../../../../lib/audit.js'
+import prisma from '../../../../lib/database.js'
 
 export async function GET(request, { params }) {
   // Rate limiting removed
@@ -10,6 +11,24 @@ export async function GET(request, { params }) {
     const user = await getCurrentUser(request)
     if (!user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Check subscription status for key access
+    const currentUser = await prisma.users.findUnique({
+      where: { id: user.id },
+      select: { plan: true, subscriptionExpiresAt: true }
+    });
+
+    const now = new Date();
+    const hasActiveSubscription = currentUser.subscriptionExpiresAt && currentUser.subscriptionExpiresAt > now;
+
+    // Block key access for expired subscriptions (except FREE plan)
+    if (currentUser.plan !== 'FREE' && !hasActiveSubscription) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Your subscription has expired. Renew your subscription to access your keys.',
+        requiresRenewal: true
+      }, { status: 403 });
     }
 
     const { id } = params

@@ -60,15 +60,15 @@ async function checkExpiredSubscriptions() {
       console.log(`Downgraded ${user.email} from ${user.plan} to FREE plan`);
     }
 
-    // Check for users with subscriptions expiring soon (within 7 days)
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+    // Check for users with subscriptions expiring soon (within 3 days)
+    const threeDaysFromNow = new Date();
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
 
     const expiringSoonUsers = await prisma.users.findMany({
       where: {
         subscriptionExpiresAt: {
           gte: now,
-          lte: sevenDaysFromNow
+          lte: threeDaysFromNow
         },
         plan: {
           not: 'FREE'
@@ -83,7 +83,7 @@ async function checkExpiredSubscriptions() {
       }
     });
 
-    console.log(`Found ${expiringSoonUsers.length} users with subscriptions expiring soon`);
+    console.log(`Found ${expiringSoonUsers.length} users with subscriptions expiring within 3 days`);
 
     for (const user of expiringSoonUsers) {
       const daysUntilExpiry = Math.ceil((user.subscriptionExpiresAt - now) / (1000 * 60 * 60 * 24));

@@ -8,9 +8,9 @@ export default function DocsPage() {
       <div className="max-w-5xl mx-auto py-12 px-6">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Key Vault Documentation</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">API Vault Documentation</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Welcome to the Key Vault documentation. This guide covers everything you need to know about using Key Vault for secure secret management.
+            Welcome to the API Vault documentation. This guide covers everything you need to know about using API Vault for secure secret management.
           </p>
         </div>
 
@@ -34,8 +34,8 @@ export default function DocsPage() {
           <section id="sdk" className="scroll-mt-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">JavaScript SDK</h2>
             <p className="text-lg text-gray-600 mb-8">
-              The Key Vault SDK allows you to securely access your vault keys from JavaScript/TypeScript projects. 
-              <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
+              The API Vault SDK allows you to securely access your vault keys from JavaScript/TypeScript projects. 
+              <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the API Vault web platform.
               <br /><br />
               <strong className="text-green-600">✅ Supports both ES Modules and CommonJS</strong> - works in any JavaScript environment!
             </p>
@@ -55,7 +55,7 @@ export default function DocsPage() {
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 1: Get Your API Token</h4>
                     <ol className="space-y-2 text-gray-600 ml-6">
-                      <li>1. Login to your Key Vault application</li>
+                      <li>1. Login to your API Vault application</li>
                       <li>2. Navigate to the &quot;API&quot; page</li>
                       <li>3. Copy your API token (starts with <code className="bg-gray-200 px-1 rounded text-gray-800">tok_</code>)</li>
                     </ol>
@@ -130,7 +130,7 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                       <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken, onAuthError? &#125;)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-600">
-                      <li><strong>apiUrl</strong> (string): Base URL of your Key Vault API</li>
+                      <li><strong>apiUrl</strong> (string): Base URL of your API Vault API</li>
                       <li><strong>getToken</strong> (function): Function that returns your API token</li>
                       <li><strong>onAuthError</strong> (function, optional): Callback for authentication errors</li>
                     </ul>
@@ -313,8 +313,8 @@ const secrets = {
           <section id="python-sdk" className="scroll-mt-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Python SDK</h2>
             <p className="text-lg text-gray-600 mb-8">
-              The Key Vault Python SDK allows you to securely access your vault keys from Python applications. 
-              <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the Key Vault web platform.
+              The API Vault Python SDK allows you to securely access your vault keys from Python applications. 
+              <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the API Vault web platform.
               <br /><br />
               <strong className="text-green-600">✅ Latest Version: v1.0.1</strong> - Fixed URL construction bug for improved reliability.
             </p>
@@ -334,7 +334,7 @@ const secrets = {
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 1: Get Your API Token</h4>
                     <ol className="space-y-2 text-gray-600 ml-6">
-                      <li>1. Login to your Key Vault application</li>
+                      <li>1. Login to your API Vault application</li>
                       <li>2. Navigate to the &quot;API&quot; page</li>
                       <li>3. Copy your API token</li>
                     </ol>
@@ -381,7 +381,7 @@ print("Available keys:", [k['name'] for k in result['keys']])`}</code>
                       <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(api_url, token, timeout=30)</code>
                     </h4>
                     <ul className="space-y-2 text-gray-600">
-                      <li><strong>api_url</strong> (str): Base URL of your Key Vault API</li>
+                      <li><strong>api_url</strong> (str): Base URL of your API Vault API</li>
                       <li><strong>token</strong> (str): Your API token for authentication</li>
                       <li><strong>timeout</strong> (int, optional): Request timeout in seconds</li>
                     </ul>

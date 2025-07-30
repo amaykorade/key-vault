@@ -15,12 +15,19 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata = {
-  title: 'Key Vault - Secure API Key Management',
-  description: 'Centralized key vault for developers to securely store, auto-rotate, and access secrets via SDK. No more plaintext configs or expired API tokens.',
+  title: 'API Vault - Secure API Key Management',
+  description: 'Centralized API vault for developers to securely store, auto-rotate, and access secrets via SDK. No more plaintext configs or expired API tokens.',
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/png/32x32-favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/png/48x48-favicon.png', sizes: '48x48', type: 'image/png' },
+    ],
     shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: [
+      { url: '/png/48x48-favicon.png', sizes: '48x48', type: 'image/png' },
+      { url: '/png/64x64-favicon.png', sizes: '64x64', type: 'image/png' },
+    ],
   },
 }
 

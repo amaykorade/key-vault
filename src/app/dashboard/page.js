@@ -8,6 +8,7 @@ import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
 import SubscriptionStatus from '../../components/SubscriptionStatus'
+import SubscriptionWarning from '../../components/SubscriptionWarning'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -154,13 +155,16 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
+          {/* Subscription Warning */}
+          <SubscriptionWarning />
+
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
                 Welcome back, {user?.name || 'User'}!
               </h1>
               <p className="mt-2 text-gray-600">
-                Manage your secure keys and passwords
+                Manage your secure API keys and secrets
               </p>
             </div>
             <div className="flex space-x-4">
