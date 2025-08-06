@@ -5,9 +5,11 @@ import { getKeyById, updateKey, deleteKey, decryptKeyValue, validateKeyData } fr
 import { logKeyAccess } from '../../../../lib/audit.js'
 import prisma from '../../../../lib/database.js'
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   // Rate limiting removed
   try {
+    const params = await context.params;
+    const { id } = params;
     const user = await getCurrentUser(request)
     if (!user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
@@ -30,8 +32,6 @@ export async function GET(request, { params }) {
         requiresRenewal: true
       }, { status: 403 });
     }
-
-    const { id } = params
     const { searchParams } = new URL(request.url)
     const includeValue = searchParams.get('includeValue') === 'true'
 
@@ -150,15 +150,15 @@ export async function PUT(request, context) {
   }
 }
 
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
   // Rate limiting removed
   try {
+    const params = await context.params;
+    const { id } = params;
     const user = await getCurrentUser(request)
     if (!user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
-
-    const { id } = params
 
     // Get the key
     let key

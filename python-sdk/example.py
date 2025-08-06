@@ -8,7 +8,7 @@ from key_vault_sdk import KeyVault
 def main():
     # Initialize the SDK
     kv = KeyVault(
-        api_url="https://yourdomain.com/api",
+        api_url="http://localhost:3000/api",
         token="your-api-token"
     )
     

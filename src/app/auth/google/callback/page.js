@@ -127,7 +127,7 @@ function GoogleCallbackContent() {
               Account Not Found
             </h3>
             <p className="text-yellow-200 mb-4">
-              We found your Google account ({userInfo?.email}), but you don't have a Key Vault account yet. Please sign up first.
+              We found your Google account ({userInfo?.email}), but you don&apos;t have a Key Vault account yet. Please sign up first.
             </p>
             <div className="space-y-3">
               <button

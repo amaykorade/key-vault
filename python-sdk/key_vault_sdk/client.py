@@ -26,8 +26,8 @@ class KeyVault:
     """
     Key Vault SDK Client
     
-    Provides a simple interface for accessing Key Vault API keys and values.
-    This SDK is read-only: key creation, update, and deletion must be performed
+    Provides a simple interface for accessing Key Vault API keys and folders.
+    This SDK is read-only: key and folder creation, update, and deletion must be performed
     via the Key Vault web platform.
     """
     
@@ -233,24 +233,184 @@ class KeyVault:
                 keys_dict[key_name] = None  # Key not found
         
         return keys_dict
-    
-    def list_folders(self) -> List[Dict[str, Any]]:
+
+    def list_folders(self, project_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        List all folders
+        List all folders with hierarchical structure
         
+        Args:
+            project_id: If provided, only return folders within this project
+            
         Returns:
-            List of folder objects
+            Dictionary containing folders list with hierarchical structure
             
         Example:
             >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
-            >>> folders = kv.list_folders()
-            >>> for folder in folders:
-            ...     print(f"Folder: {folder['name']} (ID: {folder['id']})")
+            >>> # Get all folders
+            >>> all_folders = kv.list_folders()
+            >>> # Get folders within a specific project
+            >>> project_folders = kv.list_folders(project_id="project-123")
+            >>> print(f"Found {len(all_folders['folders'])} root folders")
+        """
+        if project_id:
+            response = self._make_request('GET', f'/folders/tree?projectId={project_id}')
+        else:
+            response = self._make_request('GET', '/folders/tree')
+        
+        return {
+            'folders': response.get('folders', [])
+        }
+
+    def list_projects(self) -> List[Dict[str, Any]]:
+        """
+        List only root folders (projects)
+        
+        Returns:
+            List of project folders
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> projects = kv.list_projects()
+            >>> for project in projects:
+            ...     print(f"Project: {project['name']} (ID: {project['id']})")
         """
         response = self._make_request('GET', '/folders')
-        
-        # The /folders endpoint returns { "folders": [...] } without a success field
         return response.get('folders', [])
+
+    def get_folder(self, folder_id: str) -> Dict[str, Any]:
+        """
+        Get a specific folder with its contents
+        
+        Args:
+            folder_id: The folder's ID
+            
+        Returns:
+            Dictionary containing folder object and its keys
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> folder_data = kv.get_folder(folder_id="folder-123")
+            >>> print(f"Folder: {folder_data['folder']['name']}")
+            >>> print(f"Contains {len(folder_data['keys'])} keys")
+        """
+        response = self._make_request('GET', f'/folders/{folder_id}')
+        
+        return {
+            'folder': response.get('folder', {}),
+            'keys': response.get('keys', [])
+        }
+
+    def search_keys(self, search: str, key_type: Optional[str] = None, 
+                   favorite: Optional[bool] = None, limit: int = 20, 
+                   offset: int = 0) -> Dict[str, Any]:
+        """
+        Search for keys across all folders
+        
+        Args:
+            search: Search term
+            key_type: Filter by key type (e.g., 'API_KEY', 'PASSWORD')
+            favorite: Filter by favorite status
+            limit: Number of keys to return (default: 20)
+            offset: Number of keys to skip (default: 0)
+            
+        Returns:
+            Dictionary containing search results and pagination info
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> results = kv.search_keys(search="database", key_type="PASSWORD")
+            >>> print(f"Found {len(results['keys'])} database passwords")
+        """
+        params = {
+            'search': search,
+            'limit': limit,
+            'offset': offset
+        }
+        
+        if key_type:
+            params['type'] = key_type
+        if favorite is not None:
+            params['favorite'] = str(favorite).lower()
+        
+        response = self._make_request('GET', '/keys', params=params)
+        
+        return {
+            'keys': response.get('keys', []),
+            'total': response.get('total', 0),
+            'limit': response.get('limit', limit),
+            'offset': response.get('offset', offset)
+        }
+
+    def get_stats(self) -> Dict[str, Any]:
+        """
+        Get folder and key statistics
+        
+        Returns:
+            Dictionary containing statistics about keys and folders
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> stats = kv.get_stats()
+            >>> print(f"Total keys: {stats['totalKeys']}")
+            >>> print(f"Total folders: {stats['folders']}")
+        """
+        response = self._make_request('GET', '/stats')
+        return response.get('stats', {})
+
+    def navigate_folder_tree(self, project_id: str) -> Dict[str, Any]:
+        """
+        Navigate through folder tree structure (convenience method)
+        
+        Args:
+            project_id: The project ID to navigate
+            
+        Returns:
+            Dictionary with folder tree and navigation helpers
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> tree = kv.navigate_folder_tree(project_id="project-123")
+            >>> # Print folder structure
+            >>> def print_tree(folders, level=0):
+            ...     for folder in folders:
+            ...         print("  " * level + f"📁 {folder['name']}")
+            ...         if folder.get('children'):
+            ...             print_tree(folder['children'], level + 1)
+            >>> print_tree(tree['folders'])
+        """
+        folders = self.list_folders(project_id=project_id)
+        
+        def find_folder_by_name(folder_list, name):
+            """Find a folder by name in the tree"""
+            for folder in folder_list:
+                if folder['name'] == name:
+                    return folder
+                if folder.get('children'):
+                    found = find_folder_by_name(folder['children'], name)
+                    if found:
+                        return found
+            return None
+        
+        def get_folder_path(folder_list, target_id, path=None):
+            """Get the path to a folder"""
+            if path is None:
+                path = []
+            
+            for folder in folder_list:
+                current_path = path + [folder]
+                if folder['id'] == target_id:
+                    return current_path
+                if folder.get('children'):
+                    found_path = get_folder_path(folder['children'], target_id, current_path)
+                    if found_path:
+                        return found_path
+            return None
+        
+        return {
+            'folders': folders['folders'],
+            'find_folder_by_name': lambda name: find_folder_by_name(folders['folders'], name),
+            'get_folder_path': lambda folder_id: get_folder_path(folders['folders'], folder_id)
+        }
     
     def test_connection(self) -> bool:
         """

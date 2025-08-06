@@ -58,25 +58,44 @@ export async function POST(request) {
       )
     }
 
-    // Enforce Free plan project limit
-    if (user.plan === 'FREE') {
+    const { name, description, color, parentId } = await request.json()
+
+    // Validate input
+    if (!name || !name.trim()) {
+      return NextResponse.json(
+        { message: 'Folder name is required' },
+        { status: 400 }
+      )
+    }
+
+    // Enforce Free plan project limit (only for root folders/projects)
+    if (user.plan === 'FREE' && !parentId) {
       const userFolders = await getUserFolders(user.id);
       if (userFolders.length >= 1) {
-      return NextResponse.json(
+        return NextResponse.json(
           { message: 'Free plan users can only create 1 project. Upgrade to add more.' },
           { status: 403 }
         );
       }
     }
 
-    const { name, description, color, parentId } = await request.json()
-
-    // Validate input
-    if (!name || !name.trim()) {
-      return NextResponse.json(
-        { message: 'Project name is required' },
-        { status: 400 }
-      )
+    // For free users, ensure they can only create subfolders within their existing project
+    if (user.plan === 'FREE' && parentId) {
+      // Check if the parent folder belongs to the user and is a root folder (project)
+      const parentFolder = await prisma.folders.findFirst({
+        where: { 
+          id: parentId, 
+          userId: user.id,
+          parentId: null // Ensure it's a root folder (project)
+        }
+      });
+      
+      if (!parentFolder) {
+        return NextResponse.json(
+          { message: 'You can only create subfolders within your existing project.' },
+          { status: 403 }
+        );
+      }
     }
 
     // Create folder
@@ -88,7 +107,7 @@ export async function POST(request) {
     })
 
     return NextResponse.json({ 
-      message: 'Project created successfully',
+      message: parentId ? 'Folder created successfully' : 'Project created successfully',
       folder 
     })
 

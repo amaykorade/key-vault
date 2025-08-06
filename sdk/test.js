@@ -14,8 +14,8 @@ const config = {
 // };
 
 const testUser = {
-    email: 'amaykorade@gmail.com',
-    password: 'Amay@2020'
+    email: 'test@example.com',
+    password: 'testpassword123'
   };
 
 async function login() {
@@ -104,7 +104,7 @@ async function runTests() {
     console.log('\n2. Listing keys...');
     try {
       const { keys, total } = await kv.listKeys({
-        folderId: 'cmd73hr5z0005ohqjb0dq6vsx',
+        folderId: 'default',
         limit: 10
       });
       console.log(`✅ Found ${total} keys`);

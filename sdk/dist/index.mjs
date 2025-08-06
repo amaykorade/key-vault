@@ -1,10 +1,12 @@
 /**
- * KeyVault SDK - Read-only access to your Key Vault keys (with automatic token refresh)
+ * KeyVault SDK - Read-only access to your Key Vault keys and folders (with automatic token refresh)
  *
  * Usage:
  *   const kv = new KeyVault({ apiUrl, getToken, onAuthError });
  *   const keys = await kv.listKeys({ folderId, limit, offset });
  *   const key = await kv.getKey(keyId, { includeValue });
+ *   const folders = await kv.listFolders({ projectId });
+ *   const folder = await kv.getFolder(folderId);
  */
 class KeyVault {
   /**
@@ -91,6 +93,125 @@ class KeyVault {
       throw new Error(data.error || 'Failed to fetch key');
     }
     return data.key;
+  }
+
+  /**
+   * List all folders (projects and subfolders)
+   * @param {Object} [params]
+   * @param {string} [params.projectId] - If provided, only return folders within this project
+   * @returns {Promise<{ folders: Array }>} - Array of folders with hierarchical structure
+   */
+  async listFolders({ projectId } = {}) {
+    const url = projectId 
+      ? `${this.apiUrl}/folders/tree?projectId=${encodeURIComponent(projectId)}`
+      : `${this.apiUrl}/folders/tree`;
+    const res = await this._fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to list folders');
+    }
+    return {
+      folders: data.folders || []
+    };
+  }
+
+  /**
+   * Get a specific folder with its contents
+   * @param {string} folderId - The folder's ID
+   * @returns {Promise<Object>} - The folder object with keys and subfolders
+   */
+  async getFolder(folderId) {
+    const url = `${this.apiUrl}/folders/${encodeURIComponent(folderId)}`;
+    const res = await this._fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to fetch folder');
+    }
+    return {
+      folder: data.folder,
+      keys: data.keys || []
+    };
+  }
+
+  /**
+   * List only root folders (projects)
+   * @returns {Promise<{ folders: Array }>} - Array of root folders
+   */
+  async listProjects() {
+    const url = `${this.apiUrl}/folders`;
+    const res = await this._fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to list projects');
+    }
+    return {
+      folders: data.folders || []
+    };
+  }
+
+  /**
+   * Get a key by name from a specific folder
+   * @param {string} folderId - The folder's ID
+   * @param {string} keyName - The key's name
+   * @param {Object} [options]
+   * @param {boolean} [options.includeValue=false] - If true, include the decrypted key value
+   * @returns {Promise<Object|null>} - The key object or null if not found
+   */
+  async getKeyByName(folderId, keyName, { includeValue = false } = {}) {
+    const { keys } = await this.listKeys({ folderId, limit: 100 });
+    const key = keys.find(k => k.name === keyName);
+    if (!key) {
+      return null;
+    }
+    return this.getKey(key.id, { includeValue });
+  }
+
+  /**
+   * Search for keys across all folders
+   * @param {Object} params
+   * @param {string} params.search - Search term
+   * @param {string} [params.type] - Filter by key type
+   * @param {boolean} [params.favorite] - Filter by favorite status
+   * @param {number} [params.limit=20] - Number of keys to return
+   * @param {number} [params.offset=0] - Number of keys to skip
+   * @returns {Promise<{ keys: Array, total: number, limit: number, offset: number }>}
+   */
+  async searchKeys({ search, type, favorite, limit = 20, offset = 0 }) {
+    const params = new URLSearchParams({
+      search: search,
+      limit: limit.toString(),
+      offset: offset.toString()
+    });
+    
+    if (type) params.append('type', type);
+    if (favorite !== undefined) params.append('favorite', favorite.toString());
+    
+    const url = `${this.apiUrl}/keys?${params.toString()}`;
+    const res = await this._fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to search keys');
+    }
+    return {
+      keys: data.keys || [],
+      total: data.total || 0,
+      limit: data.limit || limit,
+      offset: data.offset || offset
+    };
+  }
+
+  /**
+   * Get folder statistics
+   * @returns {Promise<Object>} - Statistics about keys and folders
+   */
+  async getStats() {
+    const url = `${this.apiUrl}/stats`;
+    const res = await this._fetchWithAuth(url);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to fetch stats');
+    }
+    return data.stats || {};
   }
 }
 

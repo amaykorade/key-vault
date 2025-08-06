@@ -1,6 +1,7 @@
 {
   "name": "amay-key-vault-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "type": "module",
   "description": "JavaScript SDK for accessing Key Vault API (Node.js, ESM & CommonJS) - Python SDK also available",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

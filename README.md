@@ -11,6 +11,7 @@ A modern, secure secret management application built with Next.js, featuring enc
 - **Audit Logging**: Complete audit trail of all actions
 
 ### 📁 Organization
+- **Hierarchical Folder Structure**: Create nested folders within projects for better organization
 - **Project-based Organization**: Group secrets by projects/folders
 - **Tags & Favorites**: Organize and mark important secrets
 - **Search & Filter**: Find secrets quickly with advanced filtering
@@ -138,6 +139,9 @@ const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
 
 // Get a specific key with metadata
 const key = await kv.getKey('key-id', { includeValue: true });
+
+// Navigate hierarchical folder structure
+const { folders } = await kv.listFolders({ projectId: 'your-project-id' });
 ```
 
 ## Getting Started with API Access
@@ -249,6 +253,95 @@ const pool = new Pool({
 // Now you can use the database connection
 const result = await pool.query('SELECT NOW()');
 console.log('Database connected:', result.rows[0]);
+```
+
+## Hierarchical Folder Structure
+
+Key Vault now supports hierarchical folder structures within projects, allowing you to organize your keys more effectively:
+
+### Creating a Project Structure
+
+1. **Create a Main Project**
+   - Go to Dashboard → Create Project
+   - Name it (e.g., "E-commerce Platform")
+   - Choose a color and description
+
+2. **Add Subfolders**
+   - Open your project
+   - Click "Add Folder" to create subfolders:
+     - `Database URLs` - For database connection strings
+     - `Payment Keys` - For payment gateway APIs
+     - `API Keys` - For third-party services
+     - `SSH Keys` - For server access
+     - `Secrets` - For application secrets
+
+### Example Structure
+```
+E-commerce Platform (Project)
+├── Database URLs
+│   ├── Production DB
+│   ├── Staging DB
+│   └── Development DB
+├── Payment Keys
+│   ├── Stripe Production
+│   ├── Stripe Test
+│   └── PayPal Keys
+├── API Keys
+│   ├── Email Service
+│   ├── SMS Gateway
+│   └── Analytics
+└── SSH Keys
+    ├── Production Server
+    └── Backup Server
+```
+
+### Navigation Features
+- **Folder Tree Sidebar**: Visual representation of your project structure
+- **Breadcrumb Navigation**: Shows your current location in the hierarchy
+- **Click to Navigate**: Easy navigation between folders
+- **Folder-Specific Keys**: Add and view keys organized by folder
+
+### API Access to Folder Structure
+```javascript
+// Get folder tree for a project
+const { folders } = await kv.listFolders({ projectId: 'project-id' });
+
+// Navigate through folder structure
+const dbFolder = folders[0].children.find(f => f.name === 'Database URLs');
+const prodDbFolder = dbFolder.children.find(f => f.name === 'Production DB');
+
+// Get keys from specific folder
+const { keys } = await kv.listKeys({ folderId: prodDbFolder.id });
+
+// Get a key by name
+const dbUrl = await kv.getKeyByName(prodDbFolder.id, 'DB_URL', { includeValue: true });
+
+// Search across all folders
+const results = await kv.searchKeys({ 
+  search: 'database', 
+  type: 'PASSWORD' 
+});
+```
+
+**Python SDK:**
+```python
+# Get folder tree for a project
+folders = kv.list_folders(project_id="project-id")
+
+# Navigate through folder structure
+tree = kv.navigate_folder_tree(project_id="project-id")
+db_folder = tree['find_folder_by_name']('Database URLs')
+prod_db_folder = tree['find_folder_by_name']('Production DB')
+
+# Get keys from specific folder
+folder_data = kv.get_folder(folder_id=prod_db_folder['id'])
+keys = folder_data['keys']
+
+# Get a key by name
+db_url = kv.get_key_by_name(folder_id=prod_db_folder['id'], key_name='DB_URL')
+
+# Search across all folders
+results = kv.search_keys(search="database", key_type="PASSWORD")
 ```
 
 ## API Documentation
@@ -384,10 +477,12 @@ See `env.example` for all required environment variables.
 ## Version Information
 
 ### SDK Versions
-- **Python SDK**: v1.0.1 - [PyPI Package](https://pypi.org/project/amay-key-vault-sdk/)
-- **JavaScript SDK**: v1.0.0 - [npm Package](https://www.npmjs.com/package/amay-key-vault-sdk)
+- **Python SDK**: v1.0.2 - [PyPI Package](https://pypi.org/project/amay-key-vault-sdk/)
+- **JavaScript SDK**: v1.0.3 - [npm Package](https://www.npmjs.com/package/amay-key-vault-sdk)
 
 ### Recent Updates
+- **JavaScript SDK v1.0.3** (2025-08-07): Updated documentation, improved examples, tested functionality
+- **Python SDK v1.0.2** (2025-08-07): Updated documentation, improved examples, tested functionality
 - **Python SDK v1.0.1** (2025-07-30): Fixed URL construction bug that was causing API requests to fail
 - **Python SDK v1.0.0** (2025-07-23): Initial release with basic functionality
 

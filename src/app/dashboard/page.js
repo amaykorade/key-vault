@@ -429,8 +429,13 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 {userPlan === 'FREE' && projectCount >= 1 && (
-                  <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md mb-2 mt-4 border border-red-200">
-                    Free plan users can only create 1 project. <a href="/pricing" className="text-blue-600 underline">Upgrade to add more.</a>
+                  <div className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md mb-2 mt-4 border border-blue-200">
+                    <div className="font-medium mb-1">Free Plan Limitation</div>
+                    <div className="text-sm">
+                      Free plan users can only create 1 project, but you can create unlimited subfolders within your project to organize your keys! 
+                      <br />
+                      <a href="/pricing" className="text-blue-700 underline font-medium">Upgrade to create multiple projects.</a>
+                    </div>
                   </div>
                 )}
                 <div className="flex justify-end space-x-3 mt-6">

@@ -158,14 +158,36 @@ export async function getUserFolders(userId) {
   })
 }
 
-export async function getFolderTree(userId) {
+export async function getFolderTree(userId, projectId = null) {
+  // If projectId is provided, we need to get all folders that are descendants of the project
+  let folderIds = []
+  
+  if (projectId) {
+    // Get the project folder and all its descendants
+    const projectFolder = await prisma.folders.findFirst({
+      where: { id: projectId, userId },
+      select: { id: true }
+    })
+    
+    if (!projectFolder) {
+      return []
+    }
+    
+    // Get all descendant folder IDs
+    const descendantIds = await getSubfolderIds(projectId, userId)
+    folderIds = [projectId, ...descendantIds]
+  }
+  
   const folders = await prisma.folders.findMany({
-    where: { userId },
+    where: { 
+      userId,
+      ...(projectId && { id: { in: folderIds } })
+    },
     include: {
       _count: {
         select: {
           keys: true,
-          children: true
+          other_folders: true
         }
       }
     },
@@ -194,7 +216,10 @@ export async function getFolderTree(userId) {
         parent.children.push(folderMap.get(folder.id))
       }
     } else {
-      rootFolders.push(folderMap.get(folder.id))
+      // Only add to root folders if it's the project folder or if no project filtering
+      if (!projectId || folder.id === projectId) {
+        rootFolders.push(folderMap.get(folder.id))
+      }
     }
   })
   

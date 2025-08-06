@@ -42,3 +42,30 @@ next-env.d.ts
 
 /src/generated/prisma
 python-sdk/.pypirc
+
+# Python SDK build artifacts
+python-sdk/dist/
+python-sdk/build/
+python-sdk/*.egg-info/
+
+# Test files
+test-*.js
+test-*.py
+*_test.js
+*_test.py
+
+# Temporary files
+*.tmp
+*.temp
+cookies.txt
+cleared_cookies.txt
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -11,5 +11,5 @@ Usage:
 
 from .client import KeyVault, KeyVaultError, KeyVaultAuthError, KeyVaultNotFoundError
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 __all__ = ["KeyVault", "KeyVaultError", "KeyVaultAuthError", "KeyVaultNotFoundError"] 
