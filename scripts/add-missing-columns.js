@@ -49,6 +49,19 @@ async function addMissingColumns() {
       }
     }
     
+    // Check and add environment column to keys table
+    try {
+      console.log('🔍 Adding environment column to keys table...')
+      await prisma.$executeRaw`ALTER TABLE "keys" ADD COLUMN "environment" TEXT NOT NULL DEFAULT 'DEVELOPMENT'`
+      console.log('✅ environment column added to keys table successfully')
+    } catch (error) {
+      if (error.message.includes('already exists')) {
+        console.log('ℹ️ environment column already exists in keys table')
+      } else {
+        console.error('❌ Failed to add environment column to keys table:', error.message)
+      }
+    }
+    
     // Check if plan_limits table exists
     try {
       console.log('🔍 Checking if plan_limits table exists...')
