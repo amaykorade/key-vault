@@ -29,10 +29,18 @@ export async function POST(request) {
     // Create refresh token
     const refreshToken = await createRefreshToken(user.id)
 
-    // Log the login
+    // Log the login with enhanced details
     await logUserLogin(user.id, {
       ipAddress: request.headers.get('x-forwarded-for') || request.ip,
-      userAgent: request.headers.get('user-agent')
+      userAgent: request.headers.get('user-agent'),
+      method: 'POST',
+      endpoint: '/api/auth/login',
+      statusCode: 200
+    }, {
+      email: user.email,
+      role: user.role,
+      plan: user.plan,
+      loginMethod: 'email_password'
     })
 
     // Create response with session and refresh token cookies

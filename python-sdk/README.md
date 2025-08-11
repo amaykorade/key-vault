@@ -8,16 +8,24 @@ A Python SDK for securely accessing your Key Vault API keys and secrets.
 pip install amay-key-vault-sdk
 ```
 
+**Package**: [pypi.org/project/amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk)
+
 ## Quick Start
 
 ```python
 from key_vault_sdk import KeyVault
 
-# Initialize the SDK
-kv = KeyVault(
-    api_url="https://yourdomain.com/api",
-    token="your-api-token"
-)
+# Initialize the SDK (v1.0.4+)
+kv = KeyVault('your-api-token', 'https://yourdomain.com')
+
+# 🆕 New Path-Based Access (Easiest Method)
+keys = kv.get_keys_by_path('MyApp/Production')
+print('Production keys:', keys)
+
+# Get environment-specific keys
+env_keys = kv.get_environment_keys('MyApp', 'PRODUCTION')
+print('Production keys:', env_keys)
+```
 
 # Get a key by name
 api_key = kv.get_key_by_name("folder-id", "stripe-secret-key")
@@ -51,6 +59,10 @@ print(f"Retrieved {len(keys)} keys")
 ```python
 from key_vault_sdk import KeyVault
 
+# v1.0.4+ (Recommended)
+kv = KeyVault('your-api-token', 'https://yourdomain.com', timeout=30)
+
+# Legacy format (v1.0.0 - v1.0.3)
 kv = KeyVault(
     api_url="https://yourdomain.com/api",
     token="your-api-token",
@@ -59,6 +71,21 @@ kv = KeyVault(
 ```
 
 ### Key Operations
+
+#### 🆕 Path-Based Access (v1.0.4+)
+```python
+# Get keys by project/folder path (easiest method)
+keys = kv.get_keys_by_path('MyApp/Production')
+print('Production keys:', keys)
+
+# Get all keys in a project
+project_keys = kv.get_project_keys('MyApp')
+print('All project keys:', project_keys)
+
+# Get keys filtered by environment
+env_keys = kv.get_environment_keys('MyApp', 'PRODUCTION')
+print('Production keys:', env_keys)
+```
 
 #### Get Key by Name
 ```python

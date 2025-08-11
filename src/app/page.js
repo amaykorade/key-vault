@@ -353,6 +353,103 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* SDK Section */}
+      <section className="py-24 relative bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
+              🚀 Official SDKs Now Available!
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              Both JavaScript and Python SDKs are now published and ready to use with new path-based access methods
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* JavaScript SDK */}
+            <div className="group bg-white rounded-2xl p-8 border border-blue-200 hover:border-blue-400 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Terminal className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">JavaScript/Node.js SDK</h3>
+              <div className="space-y-4 mb-6">
+                <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
+                  <code className="text-green-600 font-mono">npm install amay-key-vault-sdk</code>
+                </div>
+                <div className="text-sm text-gray-600">
+                  📦 <a href="https://npmjs.com/package/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on npm</a>
+                </div>
+              </div>
+              <div className="space-y-3 text-slate-600">
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>ESM & CommonJS support</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Path-based access</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Environment filtering</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Python SDK */}
+            <div className="group bg-white rounded-2xl p-8 border border-green-200 hover:border-green-400 transition-all hover:shadow-xl hover:-translate-y-1">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Code className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Python SDK</h3>
+              <div className="space-y-4 mb-6">
+                <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
+                  <code className="text-green-600 font-mono">pip install amay-key-vault-sdk</code>
+                </div>
+                <div className="text-sm text-gray-600">
+                  📦 <a href="https://pypi.org/project/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on PyPI</a>
+                </div>
+              </div>
+              <div className="space-y-3 text-slate-600">
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Python 3.7+ support</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Path-based access</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Simple integration</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* New Features Banner */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-2xl">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold mb-4">🆕 New in v1.0.4: Path-Based Access</h3>
+                <p className="text-blue-100 mb-6 text-lg">
+                  Access keys using project/folder names instead of folder IDs - no more UUIDs to remember!
+                </p>
+                <div className="bg-white/20 rounded-lg p-4 mb-6">
+                  <code className="text-white font-mono text-lg">
+                    const keys = await kv.getKeysByPath('MyApp/Production');
+                  </code>
+                </div>
+                <a href="/docs" className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all font-semibold text-lg shadow-lg hover:shadow-xl">
+                  <Play className="h-5 w-5 mr-2" />
+                  View Documentation
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Comparison Section */}
       <section className="py-16 relative bg-gradient-to-br from-slate-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

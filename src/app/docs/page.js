@@ -12,6 +12,23 @@ export default function DocsPage() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Welcome to the API Vault documentation. This guide covers everything you need to know about using API Vault for secure secret management.
           </p>
+          
+          {/* SDK Installation Banner */}
+          <div className="mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 text-white shadow-lg">
+            <h3 className="text-xl font-semibold mb-2">🚀 Official SDKs Now Available!</h3>
+            <p className="text-blue-100 mb-4">Both JavaScript and Python SDKs are now published and ready to use:</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="bg-white/20 rounded-lg px-4 py-2">
+                <code className="text-white font-mono">npm install amay-key-vault-sdk</code>
+              </div>
+              <div className="bg-white/20 rounded-lg px-4 py-2">
+                <code className="text-white font-mono">pip install amay-key-vault-sdk</code>
+              </div>
+            </div>
+            <p className="text-blue-100 mt-3 text-sm">
+              <strong>New in v1.0.4:</strong> Path-based key access with <code className="bg-white/20 px-2 py-1 rounded">getKeysByPath('Project/Subfolder')</code>
+            </p>
+          </div>
         </div>
 
         {/* Table of Contents */}
@@ -21,6 +38,7 @@ export default function DocsPage() {
             <a href="#sdk" className="text-slate-600 hover:text-slate-500 hover:underline">JavaScript SDK</a>
             <a href="#python-sdk" className="text-slate-600 hover:text-slate-500 hover:underline">Python SDK</a>
             <a href="#api" className="text-slate-600 hover:text-slate-500 hover:underline">REST API</a>
+            <a href="#packages" className="text-slate-600 hover:text-slate-500 hover:underline">📦 Package Information</a>
             <a href="#authentication" className="text-slate-600 hover:text-slate-500 hover:underline">Authentication</a>
             <a href="#security" className="text-slate-600 hover:text-slate-500 hover:underline">Security</a>
             <a href="#plans" className="text-slate-600 hover:text-slate-500 hover:underline">Subscription Plans</a>
@@ -38,6 +56,8 @@ export default function DocsPage() {
               <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the API Vault web platform.
               <br /><br />
               <strong className="text-green-600">✅ Supports both ES Modules and CommonJS</strong> - works in any JavaScript environment!
+              <br /><br />
+              <strong className="text-blue-600">🆕 v1.0.4+ includes path-based access</strong> - access keys using project/folder names instead of IDs!
             </p>
 
             <div className="space-y-8">
@@ -45,6 +65,9 @@ export default function DocsPage() {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">Installation</h3>
                 <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
                   <code className="text-green-600 text-sm">npm install amay-key-vault-sdk</code>
+                </div>
+                <div className="mt-3 text-sm text-gray-600">
+                  📦 <a href="https://npmjs.com/package/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on npm</a>
                 </div>
               </div>
 
@@ -66,31 +89,39 @@ export default function DocsPage() {
                     
                     <div className="space-y-4">
                       <div>
-                        <h5 className="text-lg font-semibold text-gray-900 mb-2">ES Modules (Recommended)</h5>
+                        <h5 className="text-lg font-semibold text-gray-900 mb-2">ES Modules (v1.0.4+ Recommended)</h5>
                         <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                           <pre className="text-green-600 text-sm">
-                            <code>{`import KeyVault from 'amay-key-vault-sdk';
+                            <code>{`import { KeyVault } from 'amay-key-vault-sdk';
 
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: () => 'your-api-token',
-  onAuthError: () => console.log('Token expired')
-});`}</code>
+// New simplified constructor
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
+
+// Legacy constructor (still supported)
+// const kv = new KeyVault({
+//   apiUrl: 'https://yourdomain.com/api',
+//   getToken: () => 'your-api-token',
+//   onAuthError: () => console.log('Token expired')
+// });`}</code>
                           </pre>
                         </div>
                       </div>
                       
                       <div>
-                        <h5 className="text-lg font-semibold text-gray-900 mb-2">CommonJS</h5>
+                        <h5 className="text-lg font-semibold text-gray-900 mb-2">CommonJS (v1.0.4+)</h5>
                         <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
                           <pre className="text-green-600 text-sm">
-                            <code>{`const KeyVault = require('amay-key-vault-sdk');
+                            <code>{`const { KeyVault } = require('amay-key-vault-sdk');
 
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: () => 'your-api-token',
-  onAuthError: () => console.log('Token expired')
-});`}</code>
+// New simplified constructor
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
+
+// Legacy constructor (still supported)
+// const kv = new KeyVault({
+//   apiUrl: 'https://yourdomain.com/api',
+//   getToken: () => 'your-api-token',
+//   onAuthError: () => console.log('Token expired')
+// });`}</code>
                           </pre>
                         </div>
                       </div>
@@ -99,9 +130,34 @@ const kv = new KeyVault({
 
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`// Simple function to get a key by name
+                    
+                    {/* New Path-Based Access Section */}
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h5 className="text-lg font-semibold text-blue-900 mb-3">🆕 New in v1.0.4: Path-Based Access (Easiest Method)</h5>
+                      <p className="text-blue-800 mb-3">Access keys using project/folder names instead of folder IDs:</p>
+                      <div className="bg-blue-100 rounded-lg p-4 overflow-x-auto border border-blue-200">
+                        <pre className="text-blue-800 text-sm">
+                          <code>{`// Get keys by project/folder path - no need to know folder IDs!
+const keys = await kv.getKeysByPath('MyApp/Production');
+console.log('Production keys:', keys);
+
+// Get all keys in a project
+const projectKeys = await kv.getProjectKeys('MyApp');
+console.log('All project keys:', projectKeys);
+
+// Get keys filtered by environment
+const envKeys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');
+console.log('Production keys:', envKeys);`}</code>
+                        </pre>
+                      </div>
+                    </div>
+                    
+                    {/* Traditional Method */}
+                    <div>
+                      <h5 className="text-lg font-semibold text-gray-900 mb-3">Traditional Method (Using Folder IDs)</h5>
+                      <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                        <pre className="text-green-600 text-sm">
+                          <code>{`// Simple function to get a key by name
 async function getKey(keyName, folderId) {
   const { keys } = await kv.listKeys({ folderId, limit: 100 });
   const key = keys.find(k => k.name === keyName);
@@ -115,7 +171,8 @@ const apiKey = await getKey('key-name', 'folder-id');
 // Or get all keys in a folder
 const { keys } = await kv.listKeys({ folderId: 'folder-id' });
 console.log('Available keys:', keys.map(k => k.name));`}</code>
-                      </pre>
+                        </pre>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -125,9 +182,67 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">API Reference</h3>
                 
                 <div className="space-y-6">
+                  {/* New Path-Based Methods */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getKeysByPath(path, options?)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get keys using human-readable project/folder paths instead of folder IDs.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>path</strong> (string): Project/folder path like 'MyApp/Production'</li>
+                      <li><strong>options</strong> (object, optional): Environment, limit, offset</li>
+                      <li><strong>Returns:</strong> Array of keys with metadata and values</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">const keys = await kv.getKeysByPath('MyApp/Production');</code>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getProjectKeys(projectName, options?)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get all keys in a specific project.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>projectName</strong> (string): Name of the project</li>
+                      <li><strong>options</strong> (object, optional): Environment, limit, offset</li>
+                      <li><strong>Returns:</strong> Array of all keys in the project</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">const keys = await kv.getProjectKeys('MyApp');</code>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-200 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getEnvironmentKeys(projectName, environment, options?)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get keys filtered by environment within a project.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>projectName</strong> (string): Name of the project</li>
+                      <li><strong>environment</strong> (string): Environment like 'PRODUCTION', 'STAGING', 'DEVELOPMENT'</li>
+                      <li><strong>options</strong> (object, optional): Limit, offset</li>
+                      <li><strong>Returns:</strong> Array of keys filtered by environment</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">const keys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');</code>
+                    </div>
+                  </div>
+                  
+                  {/* Legacy Constructor */}
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken, onAuthError? &#125;)</code>
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(apiToken, baseUrl)</code> (v1.0.4+)
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>apiToken</strong> (string): Your API token from the dashboard</li>
+                      <li><strong>baseUrl</strong> (string): Base URL of your Key Vault instance</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken, onAuthError? &#125;)</code> (Legacy)
                     </h4>
                     <ul className="space-y-2 text-gray-600">
                       <li><strong>apiUrl</strong> (string): Base URL of your API Vault API</li>
@@ -316,7 +431,9 @@ const secrets = {
               The API Vault Python SDK allows you to securely access your vault keys from Python applications. 
               <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the API Vault web platform.
               <br /><br />
-              <strong className="text-green-600">✅ Latest Version: v1.0.1</strong> - Fixed URL construction bug for improved reliability.
+              <strong className="text-green-600">✅ Latest Version: v1.0.4</strong> - Now includes path-based access and simplified constructor!
+              <br /><br />
+              <strong className="text-blue-600">🆕 v1.0.4+ includes path-based access</strong> - access keys using project/folder names instead of IDs!
             </p>
 
             <div className="space-y-8">
@@ -324,6 +441,9 @@ const secrets = {
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">Installation</h3>
                 <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
                   <code className="text-green-600 text-sm">pip install amay-key-vault-sdk</code>
+                </div>
+                <div className="mt-3 text-sm text-gray-600">
+                  📦 <a href="https://pypi.org/project/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View on PyPI</a>
                 </div>
               </div>
 
@@ -346,27 +466,56 @@ const secrets = {
                       <pre className="text-green-600 text-sm">
                         <code>{`from key_vault_sdk import KeyVault
 
-# Initialize the SDK
-kv = KeyVault(
-    api_url="https://yourdomain.com/api",
-    token="your-api-token-here"
-)`}</code>
+# Initialize the SDK (v1.0.4+)
+kv = KeyVault('your-api-token-here', 'https://yourdomain.com')
+
+# Legacy format (still supported)
+# kv = KeyVault(
+#     api_url="https://yourdomain.com/api",
+#     token="your-api-token-here"
+# )`}</code>
                       </pre>
                     </div>
                   </div>
 
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`# Get a specific secret value by name
+                    
+                    {/* New Path-Based Access Section */}
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h5 className="text-lg font-semibold text-blue-900 mb-3">🆕 New in v1.0.4: Path-Based Access (Easiest Method)</h5>
+                      <p className="text-blue-800 mb-3">Access keys using project/folder names instead of folder IDs:</p>
+                      <div className="bg-blue-100 rounded-lg p-4 overflow-x-auto border border-blue-200">
+                        <pre className="text-blue-800 text-sm">
+                          <code>{`# Get keys by project/folder path - no need to know folder IDs!
+keys = kv.get_keys_by_path('MyApp/Production')
+print('Production keys:', keys)
+
+# Get all keys in a project
+project_keys = kv.get_project_keys('MyApp')
+print('All project keys:', project_keys)
+
+# Get keys filtered by environment
+env_keys = kv.get_environment_keys('MyApp', 'PRODUCTION')
+print('Production keys:', env_keys)`}</code>
+                        </pre>
+                      </div>
+                    </div>
+                    
+                    {/* Traditional Method */}
+                    <div>
+                      <h5 className="text-lg font-semibold text-gray-900 mb-3">Traditional Method (Using Folder IDs)</h5>
+                      <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
+                        <pre className="text-green-600 text-sm">
+                          <code>{`# Get a specific secret value by name
 secret_value = kv.get_key_by_name("folder-id", "DB_URL")
 print("Secret retrieved successfully")
 
 # Or get all keys in a folder
 result = kv.list_keys(folder_id="folder-id")
 print("Available keys:", [k['name'] for k in result['keys']])`}</code>
-                      </pre>
+                        </pre>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -376,9 +525,69 @@ print("Available keys:", [k['name'] for k in result['keys']])`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">API Reference</h3>
                 
                 <div className="space-y-6">
+                  {/* New Path-Based Methods */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_keys_by_path(path, **options)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get keys using human-readable project/folder paths instead of folder IDs.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>path</strong> (str): Project/folder path like 'MyApp/Production'</li>
+                      <li><strong>**options</strong>: Environment, limit, offset</li>
+                      <li><strong>Returns:</strong> List of keys with metadata and values</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">keys = kv.get_keys_by_path('MyApp/Production')</code>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_project_keys(project_name, **options)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get all keys in a specific project.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>project_name</strong> (str): Name of the project</li>
+                      <li><strong>**options</strong>: Environment, limit, offset</li>
+                      <li><strong>Returns:</strong> List of all keys in the project</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">keys = kv.get_project_keys('MyApp')</code>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-200 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
+                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_environment_keys(project_name, environment, **options)</code>
+                    </h4>
+                    <p className="text-blue-800 mb-3">Get keys filtered by environment within a project.</p>
+                    <ul className="space-y-2 text-blue-700">
+                      <li><strong>project_name</strong> (str): Name of the project</li>
+                      <li><strong>environment</strong> (str): Environment like 'PRODUCTION', 'STAGING', 'DEVELOPMENT'</li>
+                      <li><strong>**options</strong>: Limit, offset</li>
+                      <li><strong>Returns:</strong> List of keys filtered by environment</li>
+                    </ul>
+                    <div className="mt-3 bg-blue-100 rounded p-3">
+                      <code className="text-blue-800 text-sm">keys = kv.get_environment_keys('MyApp', 'PRODUCTION')</code>
+                    </div>
+                  </div>
+                  
+                  {/* New Constructor */}
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(api_url, token, timeout=30)</code>
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(token, base_url, timeout=30)</code> (v1.0.4+)
+                    </h4>
+                    <ul className="space-y-2 text-gray-600">
+                      <li><strong>token</strong> (str): Your API token from the dashboard</li>
+                      <li><strong>base_url</strong> (str): Base URL of your Key Vault instance</li>
+                      <li><strong>timeout</strong> (int, optional): Request timeout in seconds</li>
+                    </ul>
+                  </div>
+                  
+                  {/* Legacy Constructor */}
+                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(api_url, token, timeout=30)</code> (Legacy)
                     </h4>
                     <ul className="space-y-2 text-gray-600">
                       <li><strong>api_url</strong> (str): Base URL of your API Vault API</li>
@@ -472,6 +681,83 @@ except KeyVaultError as e:
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Package Information Section */}
+          <section id="packages" className="scroll-mt-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">📦 Package Information</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Both JavaScript and Python SDKs are now officially published and available on their respective package registries.
+            </p>
+
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">JavaScript/Node.js SDK</h3>
+                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xl font-semibold text-gray-900">amay-key-vault-sdk</h4>
+                    <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">v1.0.4</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">📦 Registry:</span>
+                      <a href="https://npmjs.com/package/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">npmjs.com</a>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">🔧 Install:</span>
+                      <code className="bg-gray-100 px-2 py-1 rounded text-sm">npm install amay-key-vault-sdk</code>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">📁 Size:</span>
+                      <span className="text-gray-800">17.6 kB (compressed), 108.8 kB (unpacked)</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">🔄 Formats:</span>
+                      <span className="text-gray-800">ESM (.mjs) and CommonJS (.cjs)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Python SDK</h3>
+                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xl font-semibold text-gray-900">amay-key-vault-sdk</h4>
+                    <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">v1.0.4</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">📦 Registry:</span>
+                      <a href="https://pypi.org/project/amay-key-vault-sdk" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">pypi.org</a>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">🔧 Install:</span>
+                      <code className="bg-gray-100 px-2 py-1 rounded text-sm">pip install amay-key-vault-sdk</code>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">📁 Size:</span>
+                      <span className="text-gray-800">10.5 kB (wheel), 9.8 kB (source)</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">🐍 Python:</span>
+                      <span className="text-gray-800">3.7+ compatibility</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+                <h3 className="text-xl font-semibold text-blue-900 mb-3">🆕 What's New in v1.0.4</h3>
+                <ul className="space-y-2 text-blue-800">
+                  <li>• <strong>Path-based access:</strong> Use <code className="bg-blue-200 px-1 rounded">getKeysByPath('Project/Subfolder')</code> instead of folder IDs</li>
+                  <li>• <strong>Simplified constructors:</strong> <code className="bg-blue-200 px-1 rounded">new KeyVault(token, baseUrl)</code> and <code className="bg-blue-200 px-1 rounded">KeyVault(token, base_url)</code></li>
+                  <li>• <strong>Environment filtering:</strong> Easy access to keys by environment (dev/staging/prod)</li>
+                  <li>• <strong>Backward compatibility:</strong> All existing methods continue to work</li>
+                  <li>• <strong>Official publication:</strong> Both packages now available on npm and PyPI</li>
+                </ul>
               </div>
             </div>
           </section>

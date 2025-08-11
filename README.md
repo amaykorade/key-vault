@@ -2,6 +2,20 @@
 
 A modern, secure secret management application built with Next.js, featuring encrypted storage, API access, and subscription-based plans.
 
+## 📦 **Official SDKs Now Available!**
+
+Both JavaScript and Python SDKs are now published and ready to use:
+
+```bash
+# JavaScript/Node.js
+npm install amay-key-vault-sdk
+
+# Python
+pip install amay-key-vault-sdk
+```
+
+**New in v1.0.4**: Path-based key access with `getKeysByPath('Project/Subfolder')` - no more folder IDs needed!
+
 ## Features
 
 ### 🔐 Security
@@ -78,9 +92,13 @@ A modern, secure secret management application built with Next.js, featuring enc
 6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## SDK Usage
+## 🚀 SDK Usage
 
-Key Vault provides SDKs for multiple programming languages:
+Key Vault provides official SDKs for multiple programming languages, now available on their respective package registries:
+
+### 📦 Package Registries
+- **JavaScript SDK**: [npmjs.com/package/amay-key-vault-sdk](https://npmjs.com/package/amay-key-vault-sdk)
+- **Python SDK**: [pypi.org/project/amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk)
 
 ### JavaScript/TypeScript SDK
 
@@ -91,13 +109,9 @@ npm install amay-key-vault-sdk
 
 #### Basic Usage
 ```javascript
-import KeyVault from 'amay-key-vault-sdk';
+import { KeyVault } from 'amay-key-vault-sdk';
 
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: () => 'your-api-token',
-  onAuthError: () => console.log('Token expired')
-});
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
 
 // Get a key by name
 async function getKey(keyName, folderId) {
@@ -108,6 +122,14 @@ async function getKey(keyName, folderId) {
 }
 
 const apiKey = await getKey('key-name', 'folder-id');
+```
+
+#### 🆕 New Path-Based Access (v1.0.4+)
+```javascript
+// Access keys using human-readable paths instead of folder IDs
+const keys = await kv.getKeysByPath('MyApp/Production');
+const projectKeys = await kv.getProjectKeys('MyApp');
+const envKeys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');
 ```
 
 ### Python SDK
@@ -122,14 +144,19 @@ pip install amay-key-vault-sdk
 from key_vault_sdk import KeyVault
 
 # Initialize
-kv = KeyVault(
-    api_url="https://yourdomain.com/api",
-    token="your-api-token"
-)
+kv = KeyVault('your-api-token', 'https://yourdomain.com')
 
 # Get a key by name
 api_key = kv.get_key_by_name("folder-id", "key-name")
 print(f"API Key: {api_key}")
+```
+
+#### 🆕 New Path-Based Access (v1.0.4+)
+```python
+# Access keys using human-readable paths instead of folder IDs
+keys = kv.get_keys_by_path('MyApp/Production')
+project_keys = kv.get_project_keys('MyApp')
+env_keys = kv.get_environment_keys('MyApp', 'PRODUCTION')
 ```
 
 ### Advanced Usage
@@ -155,13 +182,10 @@ const { folders } = await kv.listFolders({ projectId: 'your-project-id' });
 
 #### Method 1: Using the SDK (Recommended)
 ```javascript
-import KeyVault from 'amay-key-vault-sdk';
+import { KeyVault } from 'amay-key-vault-sdk';
 
 // Initialize the SDK
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'tok_your-api-token-here'
-});
+const kv = new KeyVault('tok_your-api-token-here', 'https://yourdomain.com');
 
 // Get a specific key by name
 async function getDatabaseUrl() {
@@ -184,6 +208,14 @@ async function getDatabaseUrl() {
 }
 
 getDatabaseUrl();
+```
+
+#### 🆕 New Path-Based Method (Easiest)
+```javascript
+// Get keys directly by project/folder path - no need to know folder IDs!
+const keys = await kv.getKeysByPath('MyApp/Database');
+const dbUrlKey = keys.find(key => key.name === 'DB_URL');
+console.log('Database URL:', dbUrlKey.value);
 ```
 
 #### Method 2: Using Direct API Calls

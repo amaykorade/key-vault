@@ -7,7 +7,7 @@ import useAuthStore from '../../stores/authStore'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
-import SubscriptionStatus from '../../components/SubscriptionStatus'
+
 import SubscriptionWarning from '../../components/SubscriptionWarning'
 
 export default function DashboardPage() {
@@ -27,6 +27,8 @@ export default function DashboardPage() {
   const [countLoading, setCountLoading] = useState(false);
   const [stats, setStats] = useState({ totalKeys: 0, folders: 0, favorites: 0 });
   const [statsLoading, setStatsLoading] = useState(true);
+  const [projectCopyMessages, setProjectCopyMessages] = useState({});
+
 
   // Fetch user plan and project count
   const fetchPlanAndProjectCount = async () => {
@@ -66,6 +68,8 @@ export default function DashboardPage() {
       setStatsLoading(false);
     }
   };
+
+
 
   useEffect(() => {
     // Fetch data immediately since middleware ensures we're authenticated
@@ -321,21 +325,42 @@ export default function DashboardPage() {
                     </div>
                     <div className="mt-3">
                       <button
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.stopPropagation();
-                          navigator.clipboard.writeText(project.id);
-                          // You could add a toast notification here
+                          try {
+                            await navigator.clipboard.writeText(project.id);
+                            setProjectCopyMessages(prev => ({ ...prev, [project.id]: 'Project ID copied!' }));
+                            setTimeout(() => {
+                              setProjectCopyMessages(prev => ({ ...prev, [project.id]: '' }));
+                            }, 3000);
+                          } catch (err) {
+                            setProjectCopyMessages(prev => ({ ...prev, [project.id]: 'Failed to copy' }));
+                            setTimeout(() => {
+                              setProjectCopyMessages(prev => ({ ...prev, [project.id]: '' }));
+                            }, 3000);
+                          }
                         }}
-                        className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors cursor-pointer"
-                        title="Click to copy folder ID"
+                        className={`text-xs font-mono px-2 py-1 rounded transition-all duration-200 cursor-pointer ${
+                          projectCopyMessages[project.id] === 'Project ID copied!' 
+                            ? 'bg-green-100 text-green-700 border border-green-200' 
+                            : projectCopyMessages[project.id] === 'Failed to copy'
+                              ? 'bg-red-100 text-red-700 border border-red-200'
+                              : 'text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-700'
+                        }`}
+                        title="Click to copy project ID"
                       >
                         ID: {project.id}
                       </button>
+                      {/* Copy Message for Project ID */}
+                      {projectCopyMessages[project.id] && (
+                        <div className={`mt-1 text-xs font-medium animate-pulse ${
+                          projectCopyMessages[project.id] === 'Failed to copy' ? 'text-red-600' : 'text-green-600'
+                        }`}>
+                          {projectCopyMessages[project.id]}
+                        </div>
+                      )}
                     </div>
-                    <div className="mt-4 flex justify-between items-center">
-                      <span className="text-sm text-gray-600">
-                        {project._count?.keys || 0} keys
-                      </span>
+                    <div className="mt-4 flex justify-end">
                       <Link href={`/projects/${project.id}`}>
                         <Button variant="outline" size="sm">
                           View
@@ -348,37 +373,11 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Account Information */}
-          <div className="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                Account Information
-              </h3>
-              <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-                <div>
-                  <dt className="text-sm font-medium text-gray-600">Name</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{user?.name}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-600">Email</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{user?.email}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-600">Role</dt>
-                  <dd className="mt-1 text-sm text-gray-900 capitalize">{user?.role}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-600">User ID</dt>
-                  <dd className="mt-1 text-sm text-gray-900 font-mono">{user?.id}</dd>
-                </div>
-              </dl>
-            </div>
-          </div>
 
-          {/* Subscription Status */}
-          <div className="mt-6">
-            <SubscriptionStatus />
-          </div>
+
+
+
+
         </div>
       </div>
 

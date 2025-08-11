@@ -1,8 +1,23 @@
 openapi: 3.0.3
 info:
   title: Key Vault API
-  version: 1.0.0
-  description: API documentation for Key Vault key management endpoints.
+  version: 1.0.4
+  description: |
+    API documentation for Key Vault key management endpoints.
+    
+    ## 🚀 Official SDKs Available
+    
+    **JavaScript/Node.js**: `npm install amay-key-vault-sdk`
+    **Python**: `pip install amay-key-vault-sdk`
+    
+    ### New Path-Based Access (v1.0.4+)
+    - `getKeysByPath('Project/Subfolder')` - Access keys using human-readable paths
+    - `getProjectKeys('ProjectName')` - Get all keys in a project
+    - `getEnvironmentKeys('ProjectName', 'ENVIRONMENT')` - Get keys filtered by environment
+    
+    **Package URLs**:
+    - [npmjs.com/package/amay-key-vault-sdk](https://npmjs.com/package/amay-key-vault-sdk)
+    - [pypi.org/project/amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk)
 servers:
   - url: https://yourdomain.com
 paths:

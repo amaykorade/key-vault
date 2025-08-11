@@ -72,8 +72,10 @@ model keys {
   description  String?
   value        String
   type         KeyType
+  environment  Environment    @default(DEVELOPMENT) // New: Environment for the key
   tags         String[]
   isFavorite   Boolean        @default(false)
+  expiresAt    DateTime?      // New: Expiration date for Pro+ plans
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   userId       String
@@ -120,15 +122,20 @@ model sessions {
 }
 
 model team_members {
-  id        String   @id @default(cuid())
-  role      TeamRole @default(MEMBER)
-  joinedAt  DateTime @default(now())
-  invitedAt DateTime @default(now())
-  invitedBy String?
-  userId    String
-  teamId    String
-  teams     teams    @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String    @id @default(cuid())
+  role              TeamRole  @default(MEMBER)
+  joinedAt          DateTime  @default(now())
+  invitedAt         DateTime  @default(now())
+  invitedBy         String?
+  userId            String
+  teamId            String
+  roleId            String?   // New: RBAC role reference
+  customPermissions Json?     // New: Override role permissions
+  expiresAt         DateTime? // New: Temporary access
+  acceptedAt        DateTime? // New: When invitation was accepted
+  teams             teams     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  users             users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roles             roles?    @relation(fields: [roleId], references: [id]) // New: RBAC role
 
   @@unique([userId, teamId])
 }
@@ -143,6 +150,7 @@ model teams {
   key_accesses key_accesses[]
   team_members team_members[]
   users        users          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  access_control_lists access_control_lists[] // New: ACL entries
 }
 
 model users {
@@ -151,11 +159,20 @@ model users {
   name                  String?
   password              String
   role                  UserRole         @default(USER)
+  permissions           Json?            // New: Custom user permissions
+  isActive              Boolean          @default(true) // New: Account status
+  lastLoginAt           DateTime?        // New: Last login tracking
+  failedLoginAttempts   Int              @default(0) // New: Security tracking
+  lockedUntil           DateTime?        // New: Account lockout
   createdAt             DateTime         @default(now())
   updatedAt             DateTime         @updatedAt
   apiToken              String?          @unique
   plan                  UserPlan         @default(FREE)
   subscriptionExpiresAt DateTime?
+  // Plan usage tracking
+  projectCount          Int              @default(0) // Current number of projects
+  keyCount              Int              @default(0) // Current number of keys
+  lastUsageUpdate       DateTime         @default(now())
   accounts              accounts[]
   audit_logs            audit_logs[]
   folders               folders[]
@@ -165,6 +182,9 @@ model users {
   sessions              sessions[]
   team_members          team_members[]
   teams                 teams[]
+  access_control_lists  access_control_lists[] // New: ACL entries
+  access_audit_logs     access_audit_logs[]    // New: Access audit logs
+  api_tokens            api_tokens[]           // New: API tokens
 }
 
 model verification_tokens {
@@ -173,6 +193,102 @@ model verification_tokens {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// New RBAC Models
+
+model permissions {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "keys:read", "folders:write"
+  description String
+  category    String   // e.g., "keys", "folders", "team", "billing"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  rolePermissions role_permissions[]
+}
+
+model roles {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "Admin", "Developer", "Viewer"
+  description String
+  isSystem    Boolean  @default(false) // System roles can't be deleted
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  rolePermissions role_permissions[]
+  teamMembers     team_members[]
+  access_control_lists access_control_lists[]
+}
+
+model role_permissions {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  grantedAt    DateTime   @default(now())
+  grantedBy    String
+  
+  // Relations
+  role       roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  @@unique([roleId, permissionId])
+}
+
+model access_control_lists {
+  id          String   @id @default(cuid())
+  resourceType String  // "folder" or "key"
+  resourceId  String   // ID of folder or key
+  userId      String?
+  teamId      String?
+  roleId      String?
+  permissions String[] // Array of permission names
+  grantedAt   DateTime @default(now())
+  grantedBy   String
+  expiresAt   DateTime?
+  
+  // Relations
+  user        users?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team        teams?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  role        roles?   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  @@unique([resourceType, resourceId, userId, teamId, roleId])
+}
+
+model access_audit_logs {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String   // "access_granted", "access_denied", "permission_changed"
+  resourceType String  // "folder", "key", "role"
+  resourceId  String?
+  permissions String[] // Permissions involved
+  result      String   // "success", "denied", "error"
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?    // Additional context
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        users?   @relation(fields: [userId], references: [id])
+}
+
+model api_tokens {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  userId      String
+  name        String?   // Optional name for the token
+  permissions String[]  // Array of permission names
+  isActive    Boolean   @default(true)
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
@@ -201,6 +317,15 @@ enum KeyType {
   OTHER
 }
 
+enum Environment {
+  DEVELOPMENT
+  STAGING
+  TESTING
+  PRODUCTION
+  LOCAL
+  OTHER
+}
+
 enum AuditAction {
   CREATE
   READ
@@ -218,4 +343,22 @@ enum UserPlan {
   FREE
   PRO
   TEAM
+}
+
+// Plan limits and features configuration
+model plan_limits {
+  id                    String   @id @default(cuid())
+  plan                  UserPlan @unique
+  maxProjects           Int      @default(1)
+  maxKeysPerProject     Int      @default(5)
+  maxKeysTotal          Int      @default(5)
+  hasTeamFeatures       Boolean  @default(false)
+  hasRBAC               Boolean  @default(false)
+  hasExpiringSecrets    Boolean  @default(false)
+  hasAPIAnalytics       Boolean  @default(false)
+  hasEmailSupport       Boolean  @default(false)
+  hasPrioritySupport    Boolean  @default(false)
+  price                 Int      @default(0) // Price in cents
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }

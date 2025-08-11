@@ -81,6 +81,18 @@ export async function updateFolder(folderId, userId, folderData) {
 }
 
 export async function deleteFolder(folderId, userId) {
+  // Check if folder exists
+  const folder = await prisma.folders.findFirst({
+    where: {
+      id: folderId,
+      userId
+    }
+  })
+  
+  if (!folder) {
+    return false
+  }
+  
   // Get all subfolders recursively
   const subfolderIds = await getSubfolderIds(folderId, userId)
   
@@ -106,6 +118,8 @@ export async function deleteFolder(folderId, userId) {
       userId
     }
   })
+  
+  return true
 }
 
 async function getSubfolderIds(folderId, userId) {

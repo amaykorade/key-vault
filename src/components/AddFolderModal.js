@@ -53,6 +53,14 @@ export default function AddFolderModal({ isOpen, onClose, onSuccess, parentId })
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="mt-3">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Folder</h3>
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <div className="text-sm text-blue-800">
+              <div className="font-medium mb-1">📁 Folder Structure</div>
+              <div className="text-xs">
+                New folders will be created as subfolders within your project. You cannot create folders inside subfolders.
+              </div>
+            </div>
+          </div>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <Input

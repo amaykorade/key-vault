@@ -9,6 +9,37 @@ All notable changes to the Key Vault project will be documented in this file.
 - Comprehensive documentation for Python SDK
 - Environment variable best practices examples
 
+## [2025-08-11] - SDKs v1.0.4
+
+### Added
+- **Path-Based Key Access**: New methods for accessing keys using human-readable paths
+  - `getKeysByPath('ProjectName/Subfolder')` - Access keys by project/folder path
+  - `getProjectKeys('ProjectName')` - Get all keys in a project
+  - `getEnvironmentKeys('ProjectName', 'ENVIRONMENT')` - Get keys filtered by environment
+- **Official Package Publication**: Both JavaScript and Python SDKs now available on package registries
+  - JavaScript: [npmjs.com/package/amay-key-vault-sdk](https://npmjs.com/package/amay-key-vault-sdk)
+  - Python: [pypi.org/project/amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk)
+
+### Changed
+- **JavaScript SDK**: Updated constructor to use simpler `new KeyVault(token, baseUrl)` format
+- **Python SDK**: Updated constructor to use simpler `KeyVault(token, base_url)` format
+- **Package Versions**: Both SDKs updated to v1.0.4
+
+### Benefits
+- **Easier Integration**: No need to know folder IDs - use project/subfolder names instead
+- **Better Developer Experience**: More intuitive API that matches how developers think about their projects
+- **Environment Filtering**: Easy access to keys by environment (development, staging, production)
+- **Backward Compatible**: All existing methods continue to work as before
+
+### Installation
+```bash
+# JavaScript/Node.js
+npm install amay-key-vault-sdk
+
+# Python
+pip install amay-key-vault-sdk
+```
+
 ## [2025-07-30] - Python SDK v1.0.1
 
 ### Fixed
@@ -93,6 +124,6 @@ We use [Semantic Versioning](http://semver.org/) for versioning. For the version
 
 ## Package Versions
 
-- **Python SDK**: [amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk/) - v1.0.1
-- **JavaScript SDK**: [amay-key-vault-sdk](https://www.npmjs.com/package/amay-key-vault-sdk) - v1.0.0
+- **Python SDK**: [amay-key-vault-sdk](https://pypi.org/project/amay-key-vault-sdk/) - v1.0.4
+- **JavaScript SDK**: [amay-key-vault-sdk](https://www.npmjs.com/package/amay-key-vault-sdk) - v1.0.4
 - **Web Application**: Latest development version 

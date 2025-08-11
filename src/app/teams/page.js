@@ -8,8 +8,17 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import PlanRequirement from '@/components/PlanRequirement';
+import PlanProtectedRoute from '@/components/PlanProtectedRoute.js';
 
 export default function TeamsPage() {
+  return (
+    <PlanProtectedRoute feature="teamFeatures">
+      <TeamsPageContent />
+    </PlanProtectedRoute>
+  );
+}
+
+function TeamsPageContent() {
   const { user, isAuthenticated, isLoading } = useAuthStore();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -165,8 +174,8 @@ export default function TeamsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="max-w-6xl mx-auto py-8 px-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="max-w-6xl mx-auto py-8 px-6">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Teams</h1>
@@ -354,6 +363,6 @@ export default function TeamsPage() {
           </Card>
         </div>
       )}
-    </div>
+      </div>
   );
 } 

@@ -8,20 +8,24 @@ A JavaScript SDK for securely accessing your Key Vault API keys and secrets. Sup
 npm install amay-key-vault-sdk
 ```
 
+**Package**: [npmjs.com/package/amay-key-vault-sdk](https://npmjs.com/package/amay-key-vault-sdk)
+
 ## Quick Start
 
 ```javascript
-import KeyVault from 'amay-key-vault-sdk';
+import { KeyVault } from 'amay-key-vault-sdk';
 
-// Initialize the SDK
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: async () => 'your-api-token',
-  onAuthError: async () => {
-    // Handle token refresh here
-    console.log('Token expired, refreshing...');
-  }
-});
+// Initialize the SDK (v1.0.4+)
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
+
+// 🆕 New Path-Based Access (Easiest Method)
+const keys = await kv.getKeysByPath('MyApp/Production');
+console.log('Production keys:', keys);
+
+// Get environment-specific keys
+const envKeys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');
+console.log('Production keys:', envKeys);
+```
 
 // Get a key by name
 const apiKey = await kv.getKeyByName('folder-id', 'stripe-secret-key');
@@ -47,6 +51,10 @@ console.log(`Found ${result.keys.length} keys`);
 ### Constructor
 
 ```javascript
+// v1.0.4+ (Recommended)
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
+
+// Legacy format (v1.0.0 - v1.0.3)
 const kv = new KeyVault({
   apiUrl: 'https://yourdomain.com/api',
   getToken: async () => 'your-api-token',
@@ -56,12 +64,31 @@ const kv = new KeyVault({
 });
 ```
 
-**Parameters:**
+**Parameters (v1.0.4+):**
+- `apiToken` (string): Your API token from the Key Vault dashboard
+- `baseUrl` (string): Base URL of your Key Vault instance
+
+**Parameters (Legacy):**
 - `apiUrl` (string): Base URL of your Key Vault API
 - `getToken` (function): Async function that returns the latest JWT token
 - `onAuthError` (function, optional): Async function called on 401 errors
 
 ### Key Operations
+
+#### 🆕 Path-Based Access (v1.0.4+)
+```javascript
+// Get keys by project/folder path (easiest method)
+const keys = await kv.getKeysByPath('MyApp/Production');
+console.log('Production keys:', keys);
+
+// Get all keys in a project
+const projectKeys = await kv.getProjectKeys('MyApp');
+console.log('All project keys:', projectKeys);
+
+// Get keys filtered by environment
+const envKeys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');
+console.log('Production keys:', envKeys);
+```
 
 #### List Keys
 ```javascript

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { getCurrentUser } from '../../../lib/auth.js';
+import { hasFeature, getUpgradeMessage } from '../../../lib/planLimits.js';
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,17 @@ export async function GET(request) {
     const user = await getCurrentUser(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check if user has team features
+    if (!hasFeature(user, 'team_features')) {
+      const message = getUpgradeMessage(user, 'team_features');
+      return NextResponse.json({ 
+        error: 'Team features not available',
+        message,
+        feature: 'team_features',
+        currentPlan: user.plan
+      }, { status: 403 });
     }
 
     // Get teams where user is owner or member

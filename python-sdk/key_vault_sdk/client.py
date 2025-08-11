@@ -49,6 +49,7 @@ class KeyVault:
             'Content-Type': 'application/json',
             'User-Agent': f'KeyVault-Python-SDK/1.0.0'
         })
+        self.permissions = None  # Cache for user permissions
     
     def _make_request(self, method: str, endpoint: str, **kwargs) -> Dict[str, Any]:
         """
@@ -431,4 +432,390 @@ class KeyVault:
             self.list_folders()
             return True
         except Exception:
-            return False 
+            return False
+
+    # RBAC Methods
+
+    def load_permissions(self) -> List[str]:
+        """
+        Load user permissions from the server
+        
+        Returns:
+            List of permission strings
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> permissions = kv.load_permissions()
+            >>> print(f"User has {len(permissions)} permissions")
+        """
+        try:
+            response = self._make_request('GET', '/auth/permissions')
+            if response.get('permissions'):
+                self.permissions = set(response['permissions'])
+                return list(self.permissions)
+            else:
+                self.permissions = set()
+                return []
+        except Exception as e:
+            print(f"Warning: Failed to load permissions: {e}")
+            self.permissions = set()
+            return []
+
+    def has_permission(self, permission: str) -> bool:
+        """
+        Check if user has a specific permission
+        
+        Args:
+            permission: Permission to check (e.g., 'keys:read')
+            
+        Returns:
+            True if user has permission
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> if kv.has_permission('keys:read'):
+            ...     print("User can read keys")
+            ... else:
+            ...     print("User cannot read keys")
+        """
+        if self.permissions is None:
+            self.load_permissions()
+        return permission in self.permissions or '*' in self.permissions
+
+    def has_any_permission(self, permissions: List[str]) -> bool:
+        """
+        Check if user has any of the specified permissions
+        
+        Args:
+            permissions: List of permissions to check
+            
+        Returns:
+            True if user has any of the permissions
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> if kv.has_any_permission(['keys:read', 'keys:write']):
+            ...     print("User can read or write keys")
+        """
+        if self.permissions is None:
+            self.load_permissions()
+        return any(p in self.permissions or '*' in self.permissions for p in permissions)
+
+    def has_all_permissions(self, permissions: List[str]) -> bool:
+        """
+        Check if user has all of the specified permissions
+        
+        Args:
+            permissions: List of permissions to check
+            
+        Returns:
+            True if user has all permissions
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> if kv.has_all_permissions(['keys:read', 'keys:write']):
+            ...     print("User can read and write keys")
+        """
+        if self.permissions is None:
+            self.load_permissions()
+        return all(p in self.permissions or '*' in self.permissions for p in permissions)
+
+    def get_permissions(self) -> List[str]:
+        """
+        Get user's current permissions
+        
+        Returns:
+            List of permission strings
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> permissions = kv.get_permissions()
+            >>> for perm in permissions:
+            ...     print(f"- {perm}")
+        """
+        if self.permissions is None:
+            self.load_permissions()
+        return list(self.permissions)
+
+    def get_roles(self) -> List[Dict[str, Any]]:
+        """
+        Get user's roles
+        
+        Returns:
+            List of role objects
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> roles = kv.get_roles()
+            >>> for role in roles:
+            ...     print(f"Role: {role['name']} - {role['description']}")
+        """
+        response = self._make_request('GET', '/auth/roles')
+        return response.get('roles', [])
+
+    def list_keys(self, folder_id: str, limit: int = 20, offset: int = 0) -> Dict[str, Any]:
+        """
+        List keys in a folder (with RBAC permission check)
+        
+        Args:
+            folder_id: Folder ID to list keys from
+            limit: Number of keys to return (default: 20, max: 100)
+            offset: Number of keys to skip (default: 0)
+            
+        Returns:
+            Dictionary containing keys list and pagination info
+            
+        Raises:
+            KeyVaultError: If user lacks 'keys:read' permission
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> result = kv.list_keys(folder_id="folder-123", limit=50)
+            >>> print(f"Found {len(result['keys'])} keys")
+        """
+        # Check permission before making request
+        if not self.has_permission('keys:read'):
+            raise KeyVaultError("Insufficient permissions: keys:read required")
+
+        params = {
+            'folderId': folder_id,
+            'limit': min(limit, 100),  # Cap at 100
+            'offset': offset
+        }
+        
+        response = self._make_request('GET', '/keys', params=params)
+        
+        if not response.get('success', True):
+            raise KeyVaultError(response.get('error', 'Failed to list keys'))
+        
+        return {
+            'keys': response.get('keys', []),
+            'total': response.get('total', 0),
+            'limit': response.get('limit', limit),
+            'offset': response.get('offset', offset)
+        }
+
+    def get_key(self, key_id: str, include_value: bool = False) -> Dict[str, Any]:
+        """
+        Get a key by ID (with RBAC permission check)
+        
+        Args:
+            key_id: The key's ID
+            include_value: If True, include the decrypted key value
+            
+        Returns:
+            Key object with metadata and optionally the value
+            
+        Raises:
+            KeyVaultError: If user lacks 'keys:read' permission
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> key = kv.get_key(key_id="key-123", include_value=True)
+            >>> print(f"Key: {key['name']}, Value: {key['value']}")
+        """
+        # Check permission before making request
+        if not self.has_permission('keys:read'):
+            raise KeyVaultError("Insufficient permissions: keys:read required")
+
+        params = {'includeValue': str(include_value).lower()}
+        
+        response = self._make_request('GET', f'/keys/{key_id}', params=params)
+        
+        if not response.get('success', True):
+            raise KeyVaultError(response.get('error', 'Failed to fetch key'))
+        
+        return response.get('key', {})
+
+    def get_folder(self, folder_id: str) -> Dict[str, Any]:
+        """
+        Get a specific folder with its contents (with RBAC permission check)
+        
+        Args:
+            folder_id: The folder's ID
+            
+        Returns:
+            Dictionary containing folder object and its keys
+            
+        Raises:
+            KeyVaultError: If user lacks 'folders:read' permission
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> folder_data = kv.get_folder(folder_id="folder-123")
+            >>> print(f"Folder: {folder_data['folder']['name']}")
+            >>> print(f"Contains {len(folder_data['keys'])} keys")
+        """
+        # Check permission before making request
+        if not self.has_permission('folders:read'):
+            raise KeyVaultError("Insufficient permissions: folders:read required")
+
+        response = self._make_request('GET', f'/folders/{folder_id}')
+        
+        return {
+            'folder': response.get('folder', {}),
+            'keys': response.get('keys', [])
+        }
+
+    def get_keys_by_path(self, path: str, environment: Optional[str] = None, 
+                         limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+        """
+        Get keys by path (most user-friendly method)
+        
+        Args:
+            path: Path like 'ProjectName/Subfolder' or 'ProjectName'
+            environment: Filter by environment (DEVELOPMENT, STAGING, PRODUCTION, etc.)
+            limit: Number of keys to return (default: 100)
+            offset: Number of keys to skip (default: 0)
+            
+        Returns:
+            Dictionary containing keys, total count, folder info, and path
+            
+        Raises:
+            KeyVaultError: If path not found or other errors
+            
+        Example:
+            >>> kv = KeyVault(api_url="https://yourdomain.com/api", token="your-token")
+            >>> result = kv.get_keys_by_path('MyApp/Production')
+            >>> print(f"Found {len(result['keys'])} keys in {result['path']}")
+        """
+        try:
+            # Parse the path and find the target folder
+            target_folder = self._resolve_path_to_folder(path)
+            
+            if not target_folder:
+                raise KeyVaultError(f"Path not found: {path}")
+
+            # Build query parameters
+            params = {
+                'folderId': target_folder['id'],
+                'limit': min(limit, 100),
+                'offset': offset
+            }
+            
+            if environment:
+                params['environment'] = environment.upper()
+
+            # Fetch keys from the resolved folder
+            response = self._make_request('GET', '/keys', params=params)
+            
+            if not response.get('success', True):
+                raise KeyVaultError(response.get('error', 'Failed to fetch keys'))
+
+            return {
+                'keys': response.get('keys', []),
+                'total': response.get('total', 0),
+                'folder': target_folder,
+                'path': path
+            }
+
+        except Exception as e:
+            raise KeyVaultError(f"Failed to get keys by path '{path}': {str(e)}")
+
+    def _resolve_path_to_folder(self, path: str) -> Optional[Dict[str, Any]]:
+        """
+        Helper method to resolve a path to a folder object
+        
+        Args:
+            path: Path like 'ProjectName/Subfolder/SubSubfolder'
+            
+        Returns:
+            Folder object or None if not found
+        """
+        if not path or not isinstance(path, str):
+            raise KeyVaultError("Path must be a non-empty string")
+
+        path_parts = [part.strip() for part in path.split('/') if part.strip()]
+        
+        if not path_parts:
+            raise KeyVaultError("Invalid path format")
+
+        try:
+            # First, get all projects to find the root project
+            projects = self.list_projects()
+            root_project = next((p for p in projects if 
+                               p['name'].lower() == path_parts[0].lower()), None)
+
+            if not root_project:
+                raise KeyVaultError(f"Project not found: {path_parts[0]}")
+
+            # If it's just a project name, return the project
+            if len(path_parts) == 1:
+                return root_project
+
+            # Navigate through the path to find the target folder
+            current_folder = root_project
+            
+            for i in range(1, len(path_parts)):
+                part = path_parts[i]
+                
+                # Get subfolders of current folder
+                folders_data = self.list_folders(project_id=root_project['id'])
+                
+                # Find the next folder in the path
+                next_folder = self._find_folder_in_tree(folders_data.get('folders', []), part)
+                
+                if not next_folder:
+                    raise KeyVaultError(f"Subfolder not found: {part} in path {path}")
+                
+                current_folder = next_folder
+
+            return current_folder
+
+        except Exception as e:
+            raise KeyVaultError(f"Path resolution failed: {str(e)}")
+
+    def _find_folder_in_tree(self, folders: List[Dict[str, Any]], folder_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Helper method to find a folder by name in a folder tree
+        
+        Args:
+            folders: Array of folders to search in
+            folder_name: Name of the folder to find
+            
+        Returns:
+            Found folder or None
+        """
+        for folder in folders:
+            if folder['name'].lower() == folder_name.lower():
+                return folder
+            
+            # Search in children recursively
+            if 'children' in folder and folder['children']:
+                found = self._find_folder_in_tree(folder['children'], folder_name)
+                if found:
+                    return found
+        
+        return None
+
+    def get_project_keys(self, project_name: str, environment: Optional[str] = None, 
+                        limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+        """
+        Get keys from a project by name (convenience method)
+        
+        Args:
+            project_name: Name of the project
+            environment: Filter by environment
+            limit: Number of keys to return
+            offset: Number of keys to skip
+            
+        Returns:
+            Same as get_keys_by_path
+        """
+        return self.get_keys_by_path(project_name, environment, limit, offset)
+
+    def get_environment_keys(self, project_name: str, environment: str, 
+                           limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+        """
+        Get keys from a specific environment in a project (convenience method)
+        
+        Args:
+            project_name: Name of the project
+            environment: Environment name (DEVELOPMENT, STAGING, PRODUCTION, etc.)
+            limit: Number of keys to return
+            offset: Number of keys to skip
+            
+        Returns:
+            Same as get_keys_by_path with environment filter
+        """
+        return self.get_keys_by_path(project_name, environment, limit, offset) 
