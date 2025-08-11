@@ -5,7 +5,10 @@ import prisma from '../../../../lib/database'
 
 export async function POST(request) {
   try {
+    console.log('🔍 Signup route called');
+    
     const { name, email, password } = await request.json()
+    console.log('📝 Signup data received:', { name, email, hasPassword: !!password });
 
     // Validate input
     if (!name || !email || !password) {
@@ -16,6 +19,7 @@ export async function POST(request) {
     }
 
     // Check if user already exists
+    console.log('🔍 Checking if user exists...');
     const existingUser = await prisma.users.findUnique({
       where: { email }
     })
@@ -28,14 +32,22 @@ export async function POST(request) {
     }
 
     // Create user
+    console.log('👤 Creating user...');
     const user = await createUser(email, password, name)
+    console.log('✅ User created:', user.id);
 
     // Create session
+    console.log('🔐 Creating session...');
     const session = await createSession(user.id)
+    console.log('✅ Session created');
+    
     // Create refresh token
+    console.log('🔄 Creating refresh token...');
     const refreshToken = await createRefreshToken(user.id)
+    console.log('✅ Refresh token created');
 
     // Create default folder for the user
+    console.log('📁 Creating default folder...');
     await prisma.folders.create({
       data: {
         name: 'General',
@@ -44,14 +56,23 @@ export async function POST(request) {
         userId: user.id
       }
     })
+    console.log('✅ Default folder created');
 
     // Log the signup/login
-    await logUserLogin(user.id, {
-      ipAddress: request.headers.get('x-forwarded-for') || request.ip,
-      userAgent: request.headers.get('user-agent')
-    })
+    console.log('📝 Logging user login...');
+    try {
+      await logUserLogin(user.id, {
+        ipAddress: request.headers.get('x-forwarded-for') || request.ip,
+        userAgent: request.headers.get('user-agent')
+      })
+      console.log('✅ User login logged');
+    } catch (auditError) {
+      console.error('⚠️ Audit logging failed (non-critical):', auditError);
+      // Don't fail signup if audit logging fails
+    }
 
     // Create response with session and refresh token cookies
+    console.log('🍪 Setting cookies...');
     const response = NextResponse.json({
       message: 'Account created successfully',
       user: {
@@ -85,10 +106,27 @@ export async function POST(request) {
       path: '/'
     })
 
+    console.log('✅ Signup completed successfully');
     return response
 
   } catch (error) {
-    console.error('Signup error:', error)
+    console.error('❌ Signup error:', error)
+    console.error('❌ Error stack:', error.stack)
+    console.error('❌ Error name:', error.name)
+    console.error('❌ Error message:', error.message)
+    
+    // Return more specific error information in development
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json(
+        { 
+          message: 'Internal server error',
+          error: error.message,
+          stack: error.stack
+        },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
