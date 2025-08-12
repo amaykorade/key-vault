@@ -1,23 +1,59 @@
 import { NextResponse } from 'next/server'
 import { validateSession } from '../../../../lib/auth'
+import prisma from '../../../../lib/database'
 
 export async function GET(request) {
   try {
-    const sessionToken = request.cookies.get('session_token')?.value
+    // First, try to get API token from Authorization header
+    const authHeader = request.headers.get('authorization')
+    let user = null
 
-    if (!sessionToken) {
-      return NextResponse.json(
-        { message: 'Not authenticated' },
-        { status: 401 }
-      )
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const apiToken = authHeader.substring(7) // Remove 'Bearer ' prefix
+      
+      // Validate API token
+      const tokenRecord = await prisma.api_tokens.findUnique({
+        where: { 
+          token: apiToken,
+          isActive: true
+        },
+        include: {
+          users: true
+        }
+      })
+
+      if (tokenRecord && tokenRecord.users) {
+        // Check if token is expired
+        if (tokenRecord.expiresAt && tokenRecord.expiresAt < new Date()) {
+          return NextResponse.json(
+            { message: 'API token expired' },
+            { status: 401 }
+          )
+        }
+
+        // Update last used timestamp
+        await prisma.api_tokens.update({
+          where: { id: tokenRecord.id },
+          data: { lastUsedAt: new Date() }
+        })
+
+        user = tokenRecord.users
+      }
     }
 
-    // Validate session
-    const user = await validateSession(sessionToken)
-    
+    // If no API token, try session token
+    if (!user) {
+      const sessionToken = request.cookies.get('session_token')?.value
+
+      if (sessionToken) {
+        // Validate session
+        user = await validateSession(sessionToken)
+      }
+    }
+
     if (!user) {
       return NextResponse.json(
-        { message: 'Invalid or expired session' },
+        { message: 'Not authenticated' },
         { status: 401 }
       )
     }
@@ -27,7 +63,8 @@ export async function GET(request) {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
+        plan: user.plan
       }
     })
 

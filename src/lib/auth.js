@@ -207,95 +207,58 @@ export async function validateAPIToken(token) {
   };
 }
 
+// New: Enhanced getCurrentUser function that supports both sessions and API tokens
 export async function getCurrentUser(request) {
-  // 1. Check for Bearer token in Authorization header
-  const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-  
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.slice(7);
-    
-    // Try JWT token first (new method)
-    let user = await verifyJWTToken(token);
-    if (user) return user;
-    
-    // Try API token
-    user = await validateAPIToken(token);
-    if (user) return user;
-    
-    // Try session token (legacy)
-    user = await validateSession(token);
-    if (user) return user;
-    
-    // Try legacy API token
-    user = await prisma.users.findUnique({ where: { apiToken: token } });
-    if (user) {
-      // For legacy API tokens, we need to load permissions from database
-      // since they don't have embedded permissions like JWT tokens
-      try {
-        // Get user's primary team for context
-        const teamMember = await prisma.team_members.findFirst({
-          where: { userId: user.id },
-          include: { teams: true },
-          orderBy: { joinedAt: 'asc' }
-        });
-        
-        const teamId = teamMember?.teamId || null;
-        
-        if (teamId) {
-          // User is part of a team with RBAC - load team permissions
-          const { PermissionManager } = await import('./permissions.js');
-          const pm = new PermissionManager(user, teamId);
-          await pm.loadPermissions();
-          
-          return {
-            ...user,
-            permissions: pm.getPermissionsList(),
-            roles: pm.getRolePermissionsList(),
-            teamId: teamId
-          };
-        } else {
-          // User is not part of a team - provide permissions based on role
-          let permissions = ['keys:read', 'folders:read'];
-          
-          // ADMIN users get full permissions for their own resources
-          if (user.role === 'ADMIN') {
-            permissions = [
-              'keys:read', 'keys:write', 'keys:delete',
-              'folders:read', 'folders:write', 'folders:delete',
-              'projects:read', 'projects:write', 'projects:delete'
-            ];
-          } else if (user.plan === 'FREE' || user.plan === 'PRO' || user.plan === 'TEAM') {
-            // Regular users get basic write permissions
-            permissions.push('keys:write', 'folders:write');
-          }
-          
-          return {
-            ...user,
-            permissions: permissions,
-            roles: [],
-            teamId: null
-          };
+  try {
+    // First, try to get API token from Authorization header
+    const authHeader = request.headers.get('authorization')
+    let user = null
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const apiToken = authHeader.substring(7) // Remove 'Bearer ' prefix
+      
+      // Validate API token
+      const tokenRecord = await prisma.api_tokens.findUnique({
+        where: { 
+          token: apiToken,
+          isActive: true
+        },
+        include: {
+          users: true
         }
-      } catch (error) {
-        console.error('Error loading permissions for legacy API token:', error);
-        // Fallback to basic permissions
-        return {
-          ...user,
-          permissions: ['keys:read', 'keys:write', 'folders:read', 'folders:write'],
-          roles: [],
-          teamId: null
-        };
+      })
+
+      if (tokenRecord && tokenRecord.users) {
+        // Check if token is expired
+        if (tokenRecord.expiresAt && tokenRecord.expiresAt < new Date()) {
+          return null
+        }
+
+        // Update last used timestamp
+        await prisma.api_tokens.update({
+          where: { id: tokenRecord.id },
+          data: { lastUsedAt: new Date() }
+        })
+
+        user = tokenRecord.users
       }
     }
-  }
 
-  // 2. Check for legacy session token
-  const sessionToken = request.cookies.get('session_token')?.value;
-  if (sessionToken) {
-    return await validateSession(sessionToken);
-  }
+    // If no API token, try session token
+    if (!user) {
+      const sessionToken = request.cookies.get('session_token')?.value
 
-  return null;
+      if (sessionToken) {
+        // Validate session
+        user = await validateSession(sessionToken)
+      }
+    }
+
+    return user
+  } catch (error) {
+    console.error('getCurrentUser error:', error)
+    return null
+  }
 } 
 
 export async function createRefreshToken(userId) {
