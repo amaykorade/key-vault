@@ -217,18 +217,15 @@ export async function getCurrentUser(request) {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const apiToken = authHeader.substring(7) // Remove 'Bearer ' prefix
       
-      // Validate API token
-      const tokenRecord = await prisma.api_tokens.findUnique({
+      // FIXED: Use the same working approach as the auth route
+      const tokenRecord = await prisma.api_tokens.findFirst({
         where: { 
           token: apiToken,
           isActive: true
-        },
-        include: {
-          users: true
         }
       })
 
-      if (tokenRecord && tokenRecord.users) {
+      if (tokenRecord) {
         // Check if token is expired
         if (tokenRecord.expiresAt && tokenRecord.expiresAt < new Date()) {
           return null
@@ -240,29 +237,27 @@ export async function getCurrentUser(request) {
           data: { lastUsedAt: new Date() }
         })
 
-        user = tokenRecord.users
+        // Get user data directly (same as auth route)
+        user = await prisma.users.findUnique({
+          where: { id: tokenRecord.userId }
+        })
         
-        // MINIMAL FIX: Load permissions for API token users with proper error handling
-        try {
-          if (user && user.role === 'ADMIN') {
-            user = {
-              ...user,
-              permissions: [
-                'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
-                'folders:read', 'folders:write', 'folders:delete',
-                'projects:read', 'projects:write', 'projects:delete',
-                'api:read', 'api:write', 'api:admin'
-              ]
-            };
-          } else if (user) {
-            user = {
-              ...user,
-              permissions: ['keys:read', 'folders:read', 'api:read']
-            };
-          }
-        } catch (permError) {
-          console.error('Permission loading error:', permError);
-          // Continue with user without permissions rather than failing
+        // Load permissions for API token users
+        if (user && user.role === 'ADMIN') {
+          user = {
+            ...user,
+            permissions: [
+              'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
+              'folders:read', 'folders:write', 'folders:delete',
+              'projects:read', 'projects:write', 'projects:delete',
+              'api:read', 'api:write', 'api:admin'
+            ]
+          };
+        } else if (user) {
+          user = {
+            ...user,
+            permissions: ['keys:read', 'folders:read', 'api:read']
+          };
         }
       }
     }
