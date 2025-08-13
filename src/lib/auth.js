@@ -242,22 +242,27 @@ export async function getCurrentUser(request) {
 
         user = tokenRecord.users
         
-        // MINIMAL FIX: Load permissions for API token users
-        if (user.role === 'ADMIN') {
-          user = {
-            ...user,
-            permissions: [
-              'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
-              'folders:read', 'folders:write', 'folders:delete',
-              'projects:read', 'projects:write', 'projects:delete',
-              'api:read', 'api:write', 'api:admin'
-            ]
-          };
-        } else {
-          user = {
-            ...user,
-            permissions: ['keys:read', 'folders:read', 'api:read']
-          };
+        // MINIMAL FIX: Load permissions for API token users with proper error handling
+        try {
+          if (user && user.role === 'ADMIN') {
+            user = {
+              ...user,
+              permissions: [
+                'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
+                'folders:read', 'folders:write', 'folders:delete',
+                'projects:read', 'projects:write', 'projects:delete',
+                'api:read', 'api:write', 'api:admin'
+              ]
+            };
+          } else if (user) {
+            user = {
+              ...user,
+              permissions: ['keys:read', 'folders:read', 'api:read']
+            };
+          }
+        } catch (permError) {
+          console.error('Permission loading error:', permError);
+          // Continue with user without permissions rather than failing
         }
       }
     }
