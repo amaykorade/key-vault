@@ -38,6 +38,24 @@ export async function GET(request) {
         })
 
         user = tokenRecord.users
+        
+        // ADD PERMISSIONS: Load permissions based on user role for API tokens
+        if (user.role === 'ADMIN') {
+          user = {
+            ...user,
+            permissions: [
+              'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
+              'folders:read', 'folders:write', 'folders:delete',
+              'projects:read', 'projects:write', 'projects:delete',
+              'api:read', 'api:write', 'api:admin'
+            ]
+          };
+        } else {
+          user = {
+            ...user,
+            permissions: ['keys:read', 'folders:read', 'api:read']
+          };
+        }
       }
     }
 
@@ -64,7 +82,8 @@ export async function GET(request) {
         email: user.email,
         name: user.name,
         role: user.role,
-        plan: user.plan
+        plan: user.plan,
+        permissions: user.permissions || []
       }
     })
 
