@@ -195,8 +195,13 @@ export async function GET(request) {
     let folderPath = [projectName]
     let targetFolder = null
 
-    for (let i = 0; i < remainingPath.length; i++) {
-      const folderName = remainingPath[i]
+    // Navigate through all path parts except the last one (which might be a key)
+    const folderPathParts = remainingPath.slice(0, -1) // All except last
+    const lastPathPart = remainingPath[remainingPath.length - 1] // Last part (might be key or folder)
+
+    // Navigate through folder hierarchy
+    for (let i = 0; i < folderPathParts.length; i++) {
+      const folderName = folderPathParts[i]
       
       // Find the subfolder
       const subfolder = await prisma.folders.findFirst({
@@ -243,69 +248,16 @@ export async function GET(request) {
       targetFolder = subfolder
     }
 
-    // If the last part is a folder, return folder contents
-    if (type === 'folder' || (type === 'auto' && remainingPath.length > 0)) {
-      const folderKeys = await prisma.keys.findMany({
-        where: {
-          folderId: targetFolder.id,
-          userId: user.id,
-          ...(environment && { environment: environment })
-        },
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          type: true,
-          environment: true,
-          tags: true,
-          isFavorite: true,
-          createdAt: true,
-          updatedAt: true
-        },
-        orderBy: { updatedAt: 'desc' }
-      })
+    // Now determine what the last path part is
+    const parentFolderId = targetFolder ? targetFolder.id : project.id
+    const parentFolderPath = targetFolder ? folderPath.join('/') : projectName
 
-      const folderSubfolders = await prisma.folders.findMany({
-        where: {
-          userId: user.id,
-          parentId: targetFolder.id
-        },
-        select: {
-          id: true,
-          name: true,
-          description: true,
-          color: true,
-          createdAt: true
-        },
-        orderBy: { name: 'asc' }
-      })
-
-      return NextResponse.json({
-        success: true,
-        type: 'folder',
-        path: path,
-        project: projectName,
-        folder: {
-          id: targetFolder.id,
-          name: targetFolder.name,
-          description: targetFolder.description,
-          color: targetFolder.color
-        },
-        environment: environment || 'all',
-        totalKeys: folderKeys.length,
-        totalSubfolders: folderSubfolders.length,
-        keys: folderKeys,
-        subfolders: folderSubfolders,
-        message: `Successfully accessed folder "${folderPath.join('/')}"`
-      })
-    }
-
-    // If the last part is a key name, return the key
+    // Check if the last part is a key name
     if (type === 'key' || (type === 'auto' && remainingPath.length > 0)) {
-      const keyName = remainingPath[remainingPath.length - 1]
-      const parentFolderId = remainingPath.length > 1 ? targetFolder.id : project.id
-
-      const key = await prisma.keys.findFirst({
+      const keyName = lastPathPart
+      
+      // First check if it's a key in the current folder
+      let key = await prisma.keys.findFirst({
         where: {
           name: keyName,
           folderId: parentFolderId,
@@ -326,6 +278,57 @@ export async function GET(request) {
         }
       })
 
+      // If not found, check if it's a subfolder that contains keys
+      if (!key && remainingPath.length > 1) {
+        const potentialSubfolder = await prisma.folders.findFirst({
+          where: {
+            name: keyName,
+            userId: user.id,
+            parentId: parentFolderId
+          }
+        })
+
+        if (potentialSubfolder) {
+          // It's a subfolder, get keys from it
+          const subfolderKeys = await prisma.keys.findMany({
+            where: {
+              folderId: potentialSubfolder.id,
+              userId: user.id,
+              ...(environment && { environment: environment })
+            },
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              type: true,
+              environment: true,
+              tags: true,
+              isFavorite: true,
+              createdAt: true,
+              updatedAt: true
+            },
+            orderBy: { updatedAt: 'desc' }
+          })
+
+          return NextResponse.json({
+            success: true,
+            type: 'folder',
+            path: path,
+            project: projectName,
+            folder: {
+              id: potentialSubfolder.id,
+              name: potentialSubfolder.name,
+              description: potentialSubfolder.description,
+              color: potentialSubfolder.color
+            },
+            environment: environment || 'all',
+            totalKeys: subfolderKeys.length,
+            keys: subfolderKeys,
+            message: `Successfully accessed folder "${folderPath.join('/')}/${keyName}"`
+          })
+        }
+      }
+
       if (!key) {
         // Get available keys in this folder for better error message
         const availableKeys = await prisma.keys.findMany({
@@ -341,21 +344,35 @@ export async function GET(request) {
           }
         })
 
+        // Also check available subfolders
+        const availableSubfolders = await prisma.folders.findMany({
+          where: {
+            userId: user.id,
+            parentId: parentFolderId
+          },
+          select: {
+            name: true,
+            description: true
+          }
+        })
+
         return NextResponse.json({
           success: false,
           error: 'Key not found',
-          message: `Key "${keyName}" not found in "${folderPath.join('/')}"`,
+          message: `Key "${keyName}" not found in "${parentFolderPath}"`,
           path: path,
           project: projectName,
-          folder: folderPath.join('/'),
+          folder: parentFolderPath,
           keyName: keyName,
           environment: environment || 'all',
           availableKeys: availableKeys.map(k => ({ name: k.name, environment: k.environment, type: k.type })),
+          availableSubfolders: availableSubfolders.map(f => f.name),
           suggestions: [
             'Check if the key name is spelled correctly',
             'Verify the key exists in this folder',
             'Check if the environment filter is correct',
-            `Available keys in "${folderPath.join('/')}": ${availableKeys.map(k => k.name).join(', ') || 'None'}`
+            `Available keys in "${parentFolderPath}": ${availableKeys.map(k => k.name).join(', ') || 'None'}`,
+            `Available subfolders in "${parentFolderPath}": ${availableSubfolders.map(f => f.name).join(', ') || 'None'}`
           ],
           status: 404
         }, { status: 404 })
@@ -366,7 +383,7 @@ export async function GET(request) {
         type: 'key',
         path: path,
         project: projectName,
-        folder: folderPath.join('/'),
+        folder: parentFolderPath,
         key: {
           id: key.id,
           name: key.name,
@@ -379,14 +396,117 @@ export async function GET(request) {
           createdAt: key.createdAt,
           updatedAt: key.updatedAt
         },
-        message: `Successfully accessed key "${keyName}" from "${folderPath.join('/')}"`
+        message: `Successfully accessed key "${keyName}" from "${parentFolderPath}"`
       })
     }
 
-    // Fallback: return folder contents
+    // If the last part is a folder, return folder contents
+    if (type === 'folder' || (type === 'auto' && remainingPath.length > 0)) {
+      // Check if the last part is actually a subfolder
+      const lastPartSubfolder = await prisma.folders.findFirst({
+        where: {
+          name: lastPathPart,
+          userId: user.id,
+          parentId: parentFolderId
+        }
+      })
+
+      if (lastPartSubfolder) {
+        // It's a subfolder, get its contents
+        const folderKeys = await prisma.keys.findMany({
+          where: {
+            folderId: lastPartSubfolder.id,
+            userId: user.id,
+            ...(environment && { environment: environment })
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            type: true,
+            environment: true,
+            tags: true,
+            isFavorite: true,
+            createdAt: true,
+            updatedAt: true
+          },
+          orderBy: { updatedAt: 'desc' }
+        })
+
+        const folderSubfolders = await prisma.folders.findMany({
+          where: {
+            userId: user.id,
+            parentId: lastPartSubfolder.id
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            color: true,
+            createdAt: true
+          },
+          orderBy: { name: 'asc' }
+        })
+
+        return NextResponse.json({
+          success: true,
+          type: 'folder',
+          path: path,
+          project: projectName,
+          folder: {
+            id: lastPartSubfolder.id,
+            name: lastPartSubfolder.name,
+            description: lastPartSubfolder.description,
+            color: lastPartSubfolder.color
+          },
+          environment: environment || 'all',
+          totalKeys: folderKeys.length,
+          totalSubfolders: folderSubfolders.length,
+          keys: folderKeys,
+          subfolders: folderSubfolders,
+          message: `Successfully accessed folder "${folderPath.join('/')}/${lastPathPart}"`
+        })
+      } else {
+        // Last part is not a subfolder, check if it's a key
+        const potentialKey = await prisma.keys.findFirst({
+          where: {
+            name: lastPathPart,
+            folderId: parentFolderId,
+            userId: user.id,
+            ...(environment && { environment: environment })
+          }
+        })
+
+        if (potentialKey) {
+          // It's a key, return it
+          return NextResponse.json({
+            success: true,
+            type: 'key',
+            path: path,
+            project: projectName,
+            folder: parentFolderPath,
+            key: {
+              id: potentialKey.id,
+              name: potentialKey.name,
+              description: potentialKey.description,
+              value: potentialKey.value,
+              type: potentialKey.type,
+              environment: potentialKey.environment,
+              tags: potentialKey.tags,
+              isFavorite: potentialKey.isFavorite,
+              createdAt: potentialKey.createdAt,
+              updatedAt: potentialKey.updatedAt
+            },
+            message: `Successfully accessed key "${lastPathPart}" from "${parentFolderPath}"`
+          })
+        }
+      }
+    }
+
+    // Fallback: return folder contents from the last valid folder
     const folderKeys = await prisma.keys.findMany({
       where: {
-        folderId: targetFolder.id,
+        folderId: parentFolderId,
         userId: user.id,
         ...(environment && { environment: environment })
       },
@@ -409,16 +529,21 @@ export async function GET(request) {
       type: 'folder',
       path: path,
       project: projectName,
-      folder: {
+      folder: targetFolder ? {
         id: targetFolder.id,
         name: targetFolder.name,
         description: targetFolder.description,
         color: targetFolder.color
+      } : {
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        color: project.color
       },
       environment: environment || 'all',
       totalKeys: folderKeys.length,
       keys: folderKeys,
-      message: `Successfully accessed "${folderPath.join('/')}"`
+      message: `Successfully accessed "${parentFolderPath}"`
     })
 
   } catch (error) {
