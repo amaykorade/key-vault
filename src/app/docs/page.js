@@ -26,7 +26,7 @@ export default function DocsPage() {
               </div>
             </div>
             <p className="text-blue-100 mt-3 text-sm">
-              <strong>New in v1.0.4:</strong> Path-based key access with <code className="bg-white/20 px-2 py-1 rounded">getKeysByPath('Project/Subfolder')</code>
+              <strong>New in v1.0.4:</strong> Function-based key access with simple function calls instead of building URLs
             </p>
           </div>
         </div>
@@ -34,16 +34,17 @@ export default function DocsPage() {
         {/* Table of Contents */}
         <div className="bg-white rounded-lg p-6 mb-12 border border-gray-200 shadow-sm">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Table of Contents</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <a href="#sdk" className="text-slate-600 hover:text-slate-500 hover:underline">JavaScript SDK</a>
-            <a href="#python-sdk" className="text-slate-600 hover:text-slate-500 hover:underline">Python SDK</a>
-            <a href="#api" className="text-slate-600 hover:text-slate-500 hover:underline">REST API</a>
-            <a href="#packages" className="text-slate-600 hover:text-slate-500 hover:underline">📦 Package Information</a>
-            <a href="#authentication" className="text-slate-600 hover:text-slate-500 hover:underline">Authentication</a>
-            <a href="#security" className="text-slate-600 hover:text-slate-500 hover:underline">Security</a>
-            <a href="#plans" className="text-slate-600 hover:text-slate-500 hover:underline">Subscription Plans</a>
-            <a href="#faq" className="text-slate-600 hover:text-slate-500 hover:underline">FAQ</a>
-          </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <a href="#sdk" className="text-slate-600 hover:text-slate-500 hover:underline">JavaScript SDK</a>
+              <a href="#python-sdk" className="text-slate-600 hover:text-slate-500 hover:underline">Python SDK</a>
+              <a href="#api" className="text-slate-600 hover:text-slate-500 hover:underline">REST API & Function-Based Access</a>
+              <a href="#packages" className="text-slate-600 hover:text-slate-500 hover:underline">📦 Package Information</a>
+              <a href="#authentication" className="text-slate-600 hover:text-slate-500 hover:underline">Authentication</a>
+              <a href="#security" className="text-slate-600 hover:text-slate-500 hover:underline">Security</a>
+              <a href="#plans" className="text-slate-600 hover:text-slate-500 hover:underline">Subscription Plans</a>
+              <a href="#faq" className="text-slate-600 hover:text-slate-500 hover:underline">FAQ</a>
+              <a href="#summary" className="text-slate-600 hover:text-slate-500 hover:underline">🎯 Summary</a>
+            </div>
         </div>
 
         {/* Content Sections */}
@@ -57,7 +58,7 @@ export default function DocsPage() {
               <br /><br />
               <strong className="text-green-600">✅ Supports both ES Modules and CommonJS</strong> - works in any JavaScript environment!
               <br /><br />
-              <strong className="text-blue-600">🆕 v1.0.4+ includes path-based access</strong> - access keys using project/folder names instead of IDs!
+              <strong className="text-blue-600">🆕 v1.0.4+ includes function-based access</strong> - access keys using simple function calls instead of building URLs!
             </p>
 
             <div className="space-y-8">
@@ -94,15 +95,8 @@ export default function DocsPage() {
                           <pre className="text-green-600 text-sm">
                             <code>{`import { KeyVault } from 'amay-key-vault-sdk';
 
-// New simplified constructor
-const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
-
-// Legacy constructor (still supported)
-// const kv = new KeyVault({
-//   apiUrl: 'https://yourdomain.com/api',
-//   getToken: () => 'your-api-token',
-//   onAuthError: () => console.log('Token expired')
-// });`}</code>
+// Simplified constructor
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');`}</code>
                           </pre>
                         </div>
                       </div>
@@ -113,15 +107,8 @@ const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
                           <pre className="text-green-600 text-sm">
                             <code>{`const { KeyVault } = require('amay-key-vault-sdk');
 
-// New simplified constructor
-const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
-
-// Legacy constructor (still supported)
-// const kv = new KeyVault({
-//   apiUrl: 'https://yourdomain.com/api',
-//   getToken: () => 'your-api-token',
-//   onAuthError: () => console.log('Token expired')
-// });`}</code>
+// Simplified constructor
+const kv = new KeyVault('your-api-token', 'https://yourdomain.com');`}</code>
                           </pre>
                         </div>
                       </div>
@@ -131,49 +118,9 @@ const kv = new KeyVault('your-api-token', 'https://yourdomain.com');
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
                     
-                    {/* New Path-Based Access Section */}
-                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <h5 className="text-lg font-semibold text-blue-900 mb-3">🆕 New in v1.0.4: Path-Based Access (Easiest Method)</h5>
-                      <p className="text-blue-800 mb-3">Access keys using project/folder names instead of folder IDs:</p>
-                      <div className="bg-blue-100 rounded-lg p-4 overflow-x-auto border border-blue-200">
-                        <pre className="text-blue-800 text-sm">
-                          <code>{`// Get keys by project/folder path - no need to know folder IDs!
-const keys = await kv.getKeysByPath('MyApp/Production');
-console.log('Production keys:', keys);
 
-// Get all keys in a project
-const projectKeys = await kv.getProjectKeys('MyApp');
-console.log('All project keys:', projectKeys);
-
-// Get keys filtered by environment
-const envKeys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');
-console.log('Production keys:', envKeys);`}</code>
-                        </pre>
-                      </div>
-                    </div>
                     
-                    {/* Traditional Method */}
-                    <div>
-                      <h5 className="text-lg font-semibold text-gray-900 mb-3">Traditional Method (Using Folder IDs)</h5>
-                      <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                        <pre className="text-green-600 text-sm">
-                          <code>{`// Simple function to get a key by name
-async function getKey(keyName, folderId) {
-  const { keys } = await kv.listKeys({ folderId, limit: 100 });
-  const key = keys.find(k => k.name === keyName);
-  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
-  return keyWithValue.value;
-}
 
-// Usage
-const apiKey = await getKey('key-name', 'folder-id');
-
-// Or get all keys in a folder
-const { keys } = await kv.listKeys({ folderId: 'folder-id' });
-console.log('Available keys:', keys.map(k => k.name));`}</code>
-                        </pre>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -182,52 +129,7 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">API Reference</h3>
                 
                 <div className="space-y-6">
-                  {/* New Path-Based Methods */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getKeysByPath(path, options?)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get keys using human-readable project/folder paths instead of folder IDs.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>path</strong> (string): Project/folder path like 'MyApp/Production'</li>
-                      <li><strong>options</strong> (object, optional): Environment, limit, offset</li>
-                      <li><strong>Returns:</strong> Array of keys with metadata and values</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">const keys = await kv.getKeysByPath('MyApp/Production');</code>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getProjectKeys(projectName, options?)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get all keys in a specific project.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>projectName</strong> (string): Name of the project</li>
-                      <li><strong>options</strong> (object, optional): Environment, limit, offset</li>
-                      <li><strong>Returns:</strong> Array of all keys in the project</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">const keys = await kv.getProjectKeys('MyApp');</code>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-200 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">getEnvironmentKeys(projectName, environment, options?)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get keys filtered by environment within a project.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>projectName</strong> (string): Name of the project</li>
-                      <li><strong>environment</strong> (string): Environment like 'PRODUCTION', 'STAGING', 'DEVELOPMENT'</li>
-                      <li><strong>options</strong> (object, optional): Limit, offset</li>
-                      <li><strong>Returns:</strong> Array of keys filtered by environment</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">const keys = await kv.getEnvironmentKeys('MyApp', 'PRODUCTION');</code>
-                    </div>
-                  </div>
+
                   
                   {/* Legacy Constructor */}
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
@@ -240,187 +142,11 @@ console.log('Available keys:', keys.map(k => k.name));`}</code>
                     </ul>
                   </div>
                   
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">new KeyVault(&#123; apiUrl, getToken, onAuthError? &#125;)</code> (Legacy)
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>apiUrl</strong> (string): Base URL of your API Vault API</li>
-                      <li><strong>getToken</strong> (function): Function that returns your API token</li>
-                      <li><strong>onAuthError</strong> (function, optional): Callback for authentication errors</li>
-                    </ul>
-                  </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">listKeys(&#123; folderId, limit?, offset? &#125;)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>folderId</strong> (string, required): Folder to list keys from</li>
-                      <li><strong>limit</strong> (number, optional): Number of keys to return (default: 20)</li>
-                      <li><strong>offset</strong> (number, optional): Number of keys to skip (default: 0)</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">&#123; keys, total, limit, offset &#125;</code> - Array of key metadata (no values)</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">getKey(keyId, &#123; includeValue &#125;)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>keyId</strong> (string, required): The key&apos;s ID</li>
-                      <li><strong>includeValue</strong> (boolean, optional): If true, includes the decrypted key value</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">key</code> object with metadata and optionally the value</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">getKey(keyId, &#123; includeValue? &#125;)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>keyId</strong> (string, required): The key&apos;s ID</li>
-                      <li><strong>includeValue</strong> (boolean, optional): If true, includes the decrypted key value</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">key</code> object with metadata and optionally the value</li>
-                    </ul>
-                  </div>
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Module Format Support</h3>
-                <p className="text-gray-600 mb-6">
-                  The SDK automatically detects your module system and provides the appropriate format. 
-                  No configuration needed - it just works!
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">ES Modules</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`// package.json: "type": "module"
-import KeyVault from 'amay-key-vault-sdk';
 
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: () => 'your-token'
-});`}</code>
-                      </pre>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">CommonJS</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`// package.json: no "type" field
-const KeyVault = require('amay-key-vault-sdk');
-
-const kv = new KeyVault({
-  apiUrl: 'https://yourdomain.com/api',
-  getToken: () => 'your-token'
-});`}</code>
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Usage Examples</h3>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Simple Key Retrieval</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`// Simple function to get any key by name
-async function getKey(keyName, folderId) {
-  const { keys } = await kv.listKeys({ folderId, limit: 100 });
-  const key = keys.find(k => k.name === keyName);
-  const keyWithValue = await kv.getKey(key.id, { includeValue: true });
-  return keyWithValue.value;
-}
-
-// Usage
-const apiKey = await getKey('stripe-secret-key', 'your-folder-id');
-const dbPassword = await getKey('database-password', 'your-folder-id');`}</code>
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Get Database URL from Key Vault</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`async function getDatabaseUrl() {
-  try {
-    // First, list keys to find the one you want
-    const { keys } = await kv.listKeys({ folderId: 'your-folder-id' });
-    
-    // Find the key by name
-    const dbUrlKey = keys.find(key => key.name === 'DB_URL');
-    
-    if (dbUrlKey) {
-      // Get the actual value
-      const keyWithValue = await kv.getKey(dbUrlKey.id, { includeValue: true });
-      console.log('Database URL retrieved successfully');
-      return keyWithValue.value;
-    } else {
-      throw new Error('DB_URL key not found');
-    }
-  } catch (error) {
-    console.error('Error fetching database URL:', error);
-    throw error;
-  }
-}
-
-// Use it
-const databaseUrl = await getDatabaseUrl();
-const { Pool } = require('pg');
-const pool = new Pool({ connectionString: databaseUrl });`}</code>
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Environment-Specific Secrets</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`const environment = process.env.NODE_ENV || 'development';
-const folderId = environment === 'production' ? 'prod-folder' : 'dev-folder';
-
-const secrets = {
-  database: await kv.getKeyValue(folderId, 'DB_URL'),
-  apiKey: await kv.getKeyValue(folderId, 'API_KEY'),
-  jwtSecret: await kv.getKeyValue(folderId, 'JWT_SECRET')
-};`}</code>
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Error Handling</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`try {
-  const secret = await kv.getKeyValue('folder-id', 'DB_URL');
-  // Use secret
-} catch (error) {
-  if (error.message.includes('not found')) {
-    console.error('DB_URL not found');
-  } else if (error.message.includes('Unauthorized')) {
-    console.error('Invalid API token');
-  } else {
-    console.error('Failed to retrieve DB_URL:', error.message);
-  }
-}`}</code>
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
 
@@ -431,9 +157,9 @@ const secrets = {
               The API Vault Python SDK allows you to securely access your vault keys from Python applications. 
               <strong className="text-red-600"> This SDK is read-only</strong>: key creation, update, and deletion must be performed via the API Vault web platform.
               <br /><br />
-              <strong className="text-green-600">✅ Latest Version: v1.0.4</strong> - Now includes path-based access and simplified constructor!
+              <strong className="text-green-600">✅ Latest Version: v1.0.4</strong> - Now includes function-based access and simplified constructor!
               <br /><br />
-              <strong className="text-blue-600">🆕 v1.0.4+ includes path-based access</strong> - access keys using project/folder names instead of IDs!
+              <strong className="text-blue-600">🆕 v1.0.4+ includes function-based access</strong> - access keys using simple function calls instead of building URLs!
             </p>
 
             <div className="space-y-8">
@@ -467,13 +193,7 @@ const secrets = {
                         <code>{`from key_vault_sdk import KeyVault
 
 # Initialize the SDK (v1.0.4+)
-kv = KeyVault('your-api-token-here', 'https://yourdomain.com')
-
-# Legacy format (still supported)
-# kv = KeyVault(
-#     api_url="https://yourdomain.com/api",
-#     token="your-api-token-here"
-# )`}</code>
+kv = KeyVault('your-api-token-here', 'https://yourdomain.com')`}</code>
                       </pre>
                     </div>
                   </div>
@@ -481,42 +201,9 @@ kv = KeyVault('your-api-token-here', 'https://yourdomain.com')
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900 mb-3">Step 3: Retrieve Secrets</h4>
                     
-                    {/* New Path-Based Access Section */}
-                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <h5 className="text-lg font-semibold text-blue-900 mb-3">🆕 New in v1.0.4: Path-Based Access (Easiest Method)</h5>
-                      <p className="text-blue-800 mb-3">Access keys using project/folder names instead of folder IDs:</p>
-                      <div className="bg-blue-100 rounded-lg p-4 overflow-x-auto border border-blue-200">
-                        <pre className="text-blue-800 text-sm">
-                          <code>{`# Get keys by project/folder path - no need to know folder IDs!
-keys = kv.get_keys_by_path('MyApp/Production')
-print('Production keys:', keys)
 
-# Get all keys in a project
-project_keys = kv.get_project_keys('MyApp')
-print('All project keys:', project_keys)
-
-# Get keys filtered by environment
-env_keys = kv.get_environment_keys('MyApp', 'PRODUCTION')
-print('Production keys:', env_keys)`}</code>
-                        </pre>
-                      </div>
-                    </div>
                     
-                    {/* Traditional Method */}
-                    <div>
-                      <h5 className="text-lg font-semibold text-gray-900 mb-3">Traditional Method (Using Folder IDs)</h5>
-                      <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                        <pre className="text-green-600 text-sm">
-                          <code>{`# Get a specific secret value by name
-secret_value = kv.get_key_by_name("folder-id", "DB_URL")
-print("Secret retrieved successfully")
 
-# Or get all keys in a folder
-result = kv.list_keys(folder_id="folder-id")
-print("Available keys:", [k['name'] for k in result['keys']])`}</code>
-                        </pre>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -525,52 +212,7 @@ print("Available keys:", [k['name'] for k in result['keys']])`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">API Reference</h3>
                 
                 <div className="space-y-6">
-                  {/* New Path-Based Methods */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_keys_by_path(path, **options)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get keys using human-readable project/folder paths instead of folder IDs.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>path</strong> (str): Project/folder path like 'MyApp/Production'</li>
-                      <li><strong>**options</strong>: Environment, limit, offset</li>
-                      <li><strong>Returns:</strong> List of keys with metadata and values</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">keys = kv.get_keys_by_path('MyApp/Production')</code>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_project_keys(project_name, **options)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get all keys in a specific project.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>project_name</strong> (str): Name of the project</li>
-                      <li><strong>**options</strong>: Environment, limit, offset</li>
-                      <li><strong>Returns:</strong> List of all keys in the project</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">keys = kv.get_project_keys('MyApp')</code>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-200 rounded-lg p-6 border border-blue-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-blue-900 mb-3">
-                      🆕 <code className="bg-blue-200 px-2 py-1 rounded text-blue-800">get_environment_keys(project_name, environment, **options)</code>
-                    </h4>
-                    <p className="text-blue-800 mb-3">Get keys filtered by environment within a project.</p>
-                    <ul className="space-y-2 text-blue-700">
-                      <li><strong>project_name</strong> (str): Name of the project</li>
-                      <li><strong>environment</strong> (str): Environment like 'PRODUCTION', 'STAGING', 'DEVELOPMENT'</li>
-                      <li><strong>**options</strong>: Limit, offset</li>
-                      <li><strong>Returns:</strong> List of keys filtered by environment</li>
-                    </ul>
-                    <div className="mt-3 bg-blue-100 rounded p-3">
-                      <code className="text-blue-800 text-sm">keys = kv.get_environment_keys('MyApp', 'PRODUCTION')</code>
-                    </div>
-                  </div>
+
                   
                   {/* New Constructor */}
                   <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
@@ -584,104 +226,13 @@ print("Available keys:", [k['name'] for k in result['keys']])`}</code>
                     </ul>
                   </div>
                   
-                  {/* Legacy Constructor */}
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">KeyVault(api_url, token, timeout=30)</code> (Legacy)
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>api_url</strong> (str): Base URL of your API Vault API</li>
-                      <li><strong>token</strong> (str): Your API token for authentication</li>
-                      <li><strong>timeout</strong> (int, optional): Request timeout in seconds</li>
-                    </ul>
-                  </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">list_keys(folder_id, limit=20, offset=0)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>folder_id</strong> (str, required): Folder to list keys from</li>
-                      <li><strong>limit</strong> (int, optional): Number of keys to return (default: 20)</li>
-                      <li><strong>offset</strong> (int, optional): Number of keys to skip (default: 0)</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">dict</code> - Dictionary with keys list and pagination info</li>
-                    </ul>
-                  </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">get_key(key_id, include_value=False)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>key_id</strong> (str, required): The key&apos;s ID</li>
-                      <li><strong>include_value</strong> (bool, optional): If True, include the decrypted key value</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">dict</code> - Key object with metadata and optionally the value</li>
-                    </ul>
-                  </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                      <code className="bg-gray-200 px-2 py-1 rounded text-gray-800">get_key_by_name(folder_id, key_name)</code>
-                    </h4>
-                    <ul className="space-y-2 text-gray-600">
-                      <li><strong>folder_id</strong> (str, required): Folder containing the key</li>
-                      <li><strong>key_name</strong> (str, required): Name of the key to retrieve</li>
-                      <li><strong>Returns:</strong> <code className="bg-gray-200 px-1 rounded text-gray-800">str</code> - The decrypted secret value</li>
-                    </ul>
-                  </div>
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Usage Examples</h3>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Simple Key Retrieval</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`from key_vault_sdk import KeyVault
 
-# Initialize
-kv = KeyVault(
-    api_url="https://yourdomain.com/api",
-    token="your-api-token"
-)
-
-# Get a key by name
-api_key = kv.get_key_by_name("folder-id", "key-name")
-print(f"API Key: {api_key}")
-
-# Get multiple keys
-keys = kv.get_multiple_keys(
-    folder_id="folder-id",
-    key_names=["stripe-key", "database-password"]
-)
-print(f"Retrieved keys: {keys}")`}</code>
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Error Handling</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`from key_vault_sdk import KeyVault, KeyVaultError, KeyVaultAuthError, KeyVaultNotFoundError
-
-try:
-    secret = kv.get_key_by_name("folder-id", "secret-name")
-    # Use secret
-except KeyVaultNotFoundError:
-    print("Secret not found")
-except KeyVaultAuthError:
-    print("Invalid API token")
-except KeyVaultError as e:
-    print(f"Failed to retrieve secret: {e}")`}</code>
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
 
@@ -690,6 +241,8 @@ except KeyVaultError as e:
             <h2 className="text-3xl font-bold text-gray-900 mb-6">📦 Package Information</h2>
             <p className="text-lg text-gray-600 mb-8">
               Both JavaScript and Python SDKs are now officially published and available on their respective package registries.
+              <br /><br />
+              <strong className="text-blue-600">🆕 New Function-Based Approach:</strong> Use simple function calls instead of building URLs manually!
             </p>
 
             <div className="space-y-8">
@@ -752,10 +305,10 @@ except KeyVaultError as e:
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
                 <h3 className="text-xl font-semibold text-blue-900 mb-3">🆕 What's New in v1.0.4</h3>
                 <ul className="space-y-2 text-blue-800">
-                  <li>• <strong>Path-based access:</strong> Use <code className="bg-blue-200 px-1 rounded">getKeysByPath('Project/Subfolder')</code> instead of folder IDs</li>
+                  <li>• <strong>Function-based access:</strong> Use simple function calls instead of building URLs manually</li>
                   <li>• <strong>Simplified constructors:</strong> <code className="bg-blue-200 px-1 rounded">new KeyVault(token, baseUrl)</code> and <code className="bg-blue-200 px-1 rounded">KeyVault(token, base_url)</code></li>
                   <li>• <strong>Environment filtering:</strong> Easy access to keys by environment (dev/staging/prod)</li>
-                  <li>• <strong>Backward compatibility:</strong> All existing methods continue to work</li>
+                  <li>• <strong>Cross-language support:</strong> Same approach works in JavaScript, Python, and PHP</li>
                   <li>• <strong>Official publication:</strong> Both packages now available on npm and PyPI</li>
                 </ul>
               </div>
@@ -764,9 +317,11 @@ except KeyVaultError as e:
 
           {/* API Section */}
           <section id="api" className="scroll-mt-20">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">REST API</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">REST API & Function-Based Access</h2>
             <p className="text-lg text-gray-600 mb-8">
               The Key Vault REST API provides full programmatic access to your secrets. All endpoints require authentication.
+              <br /><br />
+              <strong className="text-blue-600">🆕 New Function-Based Approach:</strong> Use simple function calls instead of building URLs manually!
             </p>
 
             <div className="space-y-8">
@@ -787,155 +342,394 @@ except KeyVaultError as e:
               </div>
 
               <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Direct API Usage (Alternative to SDK)</h3>
-                <p className="text-gray-600 mb-4">If you prefer to use direct API calls instead of the SDK:</p>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">🆕 Function-Based Access (Recommended)</h3>
+                <p className="text-gray-600 mb-6">
+                  Instead of building URLs manually, use these simple function classes to access your keys with any path depth!
+                </p>
                 
-                <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                  <pre className="text-green-600 text-sm">
-                    <code>{`import fetch from 'node-fetch';
+                <div className="space-y-8">
+                  {/* JavaScript Function-Based Approach */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-blue-900 mb-4">JavaScript/Node.js</h4>
+                    <div className="bg-blue-100 rounded-lg p-4 overflow-x-auto border border-blue-200">
+                      <pre className="text-blue-800 text-sm">
+                        <code>{`class KeyVaultClient {
+  constructor(apiToken, baseUrl = 'https://apivault.it.com') {
+    this.apiToken = apiToken;
+    this.baseUrl = baseUrl;
+  }
 
-const BASE_URL = 'https://yourdomain.com';
-const API_TOKEN = 'tok_your-api-token-here';
-
-async function getDatabaseUrl() {
-  try {
-    // 1. List folders to get folder ID
-    const foldersResponse = await fetch(\`\${BASE_URL}/api/folders\`, {
-      headers: {
-        'Authorization': \`Bearer \${API_TOKEN}\`,
-        'Content-Type': 'application/json'
-      }
+  async getKey(path, environment = null) {
+    const url = environment 
+      ? \`\${this.baseUrl}/api/access?path=\${path}&environment=\${environment}\`
+      : \`\${this.baseUrl}/api/access?path=\${path}\`;
+    
+    const response = await fetch(url, {
+      headers: { "Authorization": \`Bearer \${this.apiToken}\` }
     });
+    const data = await response.json();
     
-    const foldersData = await foldersResponse.json();
-    const folderId = foldersData.folders[0].id;
-    
-    // 2. List keys in the folder
-    const keysResponse = await fetch(\`\${BASE_URL}/api/keys?folderId=\${folderId}\`, {
-      headers: {
-        'Authorization': \`Bearer \${API_TOKEN}\`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    const keysData = await keysResponse.json();
-    
-    // 3. Find the DB_URL key
-    const dbUrlKey = keysData.keys.find(key => key.name === 'DB_URL');
-    
-    if (dbUrlKey) {
-      // 4. Get the actual value
-      const keyValueResponse = await fetch(\`\${BASE_URL}/api/keys/\${dbUrlKey.id}?includeValue=true\`, {
-        headers: {
-          'Authorization': \`Bearer \${API_TOKEN}\`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const keyValueData = await keyValueResponse.json();
-      console.log('Database URL retrieved successfully');
-      return keyValueData.key.value;
+    if (data.success && data.type === 'key') {
+      return data.key.value;
+    } else {
+      throw new Error(data.message || 'Key not found');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
+  }
+
+  async getFolder(path, environment = null) {
+    const url = environment 
+      ? \`\${this.baseUrl}/api/access?path=\${path}&environment=\${environment}\`
+      : \`\${this.baseUrl}/api/access?path=\${path}\`;
+    
+    const response = await fetch(url, {
+      headers: { "Authorization": \`Bearer \${this.apiToken}\` }
+    });
+    return response.json();
   }
 }
 
-// Use it
-const databaseUrl = await getDatabaseUrl();`}</code>
-                  </pre>
-                </div>
-              </div>
+// Usage:
+const vault = new KeyVaultClient('YOUR_API_TOKEN');
 
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Key Endpoints</h3>
-                
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Create a Key</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`POST /api/keys
-Content-Type: application/json
+// ✅ Get specific key (any path depth)
+const dbUrl = await vault.getKey('Webmeter/Database/DB_URL');
+const apiKey = await vault.getKey('MyApp/Production/API_KEY');
 
-{
-  "name": "Database Password",
-  "value": "secret-password",
-  "type": "PASSWORD",
-  "folderId": "folder-id",
-  "description": "Production database password"
-}`}</code>
+// ✅ Get folder contents
+const folderData = await vault.getFolder('Webmeter/Database');
+
+// ✅ Browse project structure
+const projectData = await vault.getFolder('Webmeter');`}</code>
                       </pre>
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">List Keys</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                      <code className="text-green-600 text-sm">GET /api/keys?folderId=folder-id</code>
-                    </div>
-                  </div>
+                  {/* Python Function-Based Approach */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-green-900 mb-4">Python</h4>
+                    <div className="bg-green-100 rounded-lg p-4 overflow-x-auto border border-green-200">
+                      <pre className="text-green-800 text-sm">
+                        <code>{`import requests
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Get Key Value</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                      <code className="text-green-600 text-sm">GET /api/keys/{'{keyId}'}?includeValue=true</code>
-                    </div>
-                  </div>
+class KeyVaultClient:
+    def __init__(self, api_token, base_url='https://apivault.it.com'):
+        self.api_token = api_token
+        self.base_url = base_url
+    
+    def get_key(self, path, environment=None):
+        params = {"path": path}
+        if environment:
+            params["environment"] = environment
+            
+        response = requests.get(
+            f"{self.base_url}/api/access",
+            params=params,
+            headers={"Authorization": f"Bearer {self.api_token}"}
+        )
+        data = response.json()
+        return data["key"]["value"]
+    
+    def get_folder(self, path, environment=None):
+        params = {"path": path}
+        if environment:
+            params["environment"] = environment
+            
+        response = requests.get(
+            f"{self.base_url}/api/access",
+            params=params,
+            headers={"Authorization": f"Bearer {self.api_token}"}
+        )
+        return response.json()
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Update Key</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`PUT /api/keys/{keyId}
-Content-Type: application/json
+# Usage:
+vault = KeyVaultClient('YOUR_API_TOKEN')
 
-{
-  "name": "Updated Name",
-  "value": "new-secret-value"
-}`}</code>
+# ✅ Get specific key (any path depth)
+db_url = vault.get_key('Webmeter/Database/DB_URL')
+api_key = vault.get_key('MyApp/Production/API_KEY')
+
+# ✅ Get folder contents
+folder_data = vault.get_folder('Webmeter/Database')
+
+# ✅ Browse project structure
+project_data = vault.get_folder('Webmeter')`}</code>
                       </pre>
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Delete Key</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                      <code className="text-green-600 text-sm">DELETE /api/keys/{'{keyId}'}</code>
+                  {/* PHP Function-Based Approach */}
+                  <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg p-6 border border-purple-200 shadow-sm">
+                    <h4 className="text-xl font-semibold text-purple-900 mb-4">PHP</h4>
+                    <div className="bg-purple-100 rounded-lg p-4 overflow-x-auto border border-purple-200">
+                      <pre className="text-purple-800 text-sm">
+                        <code>{`class KeyVaultClient {
+    private $apiToken;
+    private $baseUrl;
+    
+    public function __construct($apiToken, $baseUrl = 'https://apivault.it.com') {
+        $this->apiToken = $apiToken;
+        $this->baseUrl = $baseUrl;
+    }
+    
+    public function getKey($path, $environment = null) {
+        $url = $this->baseUrl . "/api/access?path=" . urlencode($path);
+        if ($environment) {
+            $url .= "&environment=" . urlencode($environment);
+        }
+        
+        $response = file_get_contents($url, false, stream_context_create([
+            'http' => [
+                'header' => "Authorization: Bearer {$this->apiToken}\\r\\n"
+            ]
+        ]));
+        
+        $data = json_decode($response, true);
+        return $data['key']['value'];
+    }
+    
+    public function getFolder($path, $environment = null) {
+        $url = $this->baseUrl . "/api/access?path=" . urlencode($path);
+        if ($environment) {
+            $url .= "&environment=" . urlencode($environment);
+        }
+        
+        $response = file_get_contents($url, false, stream_context_create([
+            'http' => [
+                'header' => "Authorization: Bearer {$this->apiToken}\\r\\n"
+            ]
+        ]));
+        
+        return json_decode($response, true);
+    }
+}
+
+// Usage:
+$vault = new KeyVaultClient('YOUR_API_TOKEN');
+
+// ✅ Get specific key (any path depth)
+$dbUrl = $vault->getKey('Webmeter/Database/DB_URL');
+$apiKey = $vault->getKey('MyApp/Production/API_KEY');
+
+// ✅ Get folder contents
+$folderData = $vault->getFolder('Webmeter/Database');
+
+// ✅ Browse project structure
+$projectData = $vault->getFolder('Webmeter');`}</code>
+                      </pre>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Folder Endpoints</h3>
-                
-                <div className="space-y-6">
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">Create Folder</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 overflow-x-auto border border-gray-200">
-                      <pre className="text-green-600 text-sm">
-                        <code>{`POST /api/folders
-Content-Type: application/json
+                  {/* Key Benefits */}
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-6 border border-yellow-200">
+                    <h4 className="text-xl font-semibold text-yellow-900 mb-4">🎯 Key Benefits</h4>
+                    <ul className="space-y-2 text-yellow-800">
+                      <li>• <strong>No URL building:</strong> Just call functions with path names</li>
+                      <li>• <strong>Any path depth:</strong> Works with 2 levels (Project/Key) or 10+ levels</li>
+                      <li>• <strong>Environment filtering:</strong> Easy access to dev/staging/prod keys</li>
+                      <li>• <strong>Simple error handling:</strong> Clear error messages if keys don't exist</li>
+                      <li>• <strong>Cross-language:</strong> Same approach works in JavaScript, Python, PHP</li>
+                    </ul>
+                  </div>
 
-{
-  "name": "Production",
-  "description": "Production environment secrets",
-  "color": "#ff0000"
+                  {/* Environment Parameter Quick Reference */}
+                  <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
+                    <h4 className="text-xl font-semibold text-cyan-900 mb-4">🔧 Environment Parameter Quick Reference</h4>
+                    <p className="text-cyan-800 mb-4">The second parameter in both <code className="bg-cyan-200 px-1 rounded">getKey()</code> and <code className="bg-cyan-200 px-1 rounded">getFolder()</code> methods filters results by environment:</p>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
+                        <h5 className="text-lg font-semibold text-cyan-800 mb-2">Method Signature</h5>
+                        <div className="space-y-2 text-cyan-700">
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getKey(path, environment?)</code> - Get a specific key</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getFolder(path, environment?)</code> - Get folder contents</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
+                        <h5 className="text-lg font-semibold text-cyan-800 mb-2">Environment Values</h5>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-cyan-700">
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'production'</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'staging'</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'development'</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'testing'</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">null</code> (all environments)</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">undefined</code> (all environments)</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
+                        <h5 className="text-lg font-semibold text-cyan-800 mb-2">Usage Examples</h5>
+                        <div className="space-y-2 text-cyan-700">
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key')</code> - Get key from any environment</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'production')</code> - Get key only from production</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder('Project/Folder', 'development')</code> - Get folder contents only from development</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Real Examples */}
+                  <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6 border border-indigo-200">
+                    <h4 className="text-xl font-semibold text-indigo-900 mb-4">💡 Real-World Examples</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <h5 className="text-lg font-semibold text-indigo-800 mb-2">Database Connection</h5>
+                        <div className="bg-indigo-100 rounded p-3">
+                          <code className="text-indigo-800 text-sm">const dbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'production');</code>
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="text-lg font-semibold text-indigo-800 mb-2">API Keys</h5>
+                        <div className="bg-indigo-100 rounded p-3">
+                          <code className="text-indigo-800 text-sm">const stripeKey = await vault.getKey('Ecommerce/Stripe/SecretKey', 'production');</code>
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="text-lg font-semibold text-indigo-800 mb-2">Environment-Specific Config</h5>
+                        <div className="bg-indigo-100 rounded p-3">
+                          <code className="text-indigo-800 text-sm">const config = await vault.getFolder('MyApp/Config', process.env.NODE_ENV);</code>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Environment Filtering Examples */}
+                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-200">
+                    <h4 className="text-xl font-semibold text-emerald-900 mb-4">🌍 Environment Filtering Examples</h4>
+                    <p className="text-emerald-800 mb-4">Filter keys by environment (development, staging, production) to get the right configuration for each environment.</p>
+                    
+                    <div className="space-y-6">
+                      <div>
+                        <h5 className="text-lg font-semibold text-emerald-800 mb-3">JavaScript/Node.js</h5>
+                        <div className="bg-emerald-100 rounded p-4 overflow-x-auto border border-emerald-200">
+                          <pre className="text-emerald-800 text-sm">
+                            <code>{`// Get production database URL
+const prodDbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'production');
+
+// Get development database URL  
+const devDbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'development');
+
+// Get staging database URL
+const stagingDbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'staging');
+
+// Get all production keys in a folder
+const prodKeys = await vault.getFolder('Webmeter/Database', 'production');
+
+// Get all development keys in a folder
+const devKeys = await vault.getFolder('Webmeter/Database', 'development');
+
+// Dynamic environment based on NODE_ENV
+const environment = process.env.NODE_ENV || 'development';
+const dbUrl = await vault.getKey('Webmeter/Database/DB_URL', environment);
+
+// Environment-specific configuration
+const config = {
+  production: await vault.getFolder('MyApp/Config', 'production'),
+  staging: await vault.getFolder('MyApp/Config', 'staging'),
+  development: await vault.getFolder('MyApp/Config', 'development')
+};`}</code>
+                          </pre>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h5 className="text-lg font-semibold text-emerald-800 mb-3">Python</h5>
+                        <div className="bg-emerald-100 rounded p-4 overflow-x-auto border border-emerald-200">
+                          <pre className="text-emerald-800 text-sm">
+                            <code>{`# Get production database URL
+prod_db_url = vault.get_key('Webmeter/Database/DB_URL', 'production')
+
+# Get development database URL
+dev_db_url = vault.get_key('Webmeter/Database/DB_URL', 'development')
+
+# Get staging database URL
+staging_db_url = vault.get_key('Webmeter/Database/Database/DB_URL', 'staging')
+
+# Get all production keys in a folder
+prod_keys = vault.get_folder('Webmeter/Database', 'production')
+
+# Get all development keys in a folder
+dev_keys = vault.get_folder('Webmeter/Database', 'development')
+
+# Dynamic environment based on environment variable
+import os
+environment = os.getenv('ENVIRONMENT', 'development')
+db_url = vault.get_key('Webmeter/Database/DB_URL', environment)
+
+# Environment-specific configuration
+configs = {
+    'production': vault.get_folder('MyApp/Config', 'production'),
+    'staging': vault.get_folder('MyApp/Config', 'staging'),
+    'development': vault.get_folder('MyApp/Config', 'development')
 }`}</code>
-      </pre>
-                    </div>
-                  </div>
+                          </pre>
+                        </div>
+                      </div>
 
-                  <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-3">List Folders</h4>
-                    <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
-                      <code className="text-green-600 text-sm">GET /api/folders</code>
+                      <div>
+                        <h5 className="text-lg font-semibold text-emerald-800 mb-3">PHP</h5>
+                        <div className="bg-emerald-100 rounded p-4 overflow-x-auto border border-emerald-200">
+                          <pre className="text-emerald-800 text-sm">
+                            <code>{`// Get production database URL
+$prodDbUrl = $vault->getKey('Webmeter/Database/DB_URL', 'production');
+
+// Get development database URL
+$devDbUrl = $vault->getKey('Webmeter/Database/DB_URL', 'development');
+
+// Get staging database URL
+$stagingDbUrl = $vault->getKey('Webmeter/Database/DB_URL', 'staging');
+
+// Get all production keys in a folder
+$prodKeys = $vault->getFolder('Webmeter/Database', 'production');
+
+// Get all development keys in a folder
+$devKeys = $vault->getFolder('Webmeter/Database', 'development');
+
+// Dynamic environment based on environment variable
+$environment = $_ENV['ENVIRONMENT'] ?? 'development';
+$dbUrl = $vault->getKey('Webmeter/Database/DB_URL', $environment);
+
+// Environment-specific configuration
+$configs = [
+    'production' => $vault->getFolder('MyApp/Config', 'production'),
+    'staging' => $vault->getFolder('MyApp/Config', 'staging'),
+    'development' => $vault->getFolder('MyApp/Config', 'development')
+];`}</code>
+                          </pre>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h5 className="text-lg font-semibold text-emerald-800 mb-3">Common Environment Names</h5>
+                        <div className="bg-emerald-100 rounded p-4 border border-emerald-200">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div className="text-center">
+                              <div className="bg-red-200 text-red-800 px-3 py-2 rounded font-mono text-sm">production</div>
+                              <div className="text-xs text-emerald-700 mt-1">Live environment</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="bg-yellow-200 text-yellow-800 px-3 py-2 rounded font-mono text-sm">staging</div>
+                              <div className="text-xs text-emerald-700 mt-1">Pre-production</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="bg-blue-200 text-blue-800 px-3 py-2 rounded font-mono text-sm">development</div>
+                              <div className="text-xs text-emerald-700 mt-1">Local development</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="bg-purple-200 text-purple-800 px-3 py-2 rounded font-mono text-sm">testing</div>
+                              <div className="text-xs text-emerald-700 mt-1">QA/Testing</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+
+
+
             </div>
           </section>
 
@@ -1081,6 +875,44 @@ Content-Type: application/json
               <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Can I use the SDK in the browser?</h3>
                 <p className="text-gray-600">Yes, the SDK works in both Node.js and browser environments.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Summary Section */}
+          <section id="summary" className="scroll-mt-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">🎯 Summary: Why Choose Function-Based Access?</h2>
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200 shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-green-900 mb-4">✅ What We've Removed</h3>
+                  <ul className="space-y-2 text-green-800">
+                    <li>• Complex URL building</li>
+                    <li>• Folder ID management</li>
+                    <li>• Legacy constructor methods</li>
+                    <li>• Old path-based access methods</li>
+                    <li>• Traditional usage examples</li>
+                    <li>• Redundant API documentation</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-green-900 mb-4">🚀 What We've Added</h3>
+                  <ul className="space-y-2 text-green-800">
+                    <li>• Simple function calls</li>
+                    <li>• Human-readable paths</li>
+                    <li>• Environment filtering</li>
+                    <li>• Cross-language examples</li>
+                    <li>• Real-world use cases</li>
+                    <li>• Quick reference guides</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-6 p-4 bg-green-100 rounded-lg border border-green-200">
+                <h4 className="text-lg font-semibold text-green-900 mb-2">💡 The Result</h4>
+                <p className="text-green-800">
+                  Users can now access their keys with simple function calls like <code className="bg-green-200 px-2 py-1 rounded">vault.getKey('Project/Subfolder/KeyName', 'production')</code> 
+                  instead of building complex URLs and managing folder IDs. This makes the API much more user-friendly and accessible!
+                </p>
               </div>
             </div>
           </section>
