@@ -37,6 +37,24 @@ export async function GET(request) {
     const environment = searchParams.get('environment')
     const type = searchParams.get('type') || 'auto' // auto, key, folder, project
 
+    // Normalize and validate environment parameter
+    let normalizedEnvironment = null
+    if (environment) {
+      normalizedEnvironment = environment.trim().toLowerCase()
+      // Validate environment values
+      const validEnvironments = ['development', 'staging', 'testing', 'production', 'local', 'other']
+      if (!validEnvironments.includes(normalizedEnvironment)) {
+        return NextResponse.json({
+          success: false,
+          error: 'Invalid environment',
+          message: `Environment "${environment}" is not valid.`,
+          validEnvironments: validEnvironments,
+          receivedEnvironment: environment,
+          status: 400
+        }, { status: 400 })
+      }
+    }
+
     // Validate required parameters
     if (!path) {
       return NextResponse.json({
@@ -94,7 +112,14 @@ export async function GET(request) {
     const projectName = pathParts[0]
     const remainingPath = pathParts.slice(1)
 
-    console.log('🔍 Access request:', { path, environment, type, projectName, remainingPath })
+    console.log('🔍 Access request:', { 
+      path, 
+      environment, 
+      normalizedEnvironment, 
+      type, 
+      projectName, 
+      remainingPath 
+    })
 
     // Find the project (root folder) by name
     const project = await prisma.folders.findFirst({
@@ -140,7 +165,7 @@ export async function GET(request) {
         where: {
           folderId: project.id,
           userId: user.id,
-          ...(environment && { environment: environment })
+          ...(normalizedEnvironment && { environment: normalizedEnvironment })
         },
         select: {
           id: true,
@@ -181,7 +206,7 @@ export async function GET(request) {
           description: project.description,
           color: project.color
         },
-        environment: environment || 'all',
+        environment: normalizedEnvironment || 'all',
         totalKeys: projectKeys.length,
         totalSubfolders: projectSubfolders.length,
         keys: projectKeys,
@@ -262,7 +287,7 @@ export async function GET(request) {
           name: keyName,
           folderId: parentFolderId,
           userId: user.id,
-          ...(environment && { environment: environment })
+          ...(normalizedEnvironment && { environment: normalizedEnvironment })
         },
         select: {
           id: true,
@@ -294,7 +319,7 @@ export async function GET(request) {
             where: {
               folderId: potentialSubfolder.id,
               userId: user.id,
-              ...(environment && { environment: environment })
+              ...(normalizedEnvironment && { environment: normalizedEnvironment })
             },
             select: {
               id: true,
@@ -321,9 +346,9 @@ export async function GET(request) {
               description: potentialSubfolder.description,
               color: potentialSubfolder.color
             },
-            environment: environment || 'all',
-            totalKeys: subfolderKeys.length,
-            keys: subfolderKeys,
+                      environment: normalizedEnvironment || 'all',
+          totalKeys: subfolderKeys.length,
+          keys: subfolderKeys,
             message: `Successfully accessed folder "${folderPath.join('/')}/${keyName}"`
           })
         }
@@ -335,7 +360,7 @@ export async function GET(request) {
           where: {
             folderId: parentFolderId,
             userId: user.id,
-            ...(environment && { environment: environment })
+            ...(normalizedEnvironment && { environment: normalizedEnvironment })
           },
           select: {
             name: true,
@@ -364,7 +389,7 @@ export async function GET(request) {
           project: projectName,
           folder: parentFolderPath,
           keyName: keyName,
-          environment: environment || 'all',
+          environment: normalizedEnvironment || 'all',
           availableKeys: availableKeys.map(k => ({ name: k.name, environment: k.environment, type: k.type })),
           availableSubfolders: availableSubfolders.map(f => f.name),
           suggestions: [
@@ -417,7 +442,7 @@ export async function GET(request) {
           where: {
             folderId: lastPartSubfolder.id,
             userId: user.id,
-            ...(environment && { environment: environment })
+            ...(normalizedEnvironment && { environment: normalizedEnvironment })
           },
           select: {
             id: true,
@@ -459,7 +484,7 @@ export async function GET(request) {
             description: lastPartSubfolder.description,
             color: lastPartSubfolder.color
           },
-          environment: environment || 'all',
+          environment: normalizedEnvironment || 'all',
           totalKeys: folderKeys.length,
           totalSubfolders: folderSubfolders.length,
           keys: folderKeys,
@@ -473,7 +498,7 @@ export async function GET(request) {
             name: lastPathPart,
             folderId: parentFolderId,
             userId: user.id,
-            ...(environment && { environment: environment })
+            ...(normalizedEnvironment && { environment: normalizedEnvironment })
           }
         })
 
@@ -508,7 +533,7 @@ export async function GET(request) {
       where: {
         folderId: parentFolderId,
         userId: user.id,
-        ...(environment && { environment: environment })
+        ...(normalizedEnvironment && { environment: normalizedEnvironment })
       },
       select: {
         id: true,
@@ -540,7 +565,7 @@ export async function GET(request) {
         description: project.description,
         color: project.color
       },
-      environment: environment || 'all',
+      environment: normalizedEnvironment || 'all',
       totalKeys: folderKeys.length,
       keys: folderKeys,
       message: `Successfully accessed "${parentFolderPath}"`
@@ -549,10 +574,28 @@ export async function GET(request) {
   } catch (error) {
     console.error('Access API error:', error)
     
+    // Provide more specific error information
+    let errorMessage = 'An unexpected error occurred while processing your request'
+    let errorDetails = null
+    
+    if (error.code === 'P2002') {
+      errorMessage = 'Database constraint violation - duplicate entry'
+      errorDetails = 'This usually indicates a database schema issue'
+    } else if (error.code === 'P2003') {
+      errorMessage = 'Database foreign key constraint violation'
+      errorDetails = 'Referenced record does not exist'
+    } else if (error.code === 'P2014') {
+      errorMessage = 'Database connection error'
+      errorDetails = 'Unable to connect to database'
+    } else if (error.message) {
+      errorMessage = error.message
+    }
+    
     return NextResponse.json({
       success: false,
       error: 'Internal server error',
-      message: 'An unexpected error occurred while processing your request',
+      message: errorMessage,
+      details: errorDetails,
       status: 500,
       timestamp: new Date().toISOString()
     }, { status: 500 })
