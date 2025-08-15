@@ -72,6 +72,25 @@ export async function GET(request) {
       }, { status: 400 })
     }
 
+    // Check if this is a key access (has more than 2 path parts)
+    const isKeyAccess = pathParts.length > 2
+    
+    // For key access, environment parameter is mandatory
+    if (isKeyAccess && !environment) {
+      return NextResponse.json({
+        success: false,
+        error: 'Environment parameter required for key access',
+        message: 'When accessing a specific key, environment parameter is mandatory to prevent ambiguity. Multiple keys with the same name can exist in different environments.',
+        examples: [
+          '?path=Webmeter/Database/DB_URL&environment=development',
+          '?path=MyApp/Production/API_Keys&environment=production',
+          '?path=ProjectName/Staging/DB_URL&environment=staging'
+        ],
+        securityNote: 'This prevents accidentally accessing the wrong environment (e.g., production DB credentials in development)',
+        status: 400
+      }, { status: 400 })
+    }
+
     // Validate path format
     if (path.trim() === '') {
       return NextResponse.json({
@@ -283,13 +302,13 @@ export async function GET(request) {
     if (type === 'key' || (type === 'auto' && remainingPath.length > 0)) {
       const keyName = lastPathPart
       
-      // First check if it's a key in the current folder
+      // First check if it's a key in the current folder (environment is mandatory for key access)
       let key = await prisma.keys.findFirst({
         where: {
           name: keyName,
           folderId: parentFolderId,
           userId: user.id,
-          ...(normalizedEnvironment && { environment: normalizedEnvironment })
+          environment: normalizedEnvironment // Environment is now mandatory
         },
         select: {
           id: true,
@@ -321,7 +340,7 @@ export async function GET(request) {
             where: {
               folderId: potentialSubfolder.id,
               userId: user.id,
-              ...(normalizedEnvironment && { environment: normalizedEnvironment })
+              environment: normalizedEnvironment // Environment is now mandatory
             },
             select: {
               id: true,
@@ -362,7 +381,7 @@ export async function GET(request) {
           where: {
             folderId: parentFolderId,
             userId: user.id,
-            ...(normalizedEnvironment && { environment: normalizedEnvironment })
+            environment: normalizedEnvironment // Environment is now mandatory
           },
           select: {
             name: true,
