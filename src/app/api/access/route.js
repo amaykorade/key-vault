@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser } from '../../../lib/auth'
 import prisma from '../../../lib/database'
+import { decryptKeyValue } from '../../../lib/keyManagement'
 
 export async function GET(request) {
   try {
@@ -414,7 +415,7 @@ export async function GET(request) {
           id: key.id,
           name: key.name,
           description: key.description,
-          value: key.value,
+          value: await decryptKeyValue(key.value),
           type: key.type,
           environment: key.environment,
           tags: key.tags,
@@ -449,6 +450,7 @@ export async function GET(request) {
             id: true,
             name: true,
             description: true,
+            value: true,
             type: true,
             environment: true,
             tags: true,
@@ -458,6 +460,14 @@ export async function GET(request) {
           },
           orderBy: { updatedAt: 'desc' }
         })
+
+        // Decrypt key values
+        const decryptedKeys = await Promise.all(
+          folderKeys.map(async (key) => ({
+            ...key,
+            value: await decryptKeyValue(key.value)
+          }))
+        )
 
         const folderSubfolders = await prisma.folders.findMany({
           where: {
@@ -488,7 +498,7 @@ export async function GET(request) {
                       environment: normalizedEnvironment || 'ALL',
             totalKeys: folderKeys.length,
             totalSubfolders: folderSubfolders.length,
-          keys: folderKeys,
+          keys: decryptedKeys,
           subfolders: folderSubfolders,
           message: `Successfully accessed folder "${folderPath.join('/')}/${lastPathPart}"`
         })
@@ -530,25 +540,34 @@ export async function GET(request) {
     }
 
     // Fallback: return folder contents from the last valid folder
-    const folderKeys = await prisma.keys.findMany({
-      where: {
-        folderId: parentFolderId,
-        userId: user.id,
-        ...(normalizedEnvironment && { environment: normalizedEnvironment })
-      },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        type: true,
-        environment: true,
-        tags: true,
-        isFavorite: true,
-        createdAt: true,
-        updatedAt: true
-      },
-      orderBy: { updatedAt: 'desc' }
-    })
+            const folderKeys = await prisma.keys.findMany({
+          where: {
+            folderId: parentFolderId,
+            userId: user.id,
+            ...(normalizedEnvironment && { environment: normalizedEnvironment })
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            value: true,
+            type: true,
+            environment: true,
+            tags: true,
+            isFavorite: true,
+            createdAt: true,
+            updatedAt: true
+          },
+          orderBy: { updatedAt: 'desc' }
+        })
+
+        // Decrypt key values
+        const decryptedKeys = await Promise.all(
+          folderKeys.map(async (key) => ({
+            ...key,
+            value: await decryptKeyValue(key.value)
+          }))
+        )
 
     return NextResponse.json({
       success: true,
@@ -568,7 +587,7 @@ export async function GET(request) {
       },
       environment: normalizedEnvironment || 'ALL',
       totalKeys: folderKeys.length,
-      keys: folderKeys,
+              keys: decryptedKeys,
       message: `Successfully accessed "${parentFolderPath}"`
     })
 
