@@ -72,24 +72,7 @@ export async function GET(request) {
       }, { status: 400 })
     }
 
-    // Check if this is a key access (has more than 2 path parts)
-    const isKeyAccess = pathParts.length > 2
-    
-    // For key access, environment parameter is mandatory
-    if (isKeyAccess && !environment) {
-      return NextResponse.json({
-        success: false,
-        error: 'Environment parameter required for key access',
-        message: 'When accessing a specific key, environment parameter is mandatory to prevent ambiguity. Multiple keys with the same name can exist in different environments.',
-        examples: [
-          '?path=Webmeter/Database/DB_URL&environment=development',
-          '?path=MyApp/Production/API_Keys&environment=production',
-          '?path=ProjectName/Staging/DB_URL&environment=staging'
-        ],
-        securityNote: 'This prevents accidentally accessing the wrong environment (e.g., production DB credentials in development)',
-        status: 400
-      }, { status: 400 })
-    }
+
 
     // Validate path format
     if (path.trim() === '') {
@@ -132,6 +115,25 @@ export async function GET(request) {
 
     const projectName = pathParts[0]
     const remainingPath = pathParts.slice(1)
+
+    // Check if this is a key access (has more than 2 path parts)
+    const isKeyAccess = pathParts.length > 2
+    
+    // For key access, environment parameter is mandatory
+    if (isKeyAccess && !environment) {
+      return NextResponse.json({
+        success: false,
+        error: 'Environment parameter required for key access',
+        message: 'When accessing a specific key, environment parameter is mandatory to prevent ambiguity. Multiple keys with the same name can exist in different environments.',
+        examples: [
+          '?path=Webmeter/Database/DB_URL&environment=development',
+          '?path=MyApp/Production/API_Keys&environment=production',
+          '?path=ProjectName/Staging/DB_URL&environment=staging'
+        ],
+        securityNote: 'This prevents accidentally accessing the wrong environment (e.g., production DB credentials in development)',
+        status: 400
+      }, { status: 400 })
+    }
 
     console.log('🔍 Access request:', { 
       path, 
