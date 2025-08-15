@@ -173,7 +173,9 @@ export async function createAPIToken(userId, permissions = [], expiresAt = null)
       userId,
       permissions: permissions,
       expiresAt: expiresAt ? new Date(expiresAt) : null,
-      isActive: true
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   });
   
@@ -217,8 +219,8 @@ export async function getCurrentUser(request) {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const apiToken = authHeader.substring(7) // Remove 'Bearer ' prefix
       
-      // FIXED: Use the same working approach as the auth route
-      const tokenRecord = await prisma.api_tokens.findFirst({
+      // First, try the new api_tokens table
+      let tokenRecord = await prisma.api_tokens.findFirst({
         where: { 
           token: apiToken,
           isActive: true
@@ -237,28 +239,40 @@ export async function getCurrentUser(request) {
           data: { lastUsedAt: new Date() }
         })
 
-        // Get user data directly (same as auth route)
+        // Get user data directly
         user = await prisma.users.findUnique({
           where: { id: tokenRecord.userId }
         })
-        
-        // Load permissions for API token users
-        if (user && user.role === 'ADMIN') {
-          user = {
-            ...user,
-            permissions: [
-              'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
-              'folders:read', 'folders:write', 'folders:delete',
-              'projects:read', 'projects:write', 'projects:delete',
-              'api:read', 'api:write', 'api:admin'
-            ]
-          };
-        } else if (user) {
-          user = {
-            ...user,
-            permissions: ['keys:read', 'folders:read', 'api:read']
-          };
+      } else {
+        // Fallback: try the legacy users.apiToken field
+        const legacyUser = await prisma.users.findFirst({
+          where: { 
+            apiToken: apiToken,
+            isActive: true
+          }
+        })
+
+        if (legacyUser) {
+          user = legacyUser
         }
+      }
+      
+      // Load permissions for API token users
+      if (user && user.role === 'ADMIN') {
+        user = {
+          ...user,
+          permissions: [
+            'keys:read', 'keys:write', 'keys:delete', 'keys:rotate',
+            'folders:read', 'folders:write', 'folders:delete',
+            'projects:read', 'projects:write', 'projects:delete',
+            'api:read', 'api:write', 'api:admin'
+          ]
+        };
+      } else if (user) {
+        user = {
+          ...user,
+          permissions: ['keys:read', 'folders:read', 'api:read']
+        };
       }
     }
 

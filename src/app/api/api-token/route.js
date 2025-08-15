@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '../../../lib/auth.js';
 import prisma from '../../../lib/database.js';
 import { logAccess } from '../../../lib/permissions.js';
+import crypto from 'crypto';
 
 function generateToken(userId) {
-  // Use a secure random generator in production
-  return 'tok_' + userId + '_' + Math.random().toString(36).slice(2, 18);
+  // Use a secure random generator with better format
+  const randomPart = crypto.randomBytes(16).toString('hex');
+  return 'tok_' + userId + '_' + randomPart;
 }
 
 export async function GET(request) {
@@ -22,17 +24,10 @@ export async function GET(request) {
     await prisma.users.update({ where: { id: user.id }, data: { apiToken: newToken } });
     
     // Log token generation
-    // Log the token generation/regeneration with enhanced details
-    await logAPITokenGeneration(user.id, {
+    await logAccess(user.id, 'api_token', null, 'generate', 'success', {
+      tokenType: 'legacy',
       ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-      userAgent: request.headers.get('user-agent'),
-      method: 'GET',
-      endpoint: '/api/api-token',
-      statusCode: 200
-    }, {
-      userEmail: user.email,
-      userRole: user.role,
-      userPlan: user.plan
+      userAgent: request.headers.get('user-agent')
     });
     
     return NextResponse.json({ token: newToken });
