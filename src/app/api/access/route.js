@@ -40,9 +40,10 @@ export async function GET(request) {
     // Normalize and validate environment parameter
     let normalizedEnvironment = null
     if (environment) {
-      normalizedEnvironment = environment.trim().toLowerCase()
-      // Validate environment values
-      const validEnvironments = ['development', 'staging', 'testing', 'production', 'local', 'other']
+      // Convert to uppercase to match the database enum values
+      normalizedEnvironment = environment.trim().toUpperCase()
+      // Validate environment values (must match the Environment enum in schema)
+      const validEnvironments = ['DEVELOPMENT', 'STAGING', 'TESTING', 'PRODUCTION', 'LOCAL', 'OTHER']
       if (!validEnvironments.includes(normalizedEnvironment)) {
         return NextResponse.json({
           success: false,
@@ -206,7 +207,7 @@ export async function GET(request) {
           description: project.description,
           color: project.color
         },
-        environment: normalizedEnvironment || 'all',
+        environment: normalizedEnvironment || 'ALL',
         totalKeys: projectKeys.length,
         totalSubfolders: projectSubfolders.length,
         keys: projectKeys,
@@ -346,7 +347,7 @@ export async function GET(request) {
               description: potentialSubfolder.description,
               color: potentialSubfolder.color
             },
-                      environment: normalizedEnvironment || 'all',
+                      environment: normalizedEnvironment || 'ALL',
           totalKeys: subfolderKeys.length,
           keys: subfolderKeys,
             message: `Successfully accessed folder "${folderPath.join('/')}/${keyName}"`
@@ -389,7 +390,7 @@ export async function GET(request) {
           project: projectName,
           folder: parentFolderPath,
           keyName: keyName,
-          environment: normalizedEnvironment || 'all',
+          environment: normalizedEnvironment || 'ALL',
           availableKeys: availableKeys.map(k => ({ name: k.name, environment: k.environment, type: k.type })),
           availableSubfolders: availableSubfolders.map(f => f.name),
           suggestions: [
@@ -484,9 +485,9 @@ export async function GET(request) {
             description: lastPartSubfolder.description,
             color: lastPartSubfolder.color
           },
-          environment: normalizedEnvironment || 'all',
-          totalKeys: folderKeys.length,
-          totalSubfolders: folderSubfolders.length,
+                      environment: normalizedEnvironment || 'ALL',
+            totalKeys: folderKeys.length,
+            totalSubfolders: folderSubfolders.length,
           keys: folderKeys,
           subfolders: folderSubfolders,
           message: `Successfully accessed folder "${folderPath.join('/')}/${lastPathPart}"`
@@ -565,7 +566,7 @@ export async function GET(request) {
         description: project.description,
         color: project.color
       },
-      environment: normalizedEnvironment || 'all',
+      environment: normalizedEnvironment || 'ALL',
       totalKeys: folderKeys.length,
       keys: folderKeys,
       message: `Successfully accessed "${parentFolderPath}"`
