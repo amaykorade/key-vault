@@ -345,6 +345,8 @@ kv = KeyVault('your-api-token-here', 'https://yourdomain.com')`}</code>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">🆕 Function-Based Access (Recommended)</h3>
                 <p className="text-gray-600 mb-6">
                   Instead of building URLs manually, use these simple function classes to access your keys with any path depth!
+                  <br /><br />
+                  <strong className="text-red-600">🔒 Security Update:</strong> Environment parameter is now <strong>MANDATORY</strong> for key access to prevent security risks and ensure proper environment isolation.
                 </p>
                 
                 <div className="space-y-8">
@@ -359,10 +361,13 @@ kv = KeyVault('your-api-token-here', 'https://yourdomain.com')`}</code>
     this.baseUrl = baseUrl;
   }
 
-  async getKey(path, environment = null) {
-    const url = environment 
-      ? \`\${this.baseUrl}/api/access?path=\${path}&environment=\${environment}\`
-      : \`\${this.baseUrl}/api/access?path=\${path}\`;
+  async getKey(path, environment) {
+    // Environment is now mandatory for key access
+    if (!environment) {
+      throw new Error('Environment parameter is required for key access. This prevents accessing the wrong environment (e.g., production DB credentials in development).');
+    }
+
+    const url = \`\${this.baseUrl}/api/access?path=\${path}&environment=\${environment}\`;
     
     const response = await fetch(url, {
       headers: { "Authorization": \`Bearer \${this.apiToken}\` }
@@ -391,9 +396,9 @@ kv = KeyVault('your-api-token-here', 'https://yourdomain.com')`}</code>
 // Usage:
 const vault = new KeyVaultClient('YOUR_API_TOKEN');
 
-// ✅ Get specific key (any path depth)
-const dbUrl = await vault.getKey('Webmeter/Database/DB_URL');
-const apiKey = await vault.getKey('MyApp/Production/API_KEY');
+// ✅ Get specific key (environment is now MANDATORY)
+const dbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'DEVELOPMENT');
+const apiKey = await vault.getKey('MyApp/Production/API_KEY', 'PRODUCTION');
 
 // ✅ Get folder contents
 const folderData = await vault.getFolder('Webmeter/Database');
@@ -416,11 +421,13 @@ class KeyVaultClient:
         self.api_token = api_token
         self.base_url = base_url
     
-    def get_key(self, path, environment=None):
-        params = {"path": path}
-        if environment:
-            params["environment"] = environment
+    def get_key(self, path, environment):
+        # Environment is now mandatory for key access
+        if not environment:
+            raise ValueError('Environment parameter is required for key access. This prevents accessing the wrong environment (e.g., production DB credentials in development).')
             
+        params = {"path": path, "environment": environment}
+        
         response = requests.get(
             f"{self.base_url}/api/access",
             params=params,
@@ -444,9 +451,9 @@ class KeyVaultClient:
 # Usage:
 vault = KeyVaultClient('YOUR_API_TOKEN')
 
-# ✅ Get specific key (any path depth)
-db_url = vault.get_key('Webmeter/Database/DB_URL')
-api_key = vault.get_key('MyApp/Production/API_KEY')
+# ✅ Get specific key (environment is now MANDATORY)
+db_url = vault.get_key('Webmeter/Database/DB_URL', 'DEVELOPMENT')
+api_key = vault.get_key('MyApp/Production/API_KEY', 'PRODUCTION')
 
 # ✅ Get folder contents
 folder_data = vault.get_folder('Webmeter/Database')
@@ -471,11 +478,13 @@ project_data = vault.get_folder('Webmeter')`}</code>
         $this->baseUrl = $baseUrl;
     }
     
-    public function getKey($path, $environment = null) {
-        $url = $this->baseUrl . "/api/access?path=" . urlencode($path);
-        if ($environment) {
-            $url .= "&environment=" . urlencode($environment);
+    public function getKey($path, $environment) {
+        // Environment is now mandatory for key access
+        if (!$environment) {
+            throw new Exception('Environment parameter is required for key access. This prevents accessing the wrong environment (e.g., production DB credentials in development).');
         }
+        
+        $url = $this->baseUrl . "/api/access?path=" . urlencode($path) . "&environment=" . urlencode($environment);
         
         $response = file_get_contents($url, false, stream_context_create([
             'http' => [
@@ -506,9 +515,9 @@ project_data = vault.get_folder('Webmeter')`}</code>
 // Usage:
 $vault = new KeyVaultClient('YOUR_API_TOKEN');
 
-// ✅ Get specific key (any path depth)
-$dbUrl = $vault->getKey('Webmeter/Database/DB_URL');
-$apiKey = $vault->getKey('MyApp/Production/API_KEY');
+// ✅ Get specific key (environment is now MANDATORY)
+$dbUrl = $vault->getKey('Webmeter/Database/DB_URL', 'DEVELOPMENT');
+$apiKey = $vault->getKey('MyApp/Production/API_KEY', 'PRODUCTION');
 
 // ✅ Get folder contents
 $folderData = $vault->getFolder('Webmeter/Database');
@@ -531,17 +540,60 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                     </ul>
                   </div>
 
+                  {/* Security Requirements */}
+                  <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-6 border border-red-200">
+                    <h4 className="text-xl font-semibold text-red-900 mb-4">🔒 Security Requirements</h4>
+                    <div className="space-y-4 text-red-800">
+                      <div>
+                        <h5 className="text-lg font-semibold text-red-800 mb-2">⚠️ Environment Parameter is MANDATORY for Key Access</h5>
+                        <p className="mb-3">To prevent security risks and ensure proper environment isolation, the <code className="bg-red-200 px-1 rounded">environment</code> parameter is now <strong>REQUIRED</strong> when accessing specific keys.</p>
+                        
+                        <div className="bg-red-100 rounded p-4 border border-red-200">
+                          <h6 className="text-md font-semibold text-red-800 mb-2">Why This is Required:</h6>
+                          <ul className="space-y-1 text-red-700 text-sm">
+                            <li>• <strong>Prevents accidental access</strong> to production credentials in development</li>
+                            <li>• <strong>Ensures environment isolation</strong> - no more ambiguous key access</li>
+                            <li>• <strong>Security best practice</strong> for multi-environment deployments</li>
+                            <li>• <strong>Clear audit trail</strong> of which environment was accessed</li>
+                          </ul>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-lg font-semibold text-red-800 mb-2">✅ What Still Works Without Environment:</h5>
+                        <ul className="space-y-1 text-red-700 text-sm">
+                          <li>• <strong>Project browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder('Webmeter')</code></li>
+                          <li>• <strong>Folder browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder('Webmeter/Database')</code></li>
+                          <li>• <strong>Structure discovery:</strong> See available keys and folders</li>
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-lg font-semibold text-red-800 mb-2">❌ What Requires Environment:</h5>
+                        <ul className="space-y-1 text-red-700 text-sm">
+                          <li>• <strong>Key access:</strong> <code className="bg-red-200 px-1 rounded">vault.getKey('Webmeter/Database/DB_URL', 'DEVELOPMENT')</code></li>
+                          <li>• <strong>Decrypted values:</strong> Getting actual key values requires environment</li>
+                          <li>• <strong>Environment-specific operations:</strong> All key retrieval operations</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Environment Parameter Quick Reference */}
                   <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
                     <h4 className="text-xl font-semibold text-cyan-900 mb-4">🔧 Environment Parameter Quick Reference</h4>
-                    <p className="text-cyan-800 mb-4">The second parameter in both <code className="bg-cyan-200 px-1 rounded">getKey()</code> and <code className="bg-cyan-200 px-1 rounded">getFolder()</code> methods filters results by environment:</p>
+                    <p className="text-cyan-800 mb-4">
+                      <strong className="text-red-600">🔒 getKey() requires environment parameter (mandatory)</strong><br />
+                      <strong className="text-green-600">✅ getFolder() environment parameter is optional</strong><br />
+                      The second parameter filters results by environment:
+                    </p>
                     
                     <div className="space-y-4">
                       <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
                         <h5 className="text-lg font-semibold text-cyan-800 mb-2">Method Signature</h5>
                         <div className="space-y-2 text-cyan-700">
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getKey(path, environment?)</code> - Get a specific key</div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getFolder(path, environment?)</code> - Get folder contents</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getKey(path, environment)</code> - Get a specific key <strong className="text-red-600">(REQUIRED)</strong></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded">getFolder(path, environment?)</code> - Get folder contents <strong className="text-green-600">(OPTIONAL)</strong></div>
                         </div>
                       </div>
                       
@@ -560,8 +612,9 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
                         <h5 className="text-lg font-semibold text-cyan-800 mb-2">Usage Examples</h5>
                         <div className="space-y-2 text-cyan-700">
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key')</code> - Get key from any environment</div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'production')</code> - Get key only from production</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'production')</code> - Get key from production <strong className="text-red-600">(REQUIRED)</strong></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'development')</code> - Get key from development <strong className="text-red-600">(REQUIRED)</strong></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder('Project/Folder')</code> - Get folder contents from all environments</div>
                           <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder('Project/Folder', 'development')</code> - Get folder contents only from development</div>
                         </div>
                       </div>
