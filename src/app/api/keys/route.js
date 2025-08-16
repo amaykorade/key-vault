@@ -133,6 +133,8 @@ export async function POST(request) {
         type: key.type,
         tags: key.tags,
         isFavorite: key.isFavorite,
+        environment: key.environment,
+        expiresAt: key.expiresAt,
         createdAt: key.createdAt,
         updatedAt: key.updatedAt
       }
@@ -231,6 +233,8 @@ export async function GET(request) {
       type: key.type,
       tags: key.tags,
       isFavorite: key.isFavorite,
+      environment: key.environment,
+      expiresAt: key.expiresAt,
       createdAt: key.createdAt,
       updatedAt: key.updatedAt
     }))

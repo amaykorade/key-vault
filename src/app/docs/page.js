@@ -41,6 +41,7 @@ export default function DocsPage() {
               <a href="#packages" className="text-slate-600 hover:text-slate-500 hover:underline">📦 Package Information</a>
               <a href="#authentication" className="text-slate-600 hover:text-slate-500 hover:underline">Authentication</a>
               <a href="#security" className="text-slate-600 hover:text-slate-500 hover:underline">Security</a>
+              <a href="#expiration" className="text-slate-600 hover:text-slate-500 hover:underline">⏰ Key Expiration</a>
               <a href="#plans" className="text-slate-600 hover:text-slate-500 hover:underline">Subscription Plans</a>
               <a href="#faq" className="text-slate-600 hover:text-slate-500 hover:underline">FAQ</a>
               <a href="#summary" className="text-slate-600 hover:text-slate-500 hover:underline">🎯 Summary</a>
@@ -303,7 +304,7 @@ kv = KeyVault('your-api-token-here', 'https://yourdomain.com')`}</code>
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
-                <h3 className="text-xl font-semibold text-blue-900 mb-3">🆕 What's New in v1.0.4</h3>
+                <h3 className="text-xl font-semibold text-blue-900 mb-3">🆕 What&apos;s New in v1.0.4</h3>
                 <ul className="space-y-2 text-blue-800">
                   <li>• <strong>Function-based access:</strong> Use simple function calls instead of building URLs manually</li>
                   <li>• <strong>Simplified constructors:</strong> <code className="bg-blue-200 px-1 rounded">new KeyVault(token, baseUrl)</code> and <code className="bg-blue-200 px-1 rounded">KeyVault(token, base_url)</code></li>
@@ -535,7 +536,7 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <li>• <strong>No URL building:</strong> Just call functions with path names</li>
                       <li>• <strong>Any path depth:</strong> Works with 2 levels (Project/Key) or 10+ levels</li>
                       <li>• <strong>Environment filtering:</strong> Easy access to dev/staging/prod keys</li>
-                      <li>• <strong>Simple error handling:</strong> Clear error messages if keys don't exist</li>
+                      <li>• <strong>Simple error handling:</strong> Clear error messages if keys don&apos;t exist</li>
                       <li>• <strong>Cross-language:</strong> Same approach works in JavaScript, Python, PHP</li>
                     </ul>
                   </div>
@@ -562,8 +563,8 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div>
                         <h5 className="text-lg font-semibold text-red-800 mb-2">✅ What Still Works Without Environment:</h5>
                         <ul className="space-y-1 text-red-700 text-sm">
-                          <li>• <strong>Project browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder('Webmeter')</code></li>
-                          <li>• <strong>Folder browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder('Webmeter/Database')</code></li>
+                          <li>• <strong>Project browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder(&apos;Webmeter&apos;)</code></li>
+                          <li>• <strong>Folder browsing:</strong> <code className="bg-red-200 px-1 rounded">vault.getFolder(&apos;Webmeter/Database&apos;)</code></li>
                           <li>• <strong>Structure discovery:</strong> See available keys and folders</li>
                         </ul>
                       </div>
@@ -571,7 +572,7 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div>
                         <h5 className="text-lg font-semibold text-red-800 mb-2">❌ What Requires Environment:</h5>
                         <ul className="space-y-1 text-red-700 text-sm">
-                          <li>• <strong>Key access:</strong> <code className="bg-red-200 px-1 rounded">vault.getKey('Webmeter/Database/DB_URL', 'DEVELOPMENT')</code></li>
+                          <li>• <strong>Key access:</strong> <code className="bg-red-200 px-1 rounded">vault.getKey(&apos;Webmeter/Database/DB_URL&apos;, &apos;DEVELOPMENT&apos;)</code></li>
                           <li>• <strong>Decrypted values:</strong> Getting actual key values requires environment</li>
                           <li>• <strong>Environment-specific operations:</strong> All key retrieval operations</li>
                         </ul>
@@ -600,10 +601,10 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
                         <h5 className="text-lg font-semibold text-cyan-800 mb-2">Environment Values</h5>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-cyan-700">
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'production'</code></div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'staging'</code></div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'development'</code></div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">'testing'</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">&apos;production&apos;</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">&apos;staging&apos;</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">&apos;development&apos;</code></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">&apos;testing&apos;</code></div>
                           <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">null</code> (all environments)</div>
                           <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">undefined</code> (all environments)</div>
                         </div>
@@ -612,10 +613,10 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div className="bg-cyan-100 rounded p-4 border border-cyan-200">
                         <h5 className="text-lg font-semibold text-cyan-800 mb-2">Usage Examples</h5>
                         <div className="space-y-2 text-cyan-700">
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'production')</code> - Get key from production <strong className="text-red-600">(REQUIRED)</strong></div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey('Project/Key', 'development')</code> - Get key from development <strong className="text-red-600">(REQUIRED)</strong></div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder('Project/Folder')</code> - Get folder contents from all environments</div>
-                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder('Project/Folder', 'development')</code> - Get folder contents only from development</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey(&apos;Project/Key&apos;, &apos;production&apos;)</code> - Get key from production <strong className="text-red-600">(REQUIRED)</strong></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getKey(&apos;Project/Key&apos;, &apos;development&apos;)</code> - Get key from development <strong className="text-red-600">(REQUIRED)</strong></div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder(&apos;Project/Folder&apos;)</code> - Get folder contents from all environments</div>
+                          <div><code className="bg-cyan-200 px-2 py-1 rounded text-xs">vault.getFolder(&apos;Project/Folder&apos;, &apos;development&apos;)</code> - Get folder contents only from development</div>
                         </div>
                       </div>
                     </div>
@@ -628,19 +629,19 @@ $projectData = $vault->getFolder('Webmeter');`}</code>
                       <div>
                         <h5 className="text-lg font-semibold text-indigo-800 mb-2">Database Connection</h5>
                         <div className="bg-indigo-100 rounded p-3">
-                          <code className="text-indigo-800 text-sm">const dbUrl = await vault.getKey('Webmeter/Database/DB_URL', 'production');</code>
+                          <code className="text-indigo-800 text-sm">const dbUrl = await vault.getKey(&apos;Webmeter/Database/DB_URL&apos;, &apos;production&apos;);</code>
                         </div>
                       </div>
                       <div>
                         <h5 className="text-lg font-semibold text-indigo-800 mb-2">API Keys</h5>
                         <div className="bg-indigo-100 rounded p-3">
-                          <code className="text-indigo-800 text-sm">const stripeKey = await vault.getKey('Ecommerce/Stripe/SecretKey', 'production');</code>
+                          <code className="text-indigo-800 text-sm">const stripeKey = await vault.getKey(&apos;Ecommerce/Stripe/SecretKey&apos;, &apos;production&apos;);</code>
                         </div>
                       </div>
                       <div>
                         <h5 className="text-lg font-semibold text-indigo-800 mb-2">Environment-Specific Config</h5>
                         <div className="bg-indigo-100 rounded p-3">
-                          <code className="text-indigo-800 text-sm">const config = await vault.getFolder('MyApp/Config', process.env.NODE_ENV);</code>
+                          <code className="text-indigo-800 text-sm">const config = await vault.getFolder(&apos;MyApp/Config&apos;, process.env.NODE_ENV);</code>
                         </div>
                       </div>
                     </div>
@@ -890,6 +891,124 @@ $configs = [
             </div>
           </section>
 
+          {/* Key Expiration Management Section */}
+          <section id="expiration" className="scroll-mt-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">⏰ Key Expiration Management</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              All users can now set expiration dates for their keys to ensure credentials are automatically flagged when they expire.
+              This helps maintain security by providing clear visibility into which keys need attention.
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-6 border border-orange-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-orange-900 mb-4">🆕 Available for All Plans</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-600">FREE</div>
+                    <div className="text-sm text-orange-700">✅ Expiration dates</div>
+                    <div className="text-sm text-orange-700">✅ Visual warnings</div>
+                    <div className="text-sm text-orange-700">✅ Dashboard alerts</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600">PRO</div>
+                    <div className="text-sm text-blue-700">✅ Expiration dates</div>
+                    <div className="text-sm text-blue-700">✅ Visual warnings</div>
+                    <div className="text-sm text-blue-700">✅ Dashboard alerts</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">TEAM</div>
+                    <div className="text-sm text-purple-700">✅ Expiration dates</div>
+                    <div className="text-sm text-purple-700">✅ Visual warnings</div>
+                    <div className="text-sm text-purple-700">✅ Dashboard alerts</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">🎯 How It Works</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-blue-600 text-sm font-bold">1</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Set Expiration Date</h4>
+                      <p className="text-gray-600">When creating or editing a key, set an optional expiration date and time.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-blue-600 text-sm font-bold">2</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Automatic Warnings</h4>
+                      <p className="text-gray-600">The system automatically tracks expiration status and shows visual indicators.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-blue-600 text-sm font-bold">3</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">Dashboard Alerts</h4>
+                      <p className="text-gray-600">Get notified on your dashboard when keys are expiring or have expired.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">🚨 Warning Levels</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                    <span className="font-semibold text-red-700">EXPIRED</span>
+                    <span className="text-gray-600">Keys that have already expired (immediate action required)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                    <span className="font-semibold text-yellow-700">CRITICAL</span>
+                    <span className="text-gray-600">Expiring within 7 days (urgent attention needed)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                    <span className="font-semibold text-orange-700">WARNING</span>
+                    <span className="text-gray-600">Expiring within 30 days (plan for renewal)</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                    <span className="font-semibold text-green-700">SAFE</span>
+                    <span className="text-gray-600">More than 30 days until expiration</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">💻 API Access</h3>
+                <p className="text-gray-600 mb-4">Expiration dates are included in all API responses:</p>
+                <div className="bg-gray-100 rounded-lg p-4 border border-gray-200">
+                  <pre className="text-gray-800 text-sm overflow-x-auto">
+                    <code>{`// Key response now includes expiresAt
+{
+  "success": true,
+  "key": {
+    "id": "key_123",
+    "name": "DB_PASSWORD",
+    "value": "decrypted_value",
+    "expiresAt": "2024-12-31T23:59:59.000Z",
+    "environment": "PRODUCTION",
+    // ... other fields
+  }
+}`}</code>
+                  </pre>
+                </div>
+                <p className="text-gray-600 mt-3">
+                  Use the <code className="bg-gray-200 px-1 rounded">expiresAt</code> field to programmatically check expiration status in your applications.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* FAQ Section */}
           <section id="faq" className="scroll-mt-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">FAQ</h2>
@@ -938,7 +1057,7 @@ $configs = [
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200 shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-green-900 mb-4">✅ What We've Removed</h3>
+                  <h3 className="text-xl font-semibold text-green-900 mb-4">✅ What We&apos;ve Removed</h3>
                   <ul className="space-y-2 text-green-800">
                     <li>• Complex URL building</li>
                     <li>• Folder ID management</li>
@@ -949,7 +1068,7 @@ $configs = [
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-green-900 mb-4">🚀 What We've Added</h3>
+                  <h3 className="text-xl font-semibold text-green-900 mb-4">🚀 What We&apos;ve Added</h3>
                   <ul className="space-y-2 text-green-800">
                     <li>• Simple function calls</li>
                     <li>• Human-readable paths</li>
@@ -963,7 +1082,7 @@ $configs = [
               <div className="mt-6 p-4 bg-green-100 rounded-lg border border-green-200">
                 <h4 className="text-lg font-semibold text-green-900 mb-2">💡 The Result</h4>
                 <p className="text-green-800">
-                  Users can now access their keys with simple function calls like <code className="bg-green-200 px-2 py-1 rounded">vault.getKey('Project/Subfolder/KeyName', 'production')</code> 
+                  Users can now access their keys with simple function calls like <code className="bg-green-200 px-2 py-1 rounded">vault.getKey(&apos;Project/Subfolder/KeyName&apos;, &apos;production&apos;)</code> 
                   instead of building complex URLs and managing folder IDs. This makes the API much more user-friendly and accessible!
                 </p>
               </div>

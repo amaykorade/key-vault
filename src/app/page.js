@@ -437,7 +437,7 @@ const HomePage = () => {
                 </p>
                 <div className="bg-white/20 rounded-lg p-4 mb-6">
                   <code className="text-white font-mono text-lg">
-                    const keys = await kv.getKeysByPath('MyApp/Production');
+                    const keys = await kv.getKeysByPath(&apos;MyApp/Production&apos;);
                   </code>
                 </div>
                 <a href="/docs" className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all font-semibold text-lg shadow-lg hover:shadow-xl">

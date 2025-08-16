@@ -110,20 +110,28 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0)
 
+      // Prepare update data
+      const updateData = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        value: formData.value,
+        type: formData.type,
+        tags: tagsArray,
+        isFavorite: formData.isFavorite
+      }
+
+      // Add expiration date if provided (available for all users)
+      if (formData.expiresAt !== undefined) {
+        updateData.expiresAt = formData.expiresAt
+      }
+
       const response = await fetch(`/api/keys/${keyId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          description: formData.description.trim(),
-          value: formData.value,
-          type: formData.type,
-          tags: tagsArray,
-          isFavorite: formData.isFavorite
-        })
+        body: JSON.stringify(updateData)
       })
 
       const data = await response.json()
@@ -152,7 +160,8 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
         value: '',
         type: 'PASSWORD',
         tags: '',
-        isFavorite: false
+        isFavorite: false,
+        expiresAt: ''
       })
       setErrors({})
       onClose()
@@ -276,6 +285,30 @@ export default function EditKeyModal({ isOpen, onClose, onSuccess, keyId }) {
                 {errors.type && (
                   <p className="mt-1 text-sm text-red-600">{errors.type}</p>
                 )}
+              </div>
+
+              {/* Expiration Date Field - Available for all users */}
+              <div>
+                <label htmlFor="expiresAt" className="block text-sm font-medium text-gray-700 mb-1">
+                  Expiration Date
+                </label>
+                <input
+                  id="expiresAt"
+                  name="expiresAt"
+                  type="datetime-local"
+                  value={formData.expiresAt}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 ${
+                    errors.expiresAt ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                {errors.expiresAt && (
+                  <p className="mt-1 text-sm text-red-600">{errors.expiresAt}</p>
+                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  Optional: Set when this key should expire. Leave empty for no expiration.
+                </p>
               </div>
 
               <div>

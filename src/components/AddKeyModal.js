@@ -141,21 +141,30 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId, preS
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0)
 
+      // Prepare key data
+      const keyData = {
+        folderId,
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        value: formData.value,
+        type: formData.type,
+        tags: tagsArray,
+        isFavorite: formData.isFavorite,
+        environment: formData.environment
+      }
+
+      // Add expiration date if provided (available for all users)
+      if (formData.expiresAt) {
+        keyData.expiresAt = formData.expiresAt
+      }
+
       const response = await fetch('/api/keys', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          folderId,
-          name: formData.name.trim(),
-          description: formData.description.trim(),
-          value: formData.value,
-          type: formData.type,
-          tags: tagsArray,
-          isFavorite: formData.isFavorite
-        })
+        body: JSON.stringify(keyData)
       })
 
       const data = await response.json()
@@ -173,7 +182,8 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId, preS
         type: 'PASSWORD',
         environment: currentEnvironment, // Keep the same environment
         tags: '',
-        isFavorite: false
+        isFavorite: false,
+        expiresAt: ''
       })
       setErrors({})
 
@@ -196,8 +206,10 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId, preS
         description: '',
         value: '',
         type: 'PASSWORD',
+        environment: 'DEVELOPMENT',
         tags: '',
-        isFavorite: false
+        isFavorite: false,
+        expiresAt: ''
       })
       setErrors({})
       onClose()
@@ -373,6 +385,28 @@ export default function AddKeyModal({ isOpen, onClose, onSuccess, folderId, preS
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Expiration Date Field - Available for all users */}
+            <div>
+              <label htmlFor="expiresAt" className="block text-sm font-medium text-gray-700 mb-1">
+                Expiration Date
+              </label>
+              <input
+                id="expiresAt"
+                name="expiresAt"
+                type="datetime-local"
+                value={formData.expiresAt}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+                min={new Date().toISOString().slice(0, 16)}
+              />
+              {errors.expiresAt && (
+                <p className="mt-1 text-sm text-red-600">{errors.expiresAt}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                Optional: Set when this key should expire. Leave empty for no expiration.
+              </p>
             </div>
 
             <div>

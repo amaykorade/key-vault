@@ -14,7 +14,7 @@ if (!ENCRYPTION_KEY) {
 }
 
 export async function createKey(userId, folderId, keyData) {
-  const { name, description, value, type, tags, isFavorite } = keyData
+  const { name, description, value, type, tags, isFavorite, environment, expiresAt } = keyData
 
   // Validate required fields
   if (!name || !value || !type) {
@@ -25,6 +25,14 @@ export async function createKey(userId, folderId, keyData) {
   const validTypes = ['PASSWORD', 'API_KEY', 'SSH_KEY', 'CERTIFICATE', 'SECRET', 'OTHER']
   if (!validTypes.includes(type)) {
     throw new Error('Invalid key type')
+  }
+
+  // Validate expiration date if provided
+  if (expiresAt) {
+    const expirationDate = new Date(expiresAt)
+    if (expirationDate <= new Date()) {
+      throw new Error('Expiration date must be in the future')
+    }
   }
 
   // Encrypt the key value
@@ -40,7 +48,9 @@ export async function createKey(userId, folderId, keyData) {
         tags: tags || [],
         isFavorite: isFavorite || false,
         userId,
-        folderId
+        folderId,
+        environment: environment || 'PRODUCTION',
+        expiresAt: expiresAt ? new Date(expiresAt) : null
       }
     })
 
@@ -49,7 +59,9 @@ export async function createKey(userId, folderId, keyData) {
       resourceId: key.id,
       name, 
       type, 
-      folderId 
+      folderId,
+      environment,
+      expiresAt
     })
 
     return key
@@ -161,7 +173,7 @@ export async function getKeyById(userId, keyId) {
 }
 
 export async function updateKey(userId, keyId, keyData) {
-  const { name, description, value, type, tags, isFavorite } = keyData
+  const { name, description, value, type, tags, isFavorite, environment, expiresAt } = keyData
 
   try {
     const existingKey = await prisma.keys.findFirst({
@@ -175,6 +187,16 @@ export async function updateKey(userId, keyId, keyData) {
       throw new Error('Key not found')
     }
 
+    // Validate expiration date if provided
+    if (expiresAt !== undefined) {
+      if (expiresAt) {
+        const expirationDate = new Date(expiresAt)
+        if (expirationDate <= new Date()) {
+          throw new Error('Expiration date must be in the future')
+        }
+      }
+    }
+
     const updateData = {}
     
     if (name !== undefined) updateData.name = name
@@ -182,6 +204,8 @@ export async function updateKey(userId, keyId, keyData) {
     if (type !== undefined) updateData.type = type
     if (tags !== undefined) updateData.tags = tags
     if (isFavorite !== undefined) updateData.isFavorite = isFavorite
+    if (environment !== undefined) updateData.environment = environment
+    if (expiresAt !== undefined) updateData.expiresAt = expiresAt ? new Date(expiresAt) : null
 
     // Only encrypt value if it's provided
     if (value !== undefined) {
@@ -197,7 +221,9 @@ export async function updateKey(userId, keyId, keyData) {
     await logAction('UPDATE', 'key', userId, { 
       resourceId: key.id,
       name: key.name, 
-      type: key.type 
+      type: key.type,
+      environment: key.environment,
+      expiresAt: key.expiresAt
     })
 
     return key

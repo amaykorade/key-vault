@@ -61,6 +61,8 @@ export async function GET(request, context) {
       type: key.type,
       tags: key.tags,
       isFavorite: key.isFavorite,
+      environment: key.environment,
+      expiresAt: key.expiresAt,
       createdAt: key.createdAt,
       updatedAt: key.updatedAt
     }
@@ -136,6 +138,8 @@ export async function PUT(request, context) {
         type: updatedKey.type,
         tags: updatedKey.tags,
         isFavorite: updatedKey.isFavorite,
+        environment: updatedKey.environment,
+        expiresAt: updatedKey.expiresAt,
         createdAt: updatedKey.createdAt,
         updatedAt: updatedKey.updatedAt
       }

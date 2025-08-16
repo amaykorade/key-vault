@@ -198,6 +198,7 @@ export async function GET(request) {
           environment: true,
           tags: true,
           isFavorite: true,
+          expiresAt: true,
           createdAt: true,
           updatedAt: true
         },
@@ -352,6 +353,7 @@ export async function GET(request) {
               environment: true,
               tags: true,
               isFavorite: true,
+              expiresAt: true,
               createdAt: true,
               updatedAt: true
             },
@@ -476,6 +478,7 @@ export async function GET(request) {
             environment: true,
             tags: true,
             isFavorite: true,
+            expiresAt: true,
             createdAt: true,
             updatedAt: true
           },
@@ -551,6 +554,7 @@ export async function GET(request) {
               environment: potentialKey.environment,
               tags: potentialKey.tags,
               isFavorite: potentialKey.isFavorite,
+              expiresAt: potentialKey.expiresAt,
               createdAt: potentialKey.createdAt,
               updatedAt: potentialKey.updatedAt
             },
@@ -576,6 +580,7 @@ export async function GET(request) {
             environment: true,
             tags: true,
             isFavorite: true,
+            expiresAt: true,
             createdAt: true,
             updatedAt: true
           },

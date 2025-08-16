@@ -11,7 +11,7 @@ export const PLAN_LIMITS = {
     maxKeysTotal: 5,
     hasTeamFeatures: false,
     hasRBAC: false,
-    hasExpiringSecrets: false,
+    hasExpiringSecrets: true, // Now available for all users
     hasAPIAnalytics: false,
     hasEmailSupport: false,
     hasPrioritySupport: false,
@@ -20,12 +20,12 @@ export const PLAN_LIMITS = {
       '1 project',
       '5 keys total',
       'Basic API access',
-      'Basic dashboard'
+      'Basic dashboard',
+      'Expiring secrets' // Added to features
     ],
     restrictions: [
       'No team features',
       'No RBAC',
-      'No expiring secrets',
       'No API analytics',
       'No email support'
     ]
