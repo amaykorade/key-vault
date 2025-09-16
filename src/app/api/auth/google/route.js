@@ -14,6 +14,15 @@ export async function POST(request) {
     }
 
     // Exchange code for access token
+    // Use hardcoded redirect URI for production to avoid env issues
+    const isProduction = process.env.NODE_ENV === 'production';
+    const redirectUri = isProduction 
+      ? 'https://key-vault-five.vercel.app/auth/google/callback'
+      : `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/google/callback`;
+    console.log('🔍 Debug - Redirect URI being sent to Google:', redirectUri);
+    console.log('🔍 Debug - NEXTAUTH_URL env var:', process.env.NEXTAUTH_URL);
+    console.log('🔍 Debug - NODE_ENV:', process.env.NODE_ENV);
+    
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: {
@@ -23,7 +32,7 @@ export async function POST(request) {
         code,
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/google/callback`,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     });
