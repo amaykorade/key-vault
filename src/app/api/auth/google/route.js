@@ -17,7 +17,7 @@ export async function POST(request) {
     // Use hardcoded redirect URI for production to avoid env issues
     const isProduction = process.env.NODE_ENV === 'production';
     const redirectUri = isProduction 
-      ? 'https://key-vault-five.vercel.app/auth/google/callback'
+      ? 'https://key-vault-chi.vercel.app/auth/google/callback'
       : `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/google/callback`;
     console.log('🔍 Debug - Redirect URI being sent to Google:', redirectUri);
     console.log('🔍 Debug - NEXTAUTH_URL env var:', process.env.NEXTAUTH_URL);
